@@ -7,7 +7,6 @@ public static class VoxelData
     public static readonly int TextureAtlasWidth = 20;
     public static readonly int TextureAtlasHeight = 20;
 
-    public static readonly int WorldSizeInChunks = 10;
 
     // 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
     public static readonly float NormalizedTextureAtlasWidth = 1f / TextureAtlasWidth;
@@ -53,13 +52,13 @@ public static class VoxelData
     };
 
     /// <summary> 정6면체 각각의 앞의 좌표값 </summary>
-    public static readonly Vector3[] faceChecks = new Vector3[6]
+    public static readonly Vector3Int[] faceChecks = new Vector3Int[6]
     {
-    new Vector3( 0.0f,  0.0f, -1.0f), // Back Face   (-Z)
-    new Vector3( 0.0f,  0.0f, +1.0f), // Front Face  (+Z)
-    new Vector3( 0.0f, +1.0f,  0.0f), // Top Face    (+Y)
-    new Vector3( 0.0f, -1.0f,  0.0f), // Bottom Face (-Y)
-    new Vector3(-1.0f,  0.0f,  0.0f), // Left Face   (-X)
-    new Vector3(+1.0f,  0.0f,  0.0f), // RIght Face  (+X)
+    new Vector3Int( 0,  0, -1), // Back Face   (-Z)
+    new Vector3Int( 0,  0, +1), // Front Face  (+Z)
+    new Vector3Int( 0, +1,  0), // Top Face    (+Y)
+    new Vector3Int( 0, -1,  0), // Bottom Face (-Y)
+    new Vector3Int(-1,  0,  0), // Left Face   (-X)
+    new Vector3Int(+1,  0,  0), // RIght Face  (+X)
     };
 }

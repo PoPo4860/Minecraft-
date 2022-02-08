@@ -5,11 +5,9 @@ using UnityEngine;
 
 public class Chunk
 {
-    //public MeshRenderer meshRenderer;
-    //public MeshFilter meshFilter;
+    private ushort[,,] voxelMap = 
+        new ushort[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
-    private byte[,,] voxelMap = 
-        new byte[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     public World world;
     private int vertexIndex = 0;
     private List<Vector3> vertices = new List<Vector3>();
@@ -40,7 +38,7 @@ public class Chunk
         CreateMeshData();
         CreateMesh();
     }
-    private void CreateMeshData()
+    public void CreateMeshData()
     {
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
@@ -48,7 +46,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    AddVoxelDataToChunk(new Vector3(x, y, z));
+                    AddVoxelDataToChunk(new Vector3Int(x, y, z));
                 }
             }
         }
@@ -78,12 +76,19 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    voxelMap[x, y, z] = 2;
+                    if (y == VoxelData.ChunkHeight - 1) 
+                    {
+                        voxelMap[x, y, z] = 2;
+                    }
+                    else
+                    {
+                        voxelMap[x, y, z] = 3;
+                    }
                 }
             }
         }
     }
-    private void AddVoxelDataToChunk(Vector3 pos)
+    private void AddVoxelDataToChunk(Vector3Int pos)
     {
         // 6방향의 면 그리기
         // p : -Z, +Z, +Y, -Y, -X, +X 순서로 이루어진, 큐브의 각 면에 대한 인덱스
@@ -92,7 +97,7 @@ public class Chunk
             // Face Check(면이 바라보는 방향으로 +1 이동하여 확인)를 했을 때 
             // Solid가 아닌 경우에만 큐브의 면이 그려지도록 하기
             // => 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록
-            if (CheckVoxel(pos) && !CheckVoxel(pos + VoxelData.faceChecks[face]))
+            if (false == CheckProximityVoxel(pos + VoxelData.faceChecks[face]))
             {
                 // 1. Vertex, UV 4개 추가
                 for (int i = 0; i <= 3; i++)
@@ -100,7 +105,7 @@ public class Chunk
                     vertices.Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + pos);
                 }
 
-                byte blockID = GetBlockID(pos);
+                ushort blockID = GetBlockID(pos);
                 int atlasesCode = CodeData.GetBlockTextureAtlases(blockID, face);
                 AddTextureUV(atlasesCode);
                 // 2. Triangle의 버텍스 인덱스 6개 추가
@@ -114,19 +119,55 @@ public class Chunk
         }
     }
 
-    private bool CheckVoxel(Vector3 pos)
+    /// <summary>
+    /// 인접한 블럭의 존재유무를 확인한다.
+    /// </summary>
+    private bool CheckProximityVoxel(Vector3Int pos)
     {
-        int x = Mathf.FloorToInt(pos.x);
-        int y = Mathf.FloorToInt(pos.y);
-        int z = Mathf.FloorToInt(pos.z);
-
-        // 맵 범위를 벗어나는 경우
-        if (x < 0 || x > VoxelData.ChunkWidth - 1 ||
-           y < 0 || y > VoxelData.ChunkHeight - 1 ||
-           z < 0 || z > VoxelData.ChunkWidth - 1)
+        if (pos.x < 0)
+        {
+            return CheckProximityChunk(
+                new Vector3Int(VoxelData.ChunkWidth - 1, pos.y, pos.z), 
+                new Vector2Int(coord.x - 1, coord.z));
+        }
+        else if (pos.x > VoxelData.ChunkWidth - 1)
+        {
+            return CheckProximityChunk(
+                new Vector3Int(0, pos.y, pos.z), 
+                new Vector2Int(coord.x + 1, coord.z));
+        }
+        else if (pos.z < 0)
+        {
+            return CheckProximityChunk(
+                new Vector3Int(pos.x, pos.y, VoxelData.ChunkWidth - 1),
+                new Vector2Int(coord.x, coord.z - 1));
+        }
+        else if (pos.z > VoxelData.ChunkWidth - 1)
+        {
+            return CheckProximityChunk
+                (new Vector3Int(pos.x, pos.y, 0), 
+                new Vector2Int(coord.x, coord.z + 1));
+        }
+        else if (pos.y < 0 || pos.y > VoxelData.ChunkWidth - 1)
+        {
             return false;
-
-        return voxelMap[x, y, z] != 0;
+        }
+        //if (x < 0 || x > VoxelData.ChunkWidth - 1 ||
+        //   y < 0 || y > VoxelData.ChunkHeight - 1 ||
+        //   z < 0 || z > VoxelData.ChunkWidth - 1)
+        //{
+        //    return false;
+        //}
+        return voxelMap[pos.x, pos.y, pos.z] != 0;
+    }
+    private bool CheckProximityChunk(Vector3Int blockPos, Vector2Int chunkPos)
+    {
+        int? blockCode = world.GetChunk(chunkPos)?.voxelMap[blockPos.x, blockPos.y, blockPos.z];
+        if(blockCode == null)
+        {
+            return false;
+        }
+        return (blockCode != 0);
     }
     private void AddTextureUV(int textureID)
     {
@@ -160,7 +201,7 @@ public class Chunk
         uvs.Add(new Vector2(uvX + nw, uvY));
         uvs.Add(new Vector2(uvX + nw, uvY + nh));
     }
-    private byte GetBlockID(in Vector3 pos)
+    private ushort GetBlockID(in Vector3 pos)
     {
         return voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
     }
