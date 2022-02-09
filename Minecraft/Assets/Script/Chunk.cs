@@ -2,7 +2,73 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+//
+// 자기소개
+// 저희 회사에 대해선?
+// 게임 플레이 해봤냐? 어떤점이 감명깊었냐
+// 대학에선 뭐했냐
+// push_back과 emplace_back 의 차이;
+// set과 map 구현 해봤는지
+// 트리구조에 대해 설명해봐라
+// 인터페이스와 추상클래스의 차이가 뭐냐, 인터페이스를 왜 사용하냐
+// 왜 게임프로그래머가 되고싶냐
+// 협업하면서 어려웠던것은 어떤점이냐
+// 어떻게 해결했냐
+// struct와 class랑 어떤 차이가 있냐
+// 값타입과 참조타입엔 무슨 차이가 있냐
+// C# 에서 가비지컬렉션이 어떻게 작동되는가
+// 가비지 컬렉션에서 루트를 참조한다는게 무슨 뜻이냐
+// 유니티에선 가비지컬렉션이 동작하냐
+// 박싱과 언박싱의 차이점이 뭐냐
+// 코루틴에 대해서 설명해라
+// 코루틴이 내부적으로 어떻게 동작하냐
+// 코루틴을 구현해봤냐? 안했으면 어떻게 구현해볼 것이냐
+// Tramsfprm과 RectTransform의 차이가 뭐냐
+// 전략패턴이란 뭐냐
+// 니가 만든 프로젝트에 이 시스템이 있던데, 이건 어떻게 구현을 했엇나
+// A* 알고리즘이 어떻게 동작하냐? 순서를 설명해달라
+// 니가 만든 프로젝트에서 이 코드가있던데, 이렇게 구현한 이유가 있나
+// 유니티의 MonoBehaviour의 동작과정을 설명해달라
+// MonoBehaviour 에서 FixedUpdate()와 Update()와 LasteUpdate() 가 있다고 말했는데. 이 셋의 차이점이 무엇이냐
+// ScriptableObject 공부
+//
+// 마지막으로 앞으로 어떤 프로그래머가 되고싶은가?
+// 회사에 대해 물어볼 것이 있는가?
+//
+public struct ChunkCoord
+{
+    public int x;
+    public int z;
+    public ChunkCoord(int x, int z)
+    {
+        this.x = x;
+        this.z = z;
+    }
+    public static bool operator ==(ChunkCoord a, ChunkCoord b)
+    {
+        if(a.x == b.x && a.z == b.z)
+        {
+            return true;
+        }
+        return false;
+    }
+    public static bool operator !=(ChunkCoord a, ChunkCoord b)
+    {
+        if (a.x != b.x || a.z != b.z)
+        {
+            return true;
+        }
+        return false;
+    }
+    public override bool Equals(object op1)
+    {
+        return (x == ((ChunkCoord)op1).x && z == ((ChunkCoord)op1).z);
+    }
+    public override int GetHashCode()
+    {
+        return 0;
+    }
+}
 public class Chunk
 {
     private ushort[,,] voxelMap = 
@@ -14,7 +80,7 @@ public class Chunk
     private List<int> triangles = new List<int>();
     private List<Vector2> uvs = new List<Vector2>();
 
-    private GameObject chunkObject; // 청크가 생성될 대상 게임오브젝트
+    public GameObject ChunkObject; // 청크가 생성될 대상 게임오브젝트
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
 
@@ -23,16 +89,15 @@ public class Chunk
     {
         this.coord = coord;
         this.world = world;
+        ChunkObject = new GameObject();
+        meshRenderer = ChunkObject.AddComponent<MeshRenderer>();
+        meshFilter = ChunkObject.AddComponent<MeshFilter>();
 
-        chunkObject = new GameObject();
-        meshRenderer = chunkObject.AddComponent<MeshRenderer>();
-        meshFilter = chunkObject.AddComponent<MeshFilter>();
-
-        meshRenderer.material = world.material;
-        chunkObject.transform.SetParent(world.transform);
-        chunkObject.transform.position =
+        meshRenderer.material = world.Atlas;
+        ChunkObject.transform.SetParent(world.transform);
+        ChunkObject.transform.position =
             new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
-        chunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
+        ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
 
         PopulateVoxelMap();
         CreateMeshData();
@@ -186,7 +251,7 @@ public class Chunk
     {
         if (x < 0 || y < 0 || x >= VoxelData.TextureAtlasWidth || y >= VoxelData.TextureAtlasHeight)
         {
-            throw new System.IndexOutOfRangeException($"텍스쳐 아틀라스의 범위를 벗어났습니다 : [x = {x}, y = {y}]");
+            throw new System.IndexOutOfRangeException($"텍스쳐 아틀라스의 범위를 벗어났을지도? : [x = {x}, y = {y}]");
         }
 
         float nw = VoxelData.NormalizedTextureAtlasWidth;
