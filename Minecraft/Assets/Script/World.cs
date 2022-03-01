@@ -1,34 +1,39 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
 public class World : MonoBehaviour
 {
     public Material Atlas;
-    public GameObject PlayerObject;
-    private int worldSizeInChunks = 10;
+    [SerializeField] private GameObject PlayerObject;
+    [HideInInspector] public int seed;
+    private int worldSizeInChunks = 5;
     private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
-
-    //
-    // 시야내에 있는 청크만 활성화.
-    // 플레이어가 청크에서 청크사이로 이동할때마다 호출.
-    //
-    // 이전에 활성화 되었던 청크 좌표값(int,int)와 지금 활성화 시킬 좌표값 을 비교해서
-    // 좌표값이 겹칠경우 아무 동작을 안하고,
-    // 이전에 활성화 되었던 좌표값에서 지금 활성화 시킬 좌표값이 없다면 청크 생성.(좌표값이 있다면 활성화)
-    // 이제 활성화 시킬 좌표값에서 이전에 활성화 시켰던 좌표값이 없다면 이전에 활성화 시켰던 좌표값은 비활성화.
-    //
-
+    private List<Chunk> chunkUpdataList = new List<Chunk>();
+    
     private void Start()
     {
+        seed = Random.Range(0, 10000);
         GenerateWorld();
     }
-
+    
     private void Update()
     {
         UpdateChunksInViewRange();
+        while (chunkUpdataList.Count != 0)
+        {
+            chunkUpdataList[0].UpdataChunk();
+            chunkUpdataList.RemoveAt(0);
+        }
+    }
+    public delegate bool Predicate<in Chunk>(Chunk obj);
+    public void ChunkQueuePush(Chunk chunk)
+    {
+        if(false == chunkUpdataList.Contains(chunk))
+        {
+            chunkUpdataList.Add(chunk);
+        }   
     }
     private void GenerateWorld()
     {
@@ -39,23 +44,12 @@ public class World : MonoBehaviour
                 CreateNewChunk(x, z);
             }
         }
+
     }
 
     private void CreateNewChunk(int x, int z)
     {
         chunks.Add(new Vector2Int(x, z), new Chunk(new ChunkCoord(x, z), this));
-        //Vector2Int[] vector = new Vector2Int[4]
-        //{
-        //    new Vector2Int(x - 1, z),
-        //    new Vector2Int(x + 1, z),
-        //    new Vector2Int(x, z - 1),
-        //    new Vector2Int(x, z + 1)
-        //};
-        //
-        //foreach(Vector2Int vec in vector)
-        //{
-        //    GetChunk(vec)?.CreateMeshData();
-        //}
     }
 
     public Chunk GetChunk(Vector2Int chunkPos)

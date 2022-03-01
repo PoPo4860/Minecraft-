@@ -12,8 +12,8 @@ public static class VoxelData
     public static readonly float NormalizedTextureAtlasWidth = 1f / TextureAtlasWidth;
     public static readonly float NormalizedTextureAtlasHeight = 1f / TextureAtlasHeight;
 
-    public static readonly int ChunkWidth = 10;
-    public static readonly int ChunkHeight = 10;
+    public static readonly byte ChunkWidth = 16;
+    public static readonly byte ChunkHeight = 50;
     /// <summary> 큐브의 8개 버텍스의 상대 위치 </summary>
     public static readonly Vector3[] voxelVerts = new Vector3[8]
     {   // 정점을 설정
