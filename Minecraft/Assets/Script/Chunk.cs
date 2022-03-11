@@ -21,7 +21,7 @@ public struct ChunkCoord
     }
     public static bool operator !=(ChunkCoord a, ChunkCoord b)
     {
-        if (a.x != b.x || a.z != b.z)
+        if ((a.x != b.x) || (a.z != b.z))
         {
             return true;
         }
@@ -42,14 +42,22 @@ public class Chunk
         new ushort[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
     public World world;
+
+    #region 메쉬데이터
     private int vertexIndex = 0;
     private List<Vector3> vertices = new List<Vector3>();
     private List<int> triangles = new List<int>();
     private List<Vector2> uv = new List<Vector2>();
+    #endregion
 
+    #region 오브젝트 데이터
     public GameObject ChunkObject; // 청크가 생성될 대상 게임오브젝트
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
+    #endregion
+
+    /// <summary> 해당 청크가 생성중인 것인지 확인하는 bool. </summary>
+    public bool chunkCoroutineIsRunning = false;
 
     public ChunkCoord coord;
     public Chunk(ChunkCoord coord, World world)
@@ -67,7 +75,7 @@ public class Chunk
         ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
 
         PopulateVoxelMap();
-        UpdataChunk();
+        //UpdataChunk();
         world.ChunkQueuePush(this);
         int[,] arr = new int[4, 2]
         {
@@ -79,17 +87,20 @@ public class Chunk
         for (int i = 0; i < 4; ++i)
         {
             Chunk chunk = world.GetChunk(new Vector2Int(coord.x + arr[i, 0], coord.z + arr[i, 1]));
-            if(chunk != null)
+            if (chunk != null)
             {
                 world.ChunkQueuePush(chunk);
             }
         }
     }
-    public void UpdataChunk()
+    public IEnumerator UpdataChunk()
     {
+        chunkCoroutineIsRunning = true;
         ClearMeshData();
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
+            if (y % 5 == 0) yield return null;
+
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
@@ -99,10 +110,12 @@ public class Chunk
             }
         }
         CreateMesh();
+        chunkCoroutineIsRunning = false;
     }
     private void CreateMesh()
     {
         // 메시에 데이터들 초기화
+        meshFilter.mesh.Clear();
         meshFilter.mesh.vertices = vertices.ToArray();
         meshFilter.mesh.triangles = triangles.ToArray();
         meshFilter.mesh.uv = uv.ToArray();
@@ -119,7 +132,6 @@ public class Chunk
         vertices.Clear();
         triangles.Clear();
         uv.Clear();
-        meshFilter.mesh.Clear();
     }
 
     private void PopulateVoxelMap()
@@ -192,25 +204,25 @@ public class Chunk
     {
         if (pos.x < 0)
         {
-            return CheckProximityChunk(
+            return 0 != CheckProximityChunk(
                 new Vector3Int(VoxelData.ChunkWidth - 1, pos.y, pos.z),
                 new Vector2Int(coord.x - 1, coord.z));
         }
         else if (pos.x > VoxelData.ChunkWidth - 1)
         {
-            return CheckProximityChunk(
+            return 0 != CheckProximityChunk(
                 new Vector3Int(0, pos.y, pos.z),
                 new Vector2Int(coord.x + 1, coord.z));
         }
         else if (pos.z < 0)
         {
-            return CheckProximityChunk(
+            return 0 != CheckProximityChunk(
                 new Vector3Int(pos.x, pos.y, VoxelData.ChunkWidth - 1),
                 new Vector2Int(coord.x, coord.z - 1));
         }
         else if (pos.z > VoxelData.ChunkWidth - 1)
         {
-            return CheckProximityChunk(
+            return 0 != CheckProximityChunk(
                 new Vector3Int(pos.x, pos.y, 0),
                 new Vector2Int(coord.x, coord.z + 1));
         }
@@ -218,17 +230,17 @@ public class Chunk
         {
             return false;
         }
-        return GetBlockID(pos) != 0;
+        return 0 != GetBlockID(pos);
     }
-    private bool CheckProximityChunk(Vector3Int blockPos, Vector2Int chunkPos)
+    private ushort CheckProximityChunk(Vector3Int blockPos, Vector2Int chunkPos)
     {
         Chunk chunk = world.GetChunk(chunkPos);
-        int? blockCode = chunk?.GetBlockID(blockPos);
+        ushort? blockCode = chunk?.GetBlockID(blockPos);
         if (blockCode == null)
         {
-            return false;
+            return 0;
         }
-        return (blockCode != 0);
+        return (ushort)blockCode; ;
     }
     private void AddTextureUV(int textureID)
     {
@@ -241,7 +253,6 @@ public class Chunk
         AddTextureUV(x, y);
     }
 
-    // (x, y) : (0, 0) 기준은 좌하단
     /// <summary> 텍스쳐 아틀라스 내에서 (x, y) 위치의 텍스쳐 UV를 uvs 리스트에 추가 </summary>
     private void AddTextureUV(int x, int y)
     {
@@ -257,8 +268,37 @@ public class Chunk
         uv.Add(new Vector2(uvX + nw, uvY));
         uv.Add(new Vector2(uvX + nw, uvY + nh));
     }
-    private ushort GetBlockID(in Vector3 pos)
+    public ushort GetBlockID(in Vector3 pos)
     {
+        if (pos.x <= -1)
+        {
+            return CheckProximityChunk(
+                new Vector3Int(VoxelData.ChunkWidth - 1, (int)pos.y, (int)pos.z),
+                new Vector2Int(coord.x - 1, coord.z));
+        }
+        else if (pos.x >= VoxelData.ChunkWidth)
+        {
+            return CheckProximityChunk(
+                new Vector3Int(0, (int)pos.y, (int)pos.z),
+                new Vector2Int(coord.x + 1, coord.z));
+        }
+        else if (pos.z <= -1)
+        {
+            return CheckProximityChunk(
+                new Vector3Int((int)pos.x, (int)pos.y, VoxelData.ChunkWidth - 1),
+                new Vector2Int(coord.x, coord.z - 1));
+        }
+        else if (pos.z >= VoxelData.ChunkWidth)
+        {
+            return CheckProximityChunk(
+               new Vector3Int((int)pos.x, (int)pos.y, 0),
+               new Vector2Int(coord.x, coord.z + 1));
+        };
+
+        if (pos.y <= -1 || pos.y >= VoxelData.ChunkHeight)
+        {
+            return 0;
+        }
         return voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
     }
     private int GetPerlinNoise(float x, float z)

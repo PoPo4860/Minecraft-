@@ -23,18 +23,19 @@ public class World : MonoBehaviour
         UpdateChunksInViewRange();
         while (chunkUpdataList.Count != 0)
         {
-            chunkUpdataList[0].UpdataChunk();
+            StartCoroutine(chunkUpdataList[0].UpdataChunk());
             chunkUpdataList.RemoveAt(0);
         }
     }
-    public delegate bool Predicate<in Chunk>(Chunk obj);
+
     public void ChunkQueuePush(Chunk chunk)
     {
-        if(false == chunkUpdataList.Contains(chunk))
+        if (false == chunkUpdataList.Contains(chunk) && false == chunk.chunkCoroutineIsRunning)
         {
             chunkUpdataList.Add(chunk);
         }   
     }
+
     private void GenerateWorld()
     {
         for (int x = -worldSizeInChunks; x < worldSizeInChunks; x++)
@@ -62,8 +63,12 @@ public class World : MonoBehaviour
     {
         int x = (int)(worldPos.x / VoxelData.ChunkWidth);
         int z = (int)(worldPos.z / VoxelData.ChunkWidth);
+
+        if (worldPos.x < 0) --x;
+        if (worldPos.z < 0) --z;
         return new ChunkCoord(x, z);
     }
+
     private void UpdateChunksInViewRange()
     {
         ChunkCoord newPlayerChunkcoord = GetChunkCoordFromWorldPos(PlayerObject.transform.position);
@@ -151,5 +156,11 @@ public class World : MonoBehaviour
             // 플레이어의 현재 좌표값 갱신
             playerCurrentChounkCoord = newPlayerChunkcoord;
         }
+    }
+
+    public bool CheckBlockSolid(Vector3 pos)
+    {
+        Chunk chunk = GetChunk(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z));
+        return 0 != chunk.GetBlockID(pos);
     }
 }

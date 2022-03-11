@@ -3,10 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 public static class CodeData
 {
-    // Dictionary는 C++의 unordered_map 자료구조의 비슷하다.
-    /// <summary>
-    /// <블럭코드, 텍스쳐 정보>가 담긴다.
-    /// </summary>
+    /// <summary> <블럭코드, 텍스쳐 정보>가 담긴다. </summary>
     private static readonly Dictionary<ushort, ushort[]> BlockInfo = new Dictionary<ushort, ushort[]>();
     
     // 정적 생성자는 인스턴스가 처음 호출될떄 생성자가 호출된다.

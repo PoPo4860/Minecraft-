@@ -31,7 +31,6 @@ public class Perlin : MonoBehaviour
             height = GetPerlinNoise(child);
             child.transform.position = new Vector3(child.transform.position.x, Mathf.RoundToInt(height * m), child.transform.position.z);
 
-            // Mathf.RoundToInt() : 매개변수로 받은 소수를 가까운 정수로 반환한다.
         }
 
         // 블럭 색 조정
