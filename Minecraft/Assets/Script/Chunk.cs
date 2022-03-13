@@ -36,6 +36,7 @@ public struct ChunkCoord
         return 0;
     }
 }
+
 public class Chunk
 {
     private ushort[,,] voxelMap =
@@ -46,8 +47,13 @@ public class Chunk
     #region 메쉬데이터
     private int vertexIndex = 0;
     private List<Vector3> vertices = new List<Vector3>();
+    private int[,,] verticesIndexInfo = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+
     private List<int> triangles = new List<int>();
+    private int[,,] trianglesIndexInfo = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+
     private List<Vector2> uv = new List<Vector2>();
+    private int[,,] uvIndexInfo = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     #endregion
 
     #region 오브젝트 데이터
@@ -76,6 +82,10 @@ public class Chunk
 
         PopulateVoxelMap();
         //UpdataChunk();
+        vertices.Capacity = 20000;
+        triangles.Capacity = 30000;
+        uv.Capacity = 20000;
+
         world.ChunkQueuePush(this);
         int[,] arr = new int[4, 2]
         {
@@ -105,7 +115,13 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
+                    int verticesCount = vertices.Count;
+                    int trianglesCount = triangles.Count;
+                    int uvCount = uv.Count;
                     UpdateChunkData(new Vector3Int(x, y, z));
+                    verticesIndexInfo[x, y, z] = vertices.Count - verticesCount;
+                    trianglesIndexInfo[x, y, z] = triangles.Count - trianglesCount;
+                    uvIndexInfo[x, y, z] = uv.Count - uvCount;
                 }
             }
         }
@@ -114,6 +130,8 @@ public class Chunk
     }
     private void CreateMesh()
     {
+        //MesIterator asd = new MesIterator(vertices, uv, triangles, 1, 1, 1);
+
         // 메시에 데이터들 초기화
         meshFilter.mesh.Clear();
         meshFilter.mesh.vertices = vertices.ToArray();
@@ -122,8 +140,6 @@ public class Chunk
 
         // 변경사항 적용
         meshFilter.mesh.RecalculateNormals();
-        //meshFilter.mesh.RecalculateBounds();
-        //meshFilter.mesh.RecalculateTangents();
     }
 
     public void ClearMeshData()

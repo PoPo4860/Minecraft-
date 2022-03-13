@@ -10,7 +10,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float walkSpeed = 5f;
 
-    [SerializeField] private float gravity = 9.8f;
+    [SerializeField] private float gravity = -9.8f;
+    [SerializeField] private float maxGravity = -9.8f;
 
     #endregion
     private Transform cameraTransform;
@@ -26,7 +27,7 @@ public class Player : MonoBehaviour
 
     #endregion
 
-    private float playerWidth = 0.3f;
+    readonly private float  playerWidth = 0.3f;
     //private float boundsTolerance = 0.3f;
     //private float vericalMomentum = 0f;
 
@@ -40,13 +41,20 @@ public class Player : MonoBehaviour
     {
         Camera camera = GetComponentInChildren<Camera>();
         cameraTransform = camera.transform;
-    }
+        SetCursor();
 
+    }
     void Update()
     {
         deltaTime = Time.deltaTime;
         GetPlayerInputs();
 
+    }
+    void SetCursor()
+    {
+        // defualt값 True 와 None
+        Cursor.visible = !Cursor.visible;
+        Cursor.lockState = Cursor.lockState != CursorLockMode.None ? CursorLockMode.None : CursorLockMode.Locked;
     }
     private void FixedUpdate()
     {
@@ -58,31 +66,100 @@ public class Player : MonoBehaviour
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
-        mouseX = Input.GetAxis("Mouse X") * 8;
-        mouseY = Input.GetAxis("Mouse Y") * 8;
+        mouseX = Input.GetAxis("Mouse X") * 10;
+        mouseY = Input.GetAxis("Mouse Y") * 10;
+        if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
+        {
+            gravity = -maxGravity;
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SetCursor();
+        }
     }
 
     private void CalculateVelocity()
     {
-        velocity = Time.fixedDeltaTime * walkSpeed * ((transform.forward * vertical) + (transform.right * horizontal));
-        velocity += CalculateDownSpeedAndSetGroundState(Time.fixedDeltaTime * gravity) * Vector3.down; // 중력 적용
+        Vector3 playerPos = PosNormaliz(transform.position);
+
+        velocity = CalculateMove(playerPos);
+        velocity += CalculateGravity(playerPos) * Vector3.up; // 중력 적용
     }
 
-    private float CalculateDownSpeedAndSetGroundState(float yVelocity)
+    private float CalculateGravity(Vector3 pos)
     {
-        Vector3 pos = PosNormaliz(transform.position);
-        
+        if(gravity > maxGravity)
+        {
+            gravity -= Time.fixedDeltaTime * 35;
+        }
+        else if (gravity < maxGravity)
+        {
+            gravity = maxGravity;
+    }
+        float yVelocity = Time.fixedDeltaTime* gravity;
+        // 0.2 0.8
         isGrounded =
             world.CheckBlockSolid(new Vector3(pos.x - playerWidth, pos.y + yVelocity, pos.z - playerWidth)) ||
             world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z - playerWidth)) ||
             world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z + playerWidth)) ||
             world.CheckBlockSolid(new Vector3(pos.x - playerWidth, pos.y + yVelocity, pos.z + playerWidth));
-        if(false == isGrounded)
-        {
-            Debug.Log(isGrounded);
-        }
         return isGrounded ? 0 : yVelocity;
     }
+
+    private Vector3 CalculateMove(in Vector3 pos)
+    {
+        Vector3 moveVelocity = Time.fixedDeltaTime * walkSpeed * ((transform.forward * vertical) + (transform.right * horizontal));
+        Vector3[] collisionVertex = new Vector3[8]
+        {
+            pos + new Vector3(moveVelocity.x - playerWidth, moveVelocity.y + 0.2f, -playerWidth),
+            pos + new Vector3(moveVelocity.x - playerWidth, moveVelocity.y + 0.2f, +playerWidth),
+                                                                                   
+            pos + new Vector3(moveVelocity.x + playerWidth, moveVelocity.y + 0.2f, -playerWidth),
+            pos + new Vector3(moveVelocity.x + playerWidth, moveVelocity.y + 0.2f, +playerWidth),
+
+            pos + new Vector3(-playerWidth, moveVelocity.y + 0.2f, moveVelocity.z - playerWidth),
+            pos + new Vector3(+playerWidth, moveVelocity.y + 0.2f, moveVelocity.z - playerWidth),
+                              
+            pos + new Vector3(-playerWidth, moveVelocity.y + 0.2f, moveVelocity.z + playerWidth),
+            pos + new Vector3(+playerWidth, moveVelocity.y + 0.2f, moveVelocity.z + playerWidth)
+
+        };
+        if (moveVelocity.x < 0)
+        {
+            if (world.CheckBlockSolid(collisionVertex[0]) ||
+                world.CheckBlockSolid(collisionVertex[1])) 
+            {
+                moveVelocity.x = 0;
+            }
+        }
+        else if (moveVelocity.x > 0)
+        {
+            if (world.CheckBlockSolid(collisionVertex[2]) ||
+                world.CheckBlockSolid(collisionVertex[3])) 
+            {
+                moveVelocity.x = 0;
+            }
+        }
+        
+        if (moveVelocity.z < 0)
+        {
+            if (world.CheckBlockSolid(collisionVertex[4]) ||
+                world.CheckBlockSolid(collisionVertex[5]))
+            {
+                moveVelocity.z = 0;
+            }
+        }
+        else if (moveVelocity.z > 0)
+        {
+            if (world.CheckBlockSolid(collisionVertex[6]) ||
+                world.CheckBlockSolid(collisionVertex[7]))
+            {
+                moveVelocity.z = 0;
+            }
+        }
+        return moveVelocity;
+    }
+
     private Vector3 PosNormaliz(Vector3 pos)
     {
         bool xCheck = (pos.x < 0);
@@ -97,7 +174,21 @@ public class Player : MonoBehaviour
     private void MoveAndRotate()
     {
         transform.Rotate(Vector3.up * mouseX);
-        cameraTransform.Rotate(Vector3.right * -mouseY);
+        Vector3 cameroRotate = Vector3.right * -mouseY;
+        cameraTransform.Rotate(cameroRotate);
+        if (cameraTransform.eulerAngles.z >= 170.0f)
+        {
+            Vector3 asd = cameraTransform.eulerAngles;
+            if (cameraTransform.eulerAngles.x <= 90)
+            {
+                asd.x = 90;
+            }
+            else
+            {
+                asd.x = 270;
+            }
+            cameraTransform.eulerAngles = asd;
+        }
         transform.Translate(velocity, Space.World);
     }
 

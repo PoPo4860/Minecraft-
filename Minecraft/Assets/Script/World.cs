@@ -158,7 +158,7 @@ public class World : MonoBehaviour
         }
     }
 
-    public bool CheckBlockSolid(Vector3 pos)
+    public bool CheckBlockSolid(in Vector3 pos)
     {
         Chunk chunk = GetChunk(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z));
         return 0 != chunk.GetBlockID(pos);
