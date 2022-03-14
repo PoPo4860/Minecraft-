@@ -47,13 +47,13 @@ public class Chunk
     #region 메쉬데이터
     private int vertexIndex = 0;
     private List<Vector3> vertices = new List<Vector3>();
-    private int[,,] verticesIndexInfo = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private int[,,] verticesIndexSize = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
     private List<int> triangles = new List<int>();
-    private int[,,] trianglesIndexInfo = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private int[,,] trianglesIndexSize = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
     private List<Vector2> uv = new List<Vector2>();
-    private int[,,] uvIndexInfo = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private int[,,] uvIndexSize = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     #endregion
 
     #region 오브젝트 데이터
@@ -87,26 +87,17 @@ public class Chunk
         uv.Capacity = 20000;
 
         world.ChunkQueuePush(this);
-        int[,] arr = new int[4, 2]
-        {
-            { 1, 0 },
-            {-1, 0 },
-            { 0, 1 },
-            { 0,-1 }
-        };
-        for (int i = 0; i < 4; ++i)
-        {
-            Chunk chunk = world.GetChunk(new Vector2Int(coord.x + arr[i, 0], coord.z + arr[i, 1]));
-            if (chunk != null)
-            {
-                world.ChunkQueuePush(chunk);
-            }
-        }
     }
+    //private unsafe void Asd()
+    //{
+    //    int* a = null;
+    //    int* b = a;
+    //}
     public IEnumerator UpdataChunk()
     {
         chunkCoroutineIsRunning = true;
         ClearMeshData();
+
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
             if (y % 5 == 0) yield return null;
@@ -118,13 +109,16 @@ public class Chunk
                     int verticesCount = vertices.Count;
                     int trianglesCount = triangles.Count;
                     int uvCount = uv.Count;
+
                     UpdateChunkData(new Vector3Int(x, y, z));
-                    verticesIndexInfo[x, y, z] = vertices.Count - verticesCount;
-                    trianglesIndexInfo[x, y, z] = triangles.Count - trianglesCount;
-                    uvIndexInfo[x, y, z] = uv.Count - uvCount;
+
+                    verticesIndexSize[x, y, z] = vertices.Count - verticesCount;
+                    trianglesIndexSize[x, y, z] = triangles.Count - trianglesCount;
+                    uvIndexSize[x, y, z] = uv.Count - uvCount;
                 }
             }
         }
+
         CreateMesh();
         chunkCoroutineIsRunning = false;
     }

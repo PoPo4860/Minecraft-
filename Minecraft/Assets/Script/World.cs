@@ -10,7 +10,7 @@ public class World : MonoBehaviour
     private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
-    private List<Chunk> chunkUpdataList = new List<Chunk>();
+    private Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
     
     private void Start()
     {
@@ -23,8 +23,13 @@ public class World : MonoBehaviour
         UpdateChunksInViewRange();
         while (chunkUpdataList.Count != 0)
         {
-            StartCoroutine(chunkUpdataList[0].UpdataChunk());
-            chunkUpdataList.RemoveAt(0);
+            Chunk chunk = chunkUpdataList.Peek();
+            if(chunk.chunkCoroutineIsRunning == true)
+            {
+                chunkUpdataList.Dequeue();
+                break;
+            }
+            StartCoroutine(chunk.UpdataChunk());
         }
     }
 
@@ -32,7 +37,7 @@ public class World : MonoBehaviour
     {
         if (false == chunkUpdataList.Contains(chunk) && false == chunk.chunkCoroutineIsRunning)
         {
-            chunkUpdataList.Add(chunk);
+            chunkUpdataList.Enqueue(chunk);
         }   
     }
 
@@ -45,7 +50,6 @@ public class World : MonoBehaviour
                 CreateNewChunk(x, z);
             }
         }
-
     }
 
     private void CreateNewChunk(int x, int z)

@@ -10,6 +10,7 @@ public static class CodeData
     static CodeData()
     {
         ReadToBlockInfo();
+
     }
 
     public static ushort GetBlockTextureAtlases(ushort blockCode, int num)
