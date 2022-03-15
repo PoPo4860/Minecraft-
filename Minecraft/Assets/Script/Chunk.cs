@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public struct ChunkCoord
 {
     public int x;
@@ -64,7 +65,8 @@ public class Chunk
 
     /// <summary> 해당 청크가 생성중인 것인지 확인하는 bool. </summary>
     public bool chunkCoroutineIsRunning = false;
-
+    public enum ChunkState{ CoroutineStart, CoroutineUpdate, CoroutineEnd };
+    public ChunkState chunkState = ChunkState.CoroutineStart;
     public ChunkCoord coord;
     public Chunk(ChunkCoord coord, World world)
     {
@@ -81,21 +83,32 @@ public class Chunk
         ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
 
         PopulateVoxelMap();
-        //UpdataChunk();
         vertices.Capacity = 20000;
         triangles.Capacity = 30000;
         uv.Capacity = 20000;
-
-        world.ChunkQueuePush(this);
+        ChunkObject.SetActive(false);
     }
+
+
+
     //private unsafe void Asd()
     //{
     //    int* a = null;
     //    int* b = a;
     //}
-    public IEnumerator UpdataChunk()
+    static readonly int[,] asd = new int[4, 2] {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public IEnumerator CreateMeshChunk()
     {
-        chunkCoroutineIsRunning = true;
+        chunkState = ChunkState.CoroutineUpdate;
+        ChunkObject.SetActive(true);
+        for (int i = 0; i < 4; ++i)
+        {
+            if(null == world.GetChunk(new Vector2Int(coord.x + asd[i, 0], coord.z + asd[i, 1])))
+            {
+                world.CreateNewChunk(coord.x + asd[i, 0], coord.z + asd[i, 1]);
+            }
+        }
+
         ClearMeshData();
 
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
@@ -120,7 +133,7 @@ public class Chunk
         }
 
         CreateMesh();
-        chunkCoroutineIsRunning = false;
+        chunkState = ChunkState.CoroutineEnd ;
     }
     private void CreateMesh()
     {

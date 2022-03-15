@@ -21,21 +21,23 @@ public class World : MonoBehaviour
     private void Update()
     {
         UpdateChunksInViewRange();
-        while (chunkUpdataList.Count != 0)
+        if (chunkUpdataList.Count != 0)
         {
             Chunk chunk = chunkUpdataList.Peek();
-            if(chunk.chunkCoroutineIsRunning == true)
+            if(chunk.chunkState == Chunk.ChunkState.CoroutineStart)
+            {
+                StartCoroutine(chunk.CreateMeshChunk());
+            }
+            else if (chunk.chunkState == Chunk.ChunkState.CoroutineEnd)
             {
                 chunkUpdataList.Dequeue();
-                break;
             }
-            StartCoroutine(chunk.UpdataChunk());
         }
     }
 
     public void ChunkQueuePush(Chunk chunk)
     {
-        if (false == chunkUpdataList.Contains(chunk) && false == chunk.chunkCoroutineIsRunning)
+        if (false == chunkUpdataList.Contains(chunk))
         {
             chunkUpdataList.Enqueue(chunk);
         }   
@@ -47,14 +49,16 @@ public class World : MonoBehaviour
         {
             for (int z = -worldSizeInChunks; z < worldSizeInChunks; z++)
             {
-                CreateNewChunk(x, z);
+                ChunkQueuePush(CreateNewChunk(x, z));
             }
         }
     }
 
-    private void CreateNewChunk(int x, int z)
+    public Chunk CreateNewChunk(int x, int z)
     {
-        chunks.Add(new Vector2Int(x, z), new Chunk(new ChunkCoord(x, z), this));
+        Chunk chunk = new Chunk(new ChunkCoord(x, z), this);
+        chunks.Add(new Vector2Int(x, z), chunk);
+        return chunk;
     }
 
     public Chunk GetChunk(Vector2Int chunkPos)
@@ -148,11 +152,20 @@ public class World : MonoBehaviour
                     Chunk chunk = GetChunk(new Vector2Int(x, z));
                     if (chunk == null)
                     {
-                        chunks.Add(new Vector2Int(x, z), new Chunk(new ChunkCoord(x, z), this));
+                        Chunk newChunk = new Chunk(new ChunkCoord(x, z), this);
+                        ChunkQueuePush(newChunk);
+                        chunks.Add(new Vector2Int(x, z), newChunk);
                     }
                     else
                     {
-                        chunk.ChunkObject.SetActive(true);
+                        if(chunk.chunkState == Chunk.ChunkState.CoroutineStart)
+                        {
+                            ChunkQueuePush(chunk);
+                        }
+                        else
+                        {
+                            chunk.ChunkObject.SetActive(true);
+                        }
                     }
                 }
             }
