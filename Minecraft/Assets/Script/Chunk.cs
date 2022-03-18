@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-
 public struct ChunkCoord
 {
     public int x;
@@ -47,14 +45,9 @@ public class Chunk
 
     #region 메쉬데이터
     private int vertexIndex = 0;
-    private List<Vector3> vertices = new List<Vector3>();
-    private int[,,] verticesIndexSize = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-
-    private List<int> triangles = new List<int>();
-    private int[,,] trianglesIndexSize = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-
-    private List<Vector2> uv = new List<Vector2>();
-    private int[,,] uvIndexSize = new int[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private List<Vector3>[,,] vertices = new List<Vector3>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private List<int>[,,] triangles = new List<int>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private List<Vector2>[,,] uv =  new List<Vector2>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     #endregion
 
     #region 오브젝트 데이터
@@ -64,7 +57,6 @@ public class Chunk
     #endregion
 
     /// <summary> 해당 청크가 생성중인 것인지 확인하는 bool. </summary>
-    public bool chunkCoroutineIsRunning = false;
     public enum ChunkState{ CoroutineStart, CoroutineUpdate, CoroutineEnd };
     public ChunkState chunkState = ChunkState.CoroutineStart;
     public ChunkCoord coord;
@@ -76,6 +68,19 @@ public class Chunk
         meshRenderer = ChunkObject.AddComponent<MeshRenderer>();
         meshFilter = ChunkObject.AddComponent<MeshFilter>();
 
+        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; ++x)
+            {
+                for (int z = 0; z < VoxelData.ChunkWidth; ++z)
+                {
+                    vertices[x, y, z] = new List<Vector3>();
+                    triangles[x, y, z] = new List<int>();
+                    uv[x, y, z] = new List<Vector2>();
+                }
+            }
+        }
+
         meshRenderer.material = world.Atlas;
         ChunkObject.transform.SetParent(world.transform);
         ChunkObject.transform.position =
@@ -83,19 +88,9 @@ public class Chunk
         ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
 
         PopulateVoxelMap();
-        vertices.Capacity = 20000;
-        triangles.Capacity = 30000;
-        uv.Capacity = 20000;
         ChunkObject.SetActive(false);
     }
 
-
-
-    //private unsafe void Asd()
-    //{
-    //    int* a = null;
-    //    int* b = a;
-    //}
     static readonly int[,] asd = new int[4, 2] {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     public IEnumerator CreateMeshChunk()
     {
@@ -109,25 +104,18 @@ public class Chunk
             }
         }
 
-        ClearMeshData();
-
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
+#if (DEBUG_MODE)
+            if (false) yield return null;
+#else
             if (y % 5 == 0) yield return null;
-
+#endif
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    int verticesCount = vertices.Count;
-                    int trianglesCount = triangles.Count;
-                    int uvCount = uv.Count;
-
-                    UpdateChunkData(new Vector3Int(x, y, z));
-
-                    verticesIndexSize[x, y, z] = vertices.Count - verticesCount;
-                    trianglesIndexSize[x, y, z] = triangles.Count - trianglesCount;
-                    uvIndexSize[x, y, z] = uv.Count - uvCount;
+                    CreateChunkData(new Vector3Int(x, y, z));
                 }
             }
         }
@@ -137,24 +125,33 @@ public class Chunk
     }
     private void CreateMesh()
     {
-        //MesIterator asd = new MesIterator(vertices, uv, triangles, 1, 1, 1);
-
         // 메시에 데이터들 초기화
         meshFilter.mesh.Clear();
-        meshFilter.mesh.vertices = vertices.ToArray();
-        meshFilter.mesh.triangles = triangles.ToArray();
-        meshFilter.mesh.uv = uv.ToArray();
+        List<Vector3> cvertices = new List<Vector3>();
+        List<int> ctriangles = new List<int>();
+        List<Vector2> cuv = new List<Vector2>();
+        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; ++x)
+            {
+                for (int z = 0; z < VoxelData.ChunkWidth; ++z)
+                {
+                    if (0 == GetBlockID(new Vector3(x, y, z)))
+                    {
+                        continue;
+                    }
+                    cvertices.AddRange(vertices[x,y,z]);
+                    ctriangles.AddRange(triangles[x, y, z]);
+                    cuv.AddRange(uv[x, y, z]);
+                }
+            }
+        }
+        meshFilter.mesh.vertices = cvertices.ToArray();
+        meshFilter.mesh.triangles = ctriangles.ToArray();
+        meshFilter.mesh.uv = cuv.ToArray();
 
         // 변경사항 적용
         meshFilter.mesh.RecalculateNormals();
-    }
-
-    public void ClearMeshData()
-    {
-        vertexIndex = 0;
-        vertices.Clear();
-        triangles.Clear();
-        uv.Clear();
     }
 
     private void PopulateVoxelMap()
@@ -187,9 +184,9 @@ public class Chunk
             }
         }
     }
-    private void UpdateChunkData(Vector3Int pos)
+    private void CreateChunkData(Vector3Int voxelPos)
     {
-        if (GetBlockID(pos) == 0)
+        if (GetBlockID(voxelPos) == 0)
         {
             return;
         }
@@ -200,22 +197,22 @@ public class Chunk
             // Face Check(면이 바라보는 방향으로 +1 이동하여 확인)를 했을 때 
             // Solid가 아닌 경우에만 큐브의 면이 그려지도록 하기
             // => 청크의 외곽 부분만 면이 그려지고, 내부에는 면이 그려지지 않도록
-            if (false == CheckProximityVoxel(pos + VoxelData.faceChecks[face]))
+            if (false == CheckProximityVoxel(voxelPos + VoxelData.faceChecks[face]))
             {
                 // 1. Vertex, UV 4개 추가
                 for (int i = 0; i < 4; ++i)
                 {
-                    vertices.Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + pos);
+                    vertices[voxelPos.x, voxelPos.y, voxelPos.z].Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + voxelPos);
                 }
 
-                ushort blockID = GetBlockID(pos);
+                ushort blockID = GetBlockID(voxelPos);
                 int atlasesCode = CodeData.GetBlockTextureAtlases(blockID, face);
-                AddTextureUV(atlasesCode);
+                AddTextureUV(atlasesCode, voxelPos);
                 // 2. Triangle의 버텍스 인덱스 6개 추가
                 int[] arr = new int[] { 0, 1, 2, 2, 1, 3 };
                 foreach (int i in arr)
                 {
-                    triangles.Add(vertexIndex + i);
+                    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
                 }
                 vertexIndex += 4;
             }
@@ -265,7 +262,7 @@ public class Chunk
         }
         return (ushort)blockCode; ;
     }
-    private void AddTextureUV(int textureID)
+    private void AddTextureUV(int textureID, Vector3Int voxelPos)
     {
         // 아틀라스 내의 텍스쳐 가로, 세로 개수
         (int w, int h) = (VoxelData.TextureAtlasWidth, VoxelData.TextureAtlasHeight);
@@ -273,12 +270,6 @@ public class Chunk
         int x = textureID % w;
         int y = h - (textureID / w) - 1;
 
-        AddTextureUV(x, y);
-    }
-
-    /// <summary> 텍스쳐 아틀라스 내에서 (x, y) 위치의 텍스쳐 UV를 uvs 리스트에 추가 </summary>
-    private void AddTextureUV(int x, int y)
-    {
         float nw = VoxelData.NormalizedTextureAtlasWidth;
         float nh = VoxelData.NormalizedTextureAtlasHeight;
 
@@ -286,11 +277,14 @@ public class Chunk
         float uvY = y * nh;
 
         // 해당 텍스쳐의 uv를 LB-LT-RB-RT 순서로 추가
-        uv.Add(new Vector2(uvX, uvY));
-        uv.Add(new Vector2(uvX, uvY + nh));
-        uv.Add(new Vector2(uvX + nw, uvY));
-        uv.Add(new Vector2(uvX + nw, uvY + nh));
+        uv[voxelPos.x, voxelPos.y, voxelPos.z].Add(new Vector2(uvX, uvY));
+        uv[voxelPos.x, voxelPos.y, voxelPos.z].Add(new Vector2(uvX, uvY + nh));
+        uv[voxelPos.x, voxelPos.y, voxelPos.z].Add(new Vector2(uvX + nw, uvY));
+        uv[voxelPos.x, voxelPos.y, voxelPos.z].Add(new Vector2(uvX + nw, uvY + nh));
     }
+
+    /// <summary> 텍스쳐 아틀라스 내에서 (x, y) 위치의 텍스쳐 UV를 uvs 리스트에 추가 </summary>
+
     public ushort GetBlockID(in Vector3 pos)
     {
         if (pos.x <= -1)
