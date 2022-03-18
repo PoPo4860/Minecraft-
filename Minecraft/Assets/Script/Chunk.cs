@@ -104,17 +104,18 @@ public class Chunk
             }
         }
 
-        //ClearMeshData();
-
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
+#if (DEBUG_MODE)
+            if (false) yield return null;
+#else
             if (y % 5 == 0) yield return null;
-
+#endif
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    UpdateChunkData(new Vector3Int(x, y, z));
+                    CreateChunkData(new Vector3Int(x, y, z));
                 }
             }
         }
@@ -126,7 +127,6 @@ public class Chunk
     {
         // 메시에 데이터들 초기화
         meshFilter.mesh.Clear();
-
         List<Vector3> cvertices = new List<Vector3>();
         List<int> ctriangles = new List<int>();
         List<Vector2> cuv = new List<Vector2>();
@@ -140,9 +140,9 @@ public class Chunk
                     {
                         continue;
                     }
-                    cvertices.AddRange(vertices[x,y,z].ToArray());
-                    ctriangles.AddRange(triangles[x, y, z].ToArray());
-                    cuv.AddRange(uv[x, y, z].ToArray());
+                    cvertices.AddRange(vertices[x,y,z]);
+                    ctriangles.AddRange(triangles[x, y, z]);
+                    cuv.AddRange(uv[x, y, z]);
                 }
             }
         }
@@ -152,23 +152,6 @@ public class Chunk
 
         // 변경사항 적용
         meshFilter.mesh.RecalculateNormals();
-    }
-
-    public void ClearMeshData()
-    {
-        vertexIndex = 0;
-        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
-        {
-            for (int x = 0; x < VoxelData.ChunkWidth; ++x)
-            {
-                for (int z = 0; z < VoxelData.ChunkWidth; ++z)
-                {
-                    vertices[x, y, z].Clear();
-                    triangles[x, y, z].Clear();
-                    uv[x, y, z].Clear();
-                }
-            }
-        }
     }
 
     private void PopulateVoxelMap()
@@ -201,7 +184,7 @@ public class Chunk
             }
         }
     }
-    private void UpdateChunkData(Vector3Int voxelPos)
+    private void CreateChunkData(Vector3Int voxelPos)
     {
         if (GetBlockID(voxelPos) == 0)
         {
