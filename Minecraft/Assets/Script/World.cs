@@ -26,7 +26,7 @@ public class World : MonoBehaviour
             Chunk chunk = chunkUpdataList.Peek();
             if(chunk.chunkState == Chunk.ChunkState.CoroutineStart)
             {
-                StartCoroutine(chunk.CreateMeshChunk());
+                StartCoroutine(chunk.CreateChunkMesh());
             }
             else if (chunk.chunkState == Chunk.ChunkState.CoroutineEnd)
             {
