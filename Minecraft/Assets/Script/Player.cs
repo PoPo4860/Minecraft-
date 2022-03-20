@@ -31,6 +31,10 @@ public class Player : MonoBehaviour
     //private bool isRunning = false;
     //private bool jumpRequested = false;
 
+    public Transform highlightBlock;
+    private Vector3 placeBlock = new Vector3();
+    public float checkIncrement = 0.1f;
+    public float reach = 8.0f;
 
     void Start()
     {
@@ -42,6 +46,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         GetPlayerInputs();
+        PlaceCursorBlocks();
     }
     void SetCursor()
     {
@@ -54,7 +59,6 @@ public class Player : MonoBehaviour
         CalculateVelocity();
         MoveAndRotate();
     }
-
     private void GetPlayerInputs()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
@@ -75,7 +79,6 @@ public class Player : MonoBehaviour
             world.GetPlayerChunk().ModifyChunkData(Utile.Vector3ToVector3Int(playerPos), 2);
         }
     }
-
     private void CalculateVelocity()
     {
         Vector3 playerPos = Utile.PosNormaliz(transform.position);
@@ -83,7 +86,6 @@ public class Player : MonoBehaviour
         velocity = CalculateMove(playerPos);
         velocity += CalculateGravity(playerPos) * Vector3.up; // 중력 적용
     }
-
     private float CalculateGravity(Vector3 pos)
     {
         if(gravity > maxGravity)
@@ -103,7 +105,6 @@ public class Player : MonoBehaviour
             world.CheckBlockSolid(new Vector3(pos.x - playerWidth, pos.y + yVelocity, pos.z + playerWidth));
         return isGrounded ? 0 : yVelocity;
     }
-
     private Vector3 CalculateMove(in Vector3 pos)
     {
         Vector3 moveVelocity = Time.fixedDeltaTime * walkSpeed * ((transform.forward * vertical) + (transform.right * horizontal));
@@ -157,8 +158,6 @@ public class Player : MonoBehaviour
         }
         return moveVelocity;
     }
-
-
     private void MoveAndRotate()
     {
         transform.Rotate(Vector3.up * mouseX);
@@ -180,4 +179,25 @@ public class Player : MonoBehaviour
         transform.Translate(velocity, Space.World);
     }
 
+    private void PlaceCursorBlocks()
+    {
+        float step = checkIncrement;
+        Vector3 lastPos = new Vector3();
+        while(step < reach)
+        {
+            Vector3 pos = cameraTransform.position + (cameraTransform.forward * step);
+           
+            if(world.CheckBlockSolid(Utile.PosNormaliz(pos)))
+            {
+                highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+                placeBlock = lastPos;
+                highlightBlock.gameObject.SetActive(true);
+                return;
+            }
+            lastPos = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
+            step += checkIncrement;
+        }
+        highlightBlock.gameObject.SetActive(false);
+
+    }
 }
