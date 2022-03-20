@@ -90,7 +90,7 @@ public class Chunk
         ChunkObject.SetActive(true);
         for (int i = 0; i < 4; ++i)
         {
-            if (null == world.GetChunk(VectorCoord(i)))
+            if (null == world.GetChunkFromCoord(VectorCoord(i)))
             {
                 world.CreateNewChunk(VectorCoord(i));
             }
@@ -273,7 +273,7 @@ public class Chunk
     }
     private Chunk CheckProximityChunk(Vector2Int chunkPos)
     {
-        Chunk chunk = world.GetChunk(chunkPos);
+        Chunk chunk = world.GetChunkFromCoord(chunkPos);
         if (chunk == null)
         {
             return null;
@@ -318,7 +318,7 @@ public class Chunk
             }
         }
 
-        if (voxelMap[voxelPos.x, voxelPos.y, voxelPos.z] == 0)
+        if (blockCode != 0)
         {
             voxelMap[voxelPos.x, voxelPos.y, voxelPos.z] = blockCode;
         }

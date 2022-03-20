@@ -65,6 +65,8 @@ public class Player : MonoBehaviour
         vertical = Input.GetAxisRaw("Vertical");
         mouseX = Input.GetAxis("Mouse X") * 10;
         mouseY = Input.GetAxis("Mouse Y") * 10;
+
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Input.GetKeyDown(KeyCode.Space) && isGrounded == true)
         {
             gravity = -maxGravity;
@@ -73,10 +75,15 @@ public class Player : MonoBehaviour
         {
             SetCursor();
         }
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetMouseButtonDown(0))
         {
-            
-            world.GetPlayerChunk().ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(transform.position).VexelPos), 2);
+            world.GetChunkFromPos(highlightBlock.position).
+                ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(highlightBlock.position).VexelPos), 0);
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            world.GetChunkFromPos(placeBlock).
+                ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(placeBlock).VexelPos), 2);
         }
     }
     private void CalculateVelocity()

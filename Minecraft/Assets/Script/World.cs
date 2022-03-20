@@ -61,14 +61,15 @@ public class World : MonoBehaviour
         chunks.Add(chunkPos, chunk);
         return chunk;
     }
-    public Chunk GetChunk(Vector2Int chunkPos)
+    public Chunk GetChunkFromCoord(Vector2Int chunkPos)
     {
         chunks.TryGetValue(chunkPos, out Chunk getChunk);
         return getChunk;
     }
-    public Chunk GetPlayerChunk()
+    public Chunk GetChunkFromPos (Vector3 pos)
     {
-        chunks.TryGetValue(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z), out Chunk getChunk);
+        Utile.VoxelPosAndChunkCoord result = Utile.PosNormalization(pos);
+        chunks.TryGetValue(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z), out Chunk getChunk);
         return getChunk;
     }
     private ChunkCoord GetChunkCoordFromWorldPos(in Vector3 worldPos)
@@ -146,13 +147,13 @@ public class World : MonoBehaviour
                 {
                     int x = (int)currentViewChinkCoord[i, 0];
                     int z = (int)currentViewChinkCoord[i, 1];
-                    GetChunk(new Vector2Int(x, z)).ChunkObject.SetActive(false);
+                    GetChunkFromCoord(new Vector2Int(x, z)).ChunkObject.SetActive(false);
                 }
                 if (newViewChinkCoord[i, 0] != null)
                 {
                     int x = (int)newViewChinkCoord[i, 0];
                     int z = (int)newViewChinkCoord[i, 1];
-                    Chunk chunk = GetChunk(new Vector2Int(x, z));
+                    Chunk chunk = GetChunkFromCoord(new Vector2Int(x, z));
                     if (chunk == null)
                     {
                         Chunk newChunk = new Chunk(new ChunkCoord(x, z), this);
@@ -181,6 +182,6 @@ public class World : MonoBehaviour
     {
         Utile.VoxelPosAndChunkCoord result =  Utile.PosNormalization(pos);
 
-        return 0 != GetChunk(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetBlockID(result.VexelPos);
+        return 0 != GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetBlockID(result.VexelPos);
     }
 }

@@ -11,7 +11,7 @@ static class Utile
         public Vector3 VexelPos;
         public ChunkCoord chunkCoord;
         public VoxelPosAndChunkCoord(Vector3 newVexelPos, ChunkCoord newChunkCoord)
-        {
+         {
             VexelPos = newVexelPos;
             chunkCoord = newChunkCoord;
         }
@@ -36,12 +36,12 @@ static class Utile
         pos.x % VoxelData.ChunkWidth,
         pos.y % VoxelData.ChunkHeight,
         pos.z % VoxelData.ChunkWidth);
-        if (pos.x < 0) VoxelPos.x += (VoxelData.ChunkWidth);
-        if (pos.z < 0) VoxelPos.z += (VoxelData.ChunkWidth);
+        if (pos.x < 0 && VoxelPos.x != 0) VoxelPos.x += (VoxelData.ChunkWidth);
+        if (pos.z < 0 && VoxelPos.z != 0) VoxelPos.z += (VoxelData.ChunkWidth);
 
         ChunkCoord chunkCoord = new ChunkCoord((int)pos.x / VoxelData.ChunkWidth, (int)pos.z / VoxelData.ChunkWidth);
-        if (pos.x < 0) chunkCoord.x -= 1;
-        if (pos.z < 0) chunkCoord.z -= 1;
+        if (pos.x < 0 && VoxelPos.x != 0) chunkCoord.x -= 1;
+        if (pos.z < 0 && VoxelPos.z != 0) chunkCoord.z -= 1;
         return new VoxelPosAndChunkCoord(VoxelPos, chunkCoord);
     }
 
