@@ -19,10 +19,7 @@ public class Player : MonoBehaviour
     private float vertical;
     private float mouseX;
     private float mouseY;
-    private float deltaTime;
-
     private Vector3 velocity;
-
     #endregion
 
     readonly private float  playerWidth = 0.3f;
@@ -44,9 +41,7 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        deltaTime = Time.deltaTime;
         GetPlayerInputs();
-
     }
     void SetCursor()
     {
@@ -74,11 +69,16 @@ public class Player : MonoBehaviour
         {
             SetCursor();
         }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Vector3 playerPos = Utile.PosNormaliz(transform.position);
+            world.GetPlayerChunk().ModifyChunkData(Utile.Vector3ToVector3Int(playerPos), 2);
+        }
     }
 
     private void CalculateVelocity()
     {
-        Vector3 playerPos = PosNormaliz(transform.position);
+        Vector3 playerPos = Utile.PosNormaliz(transform.position);
 
         velocity = CalculateMove(playerPos);
         velocity += CalculateGravity(playerPos) * Vector3.up; // 중력 적용
@@ -158,17 +158,7 @@ public class Player : MonoBehaviour
         return moveVelocity;
     }
 
-    private Vector3 PosNormaliz(Vector3 pos)
-    {
-        bool xCheck = (pos.x < 0);
-        bool zCheck = (pos.z < 0);
-        pos.x %= VoxelData.ChunkWidth;
-        pos.y %= VoxelData.ChunkHeight;
-        pos.z %= VoxelData.ChunkWidth;
-        if (xCheck) pos.x += (VoxelData.ChunkWidth);
-        if (zCheck) pos.z += (VoxelData.ChunkWidth);
-        return pos;
-    }
+
     private void MoveAndRotate()
     {
         transform.Rotate(Vector3.up * mouseX);

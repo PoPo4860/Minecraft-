@@ -1,22 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 public class Chunk
 {
     private ushort[,,] voxelMap =
         new ushort[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     public World world;
 
+
     #region 헬퍼
-    private readonly int[,] cerateChunkPos = new int[4, 2] {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    private readonly int[,] cerateChunkPos = new int[4, 2] { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
     private int[] vertexData = new int[] { 0, 1, 2, 2, 1, 3 };
+
+    int[,] numbers = { { -1, 0 }, { +1, 0 }, { 0, -1 }, { 0, +1 } };
+    private Vector2Int VectorCoord(int num) => new Vector2Int(coord.x + numbers[num,0], coord.z + numbers[num,1]);
+    private Vector3Int vectorCoordd(Vector3Int voxelFacePos) => new Vector3Int(VoxelData.ChunkWidth - 1, voxelFacePos.y, voxelFacePos.z);
+
     #endregion
 
     #region 메쉬데이터
     private int vertexIndex = 0;
     private List<Vector3>[,,] vertices = new List<Vector3>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     private List<int>[,,] triangles = new List<int>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    private List<Vector2>[,,] uv =  new List<Vector2>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private List<Vector2>[,,] uv = new List<Vector2>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
     List<Vector3> meshVertices = new List<Vector3>();
     List<int> meshTriangles = new List<int>();
     List<Vector2> meshUv = new List<Vector2>();
@@ -29,10 +36,11 @@ public class Chunk
     #endregion
 
     #region 청크 데이터
-    public enum ChunkState{ CoroutineStart, CoroutineUpdate, CoroutineEnd };
+    public enum ChunkState { CoroutineStart, CoroutineUpdate, CoroutineEnd };
     public ChunkState chunkState = ChunkState.CoroutineStart;
     public ChunkCoord coord;
     #endregion
+
     public Chunk(ChunkCoord coord, World world)
     {
         this.coord = coord;
@@ -69,9 +77,9 @@ public class Chunk
         ChunkObject.SetActive(true);
         for (int i = 0; i < 4; ++i)
         {
-            if(null == world.GetChunk(new Vector2Int(coord.x + cerateChunkPos[i, 0], coord.z + cerateChunkPos[i, 1])))
+            if (null == world.GetChunk(VectorCoord(i)))
             {
-                world.CreateNewChunk(coord.x + cerateChunkPos[i, 0], coord.z + cerateChunkPos[i, 1]);
+                world.CreateNewChunk(VectorCoord(i));
             }
         }
 
@@ -92,7 +100,7 @@ public class Chunk
         }
 
         ApplyMeshData();
-        chunkState = ChunkState.CoroutineEnd ;
+        chunkState = ChunkState.CoroutineEnd;
     }
     private void ApplyMeshData()
     {
@@ -101,6 +109,35 @@ public class Chunk
         meshVertices.Clear();
         meshTriangles.Clear();
         meshUv.Clear();
+        vertexIndex = 0;
+        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
+        {
+            for (int x = 0; x < VoxelData.ChunkWidth; ++x)
+            {
+                for (int z = 0; z < VoxelData.ChunkWidth; ++z)
+                {
+                    Vector3Int voxelPos = new Vector3Int(x, y, z);
+                    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
+                    if (0 == GetBlockID(voxelPos))
+                    {
+                        continue;
+                    }
+                    // p : -Z, +Z, +Y, -Y, -X, +X 순서로 이루어진, 큐브의 각 면에 대한 인덱스
+                    for (int face = 0; face < 6; ++face)
+                    {
+                        if (0 == GetBlockID(voxelPos + VoxelData.faceChecks[face]))
+                        {
+                            foreach (int i in vertexData)
+                            {
+                                triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
+                            }
+                            vertexIndex += 4;
+                        }
+                    }
+                }
+            }
+        }
+
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
@@ -111,7 +148,7 @@ public class Chunk
                     {
                         continue;
                     }
-                    meshVertices.AddRange(vertices[x,y,z]);
+                    meshVertices.AddRange(vertices[x, y, z]);
                     meshTriangles.AddRange(triangles[x, y, z]);
                     meshUv.AddRange(uv[x, y, z]);
                 }
@@ -174,11 +211,11 @@ public class Chunk
                 ushort blockID = GetBlockID(voxelPos);
                 int atlasesCode = CodeData.GetBlockTextureAtlases(blockID, face);
                 AddTextureUV(atlasesCode, voxelPos);
-                foreach (int i in vertexData)
-                {
-                    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
-                }
-                vertexIndex += 4;
+                //foreach (int i in vertexData)
+                //{
+                //    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
+                //}
+                //vertexIndex += 4;
             }
         }
     }
@@ -206,27 +243,23 @@ public class Chunk
     {
         if (pos.x <= -1)
         {
-            return CheckProximityChunk(
-                new Vector3Int(VoxelData.ChunkWidth - 1, (int)pos.y, (int)pos.z),
-                new Vector2Int(coord.x - 1, coord.z));
+            return CheckProximityChunk(VectorCoord(0)).
+               GetBlockID(new Vector3Int(VoxelData.ChunkWidth - 1, (int)pos.y, (int)pos.z));
         }
         else if (pos.x >= VoxelData.ChunkWidth)
         {
-            return CheckProximityChunk(
-                new Vector3Int(0, (int)pos.y, (int)pos.z),
-                new Vector2Int(coord.x + 1, coord.z));
+            return CheckProximityChunk(VectorCoord(1)).
+               GetBlockID(new Vector3Int(0, (int)pos.y, (int)pos.z));
         }
         else if (pos.z <= -1)
         {
-            return CheckProximityChunk(
-                new Vector3Int((int)pos.x, (int)pos.y, VoxelData.ChunkWidth - 1),
-                new Vector2Int(coord.x, coord.z - 1));
+            return CheckProximityChunk(VectorCoord(2)).
+               GetBlockID(new Vector3Int((int)pos.x, (int)pos.y, VoxelData.ChunkWidth - 1));
         }
         else if (pos.z >= VoxelData.ChunkWidth)
         {
-            return CheckProximityChunk(
-               new Vector3Int((int)pos.x, (int)pos.y, 0),
-               new Vector2Int(coord.x, coord.z + 1));
+            return CheckProximityChunk(VectorCoord(3)).
+               GetBlockID(new Vector3Int((int)pos.x, (int)pos.y, 0));
         };
         if (pos.y <= -1 || pos.y >= VoxelData.ChunkHeight)
         {
@@ -234,14 +267,116 @@ public class Chunk
         }
         return voxelMap[(int)pos.x, (int)pos.y, (int)pos.z];
     }
-    private ushort CheckProximityChunk(Vector3Int blockPos, Vector2Int chunkPos)
+    private Chunk CheckProximityChunk(Vector2Int chunkPos)
     {
         Chunk chunk = world.GetChunk(chunkPos);
-        ushort? blockCode = chunk?.GetBlockID(blockPos);
-        if (blockCode == null)
+        if (chunk == null)
         {
-            return 0;
+            return null;
         }
-        return (ushort)blockCode; ;
+        return chunk;
+    }
+    private void ClearBolckData(in Vector3Int voxelPos)
+    {
+        if (0 == GetBlockID(voxelPos))
+        {
+            return;
+        }
+        vertices[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
+        triangles[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
+        uv[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
+    }
+
+    public void ModifyChunkData(in Vector3Int voxelPos, ushort blockCode)
+    {
+        for (int face = 0; face < 6; ++face)
+        {
+            Vector3Int voxelFacePos = voxelPos + VoxelData.faceChecks[face];
+            if (voxelFacePos.x <= -1)
+            {
+                CheckProximityChunk(new Vector2Int(coord.x - 1, coord.z)).
+                   ClearBolckData(new Vector3Int(VoxelData.ChunkWidth - 1, voxelFacePos.y, voxelFacePos.z));
+            }
+            else if (voxelFacePos.x >= VoxelData.ChunkWidth)
+            {
+                CheckProximityChunk(new Vector2Int(coord.x + 1, coord.z)).
+                   ClearBolckData(new Vector3Int(0, voxelFacePos.y, voxelFacePos.z));
+            }
+            else if (voxelFacePos.z <= -1)
+            {
+                CheckProximityChunk(new Vector2Int(coord.x, coord.z - 1)).
+                   ClearBolckData(new Vector3Int(voxelFacePos.x, voxelFacePos.y, VoxelData.ChunkWidth - 1));
+            }
+            else if (voxelFacePos.z >= VoxelData.ChunkWidth)
+            {
+                CheckProximityChunk(new Vector2Int(coord.x, coord.z + 1)).
+                   ClearBolckData(new Vector3Int(voxelFacePos.x, voxelFacePos.y, 0));
+            }
+            else if (voxelFacePos.y <= -1 || voxelFacePos.y >= VoxelData.ChunkHeight) { }
+            else
+            {
+                ClearBolckData(voxelFacePos);
+            }
+        }
+
+        if (voxelMap[voxelPos.x, voxelPos.y, voxelPos.z] == 0)
+        {
+            voxelMap[voxelPos.x, voxelPos.y, voxelPos.z] = blockCode;
+        }
+        else
+        {
+            ClearBolckData(voxelPos);
+            voxelMap[voxelPos.x, voxelPos.y, voxelPos.z] = 0;
+        }
+
+        CreateMeshkData(voxelPos);
+        for (int face = 0; face < 6; ++face)
+        {
+            Vector3Int voxelFacePos = voxelPos + VoxelData.faceChecks[face];
+            if (voxelFacePos.x <= -1)
+            {
+                CheckProximityChunk(VectorCoord(0)).
+                   CreateMeshkData(new Vector3Int(VoxelData.ChunkWidth - 1, voxelFacePos.y, voxelFacePos.z));
+            }
+            else if (voxelFacePos.x >= VoxelData.ChunkWidth)
+            {
+                CheckProximityChunk(VectorCoord(1)).
+                   CreateMeshkData(new Vector3Int(0, voxelFacePos.y, voxelFacePos.z));
+            }
+            else if (voxelFacePos.z <= -1)
+            {
+                CheckProximityChunk(VectorCoord(2)).
+                   CreateMeshkData(new Vector3Int(voxelFacePos.x, voxelFacePos.y, VoxelData.ChunkWidth - 1));
+            }
+            else if (voxelFacePos.z >= VoxelData.ChunkWidth)
+            {
+                CheckProximityChunk(VectorCoord(3)).
+                   CreateMeshkData(new Vector3Int(voxelFacePos.x, voxelFacePos.y, 0));
+            }
+            else if (voxelFacePos.y <= -1 || voxelFacePos.y >= VoxelData.ChunkHeight) { }
+            else
+            {
+                CreateMeshkData(voxelFacePos);
+            }
+        }
+
+        ApplyMeshData();
+
+        if (voxelPos.x == 0)
+        {
+            CheckProximityChunk(VectorCoord(0)).ApplyMeshData();
+        }
+        else if (voxelPos.x == 15)
+        {
+            CheckProximityChunk(VectorCoord(1)).ApplyMeshData();
+        }
+        if (voxelPos.z == 0)
+        {
+            CheckProximityChunk(VectorCoord(2)).ApplyMeshData();
+        }
+        else if (voxelPos.z == 15)
+        {
+            CheckProximityChunk(VectorCoord(3)).ApplyMeshData();
+        }
     }
 }

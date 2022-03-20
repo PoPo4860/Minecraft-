@@ -16,4 +16,19 @@ static class Utile
         Debug.Log(calculationTime.ElapsedMilliseconds.ToString() + "ms");
         calculationTime.Reset();
     }
+    static public Vector3 PosNormaliz(Vector3 pos)
+    {
+        bool xCheck = (pos.x < 0);
+        bool zCheck = (pos.z < 0);
+        pos.x %= VoxelData.ChunkWidth;
+        pos.y %= VoxelData.ChunkHeight;
+        pos.z %= VoxelData.ChunkWidth;
+        if (xCheck) pos.x += (VoxelData.ChunkWidth);
+        if (zCheck) pos.z += (VoxelData.ChunkWidth);
+        return pos;
+    }
+    static public Vector3Int Vector3ToVector3Int(Vector3 pos)
+    {
+        return new Vector3Int((int)pos.x, (int)pos.y, (int)pos.z);
+    }
 }

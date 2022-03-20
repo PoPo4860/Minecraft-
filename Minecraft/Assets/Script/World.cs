@@ -54,16 +54,26 @@ public class World : MonoBehaviour
         }
     }
 
-    public Chunk CreateNewChunk(int x, int z)
+    public Chunk CreateNewChunk(in int x, in int z)
     {
         Chunk chunk = new Chunk(new ChunkCoord(x, z), this);
         chunks.Add(new Vector2Int(x, z), chunk);
         return chunk;
     }
-
+    public Chunk CreateNewChunk(in Vector2Int chunkPos)
+    {
+        Chunk chunk = new Chunk(new ChunkCoord(chunkPos.x, chunkPos.y), this);
+        chunks.Add(chunkPos, chunk);
+        return chunk;
+    }
     public Chunk GetChunk(Vector2Int chunkPos)
     {
         chunks.TryGetValue(chunkPos, out Chunk getChunk);
+        return getChunk;
+    }
+    public Chunk GetPlayerChunk()
+    {
+        chunks.TryGetValue(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z), out Chunk getChunk);
         return getChunk;
     }
 
@@ -177,7 +187,6 @@ public class World : MonoBehaviour
 
     public bool CheckBlockSolid(in Vector3 pos)
     {
-        Chunk chunk = GetChunk(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z));
-        return 0 != chunk.GetBlockID(pos);
+        return 0 != GetChunk(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z)).GetBlockID(pos);
     }
 }
