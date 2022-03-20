@@ -75,16 +75,14 @@ public class Player : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Vector3 playerPos = Utile.PosNormaliz(transform.position);
-            world.GetPlayerChunk().ModifyChunkData(Utile.Vector3ToVector3Int(playerPos), 2);
+            
+            world.GetPlayerChunk().ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(transform.position).VexelPos), 2);
         }
     }
     private void CalculateVelocity()
     {
-        Vector3 playerPos = Utile.PosNormaliz(transform.position);
-
-        velocity = CalculateMove(playerPos);
-        velocity += CalculateGravity(playerPos) * Vector3.up; // 중력 적용
+        velocity = CalculateMove(transform.position);
+        velocity += CalculateGravity(transform.position) * Vector3.up; // 중력 적용
     }
     private float CalculateGravity(Vector3 pos)
     {
@@ -186,8 +184,8 @@ public class Player : MonoBehaviour
         while(step < reach)
         {
             Vector3 pos = cameraTransform.position + (cameraTransform.forward * step);
-           
-            if(world.CheckBlockSolid(Utile.PosNormaliz(pos)))
+            // 원인 : 위치 정규화 때문에 다른 청크의 블럭을 참조하지 못한다.
+            if(world.CheckBlockSolid(pos))
             {
                 highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
                 placeBlock = lastPos;

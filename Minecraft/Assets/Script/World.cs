@@ -11,13 +11,11 @@ public class World : MonoBehaviour
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
     private Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
-    
     private void Start()
     {
         seed = Random.Range(0, 10000);
         GenerateWorld();
     }
-    
     private void Update()
     {
         UpdateChunksInViewRange();
@@ -34,7 +32,6 @@ public class World : MonoBehaviour
             }
         }
     }
-
     public void ChunkQueuePush(Chunk chunk)
     {
         if (false == chunkUpdataList.Contains(chunk))
@@ -42,7 +39,6 @@ public class World : MonoBehaviour
             chunkUpdataList.Enqueue(chunk);
         }   
     }
-
     private void GenerateWorld()
     {
         for (int x = -worldSizeInChunks; x < worldSizeInChunks; x++)
@@ -53,7 +49,6 @@ public class World : MonoBehaviour
             }
         }
     }
-
     public Chunk CreateNewChunk(in int x, in int z)
     {
         Chunk chunk = new Chunk(new ChunkCoord(x, z), this);
@@ -76,7 +71,6 @@ public class World : MonoBehaviour
         chunks.TryGetValue(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z), out Chunk getChunk);
         return getChunk;
     }
-
     private ChunkCoord GetChunkCoordFromWorldPos(in Vector3 worldPos)
     {
         int x = (int)(worldPos.x / VoxelData.ChunkWidth);
@@ -86,7 +80,6 @@ public class World : MonoBehaviour
         if (worldPos.z < 0) --z;
         return new ChunkCoord(x, z);
     }
-
     private void UpdateChunksInViewRange()
     {
         ChunkCoord newPlayerChunkcoord = GetChunkCoordFromWorldPos(PlayerObject.transform.position);
@@ -184,9 +177,10 @@ public class World : MonoBehaviour
             playerCurrentChounkCoord = newPlayerChunkcoord;
         }
     }
-
     public bool CheckBlockSolid(in Vector3 pos)
     {
-        return 0 != GetChunk(new Vector2Int(playerCurrentChounkCoord.x, playerCurrentChounkCoord.z)).GetBlockID(pos);
+        Utile.VoxelPosAndChunkCoord result =  Utile.PosNormalization(pos);
+
+        return 0 != GetChunk(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetBlockID(result.VexelPos);
     }
 }
