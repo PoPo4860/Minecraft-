@@ -61,19 +61,31 @@ public class Player : MonoBehaviour
         mouseX = Input.GetAxis("Mouse X") * 5;
         mouseY = Input.GetAxis("Mouse Y") * 5;
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (Input.GetKeyDown(KeyCode.Space))
-            playerRigi.Jump();
+        if (Input.GetKey(KeyCode.Space))
+            playerRigi.InputJump();
 
         if (Input.GetKeyDown(KeyCode.Escape))
             SetCursor();
 
-        if(Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R)) 
             walkSpeed = 10;
 
-        if (Input.GetKeyUp(KeyCode.R))
+        if (Input.GetKeyUp(KeyCode.R)) 
             walkSpeed = 6;
 
-        if(true == highlightBlock.gameObject.activeSelf)
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            playerRigi.InputShift(true);
+            walkSpeed = 3;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            playerRigi.InputShift(false);
+            walkSpeed = 6;
+        }
+
+        if (true == highlightBlock.gameObject.activeSelf)
         {
             if (Input.GetMouseButtonDown(0))
             {
