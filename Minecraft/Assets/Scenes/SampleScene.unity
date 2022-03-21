@@ -639,6 +639,7 @@ GameObject:
   m_Component:
   - component: {fileID: 827087653}
   - component: {fileID: 827087654}
+  - component: {fileID: 827087655}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -678,6 +679,21 @@ MonoBehaviour:
   gravity: -9.8
   maxGravity: -9.8
   highlightBlock: {fileID: 151982176}
+  playerRigi: {fileID: 0}
+--- !u!114 &827087655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 827087652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67caac02cdbed0742ba14d01ce04f761, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 0}
+  world: {fileID: 711807304}
 --- !u!1 &1358716206
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,7 +785,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1397391617}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.8, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 827087653}
@@ -798,7 +814,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
+  near clip plane: 0.01
   far clip plane: 1000
   field of view: 60
   orthographic: 0
