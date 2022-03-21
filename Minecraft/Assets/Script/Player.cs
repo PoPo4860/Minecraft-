@@ -22,7 +22,10 @@ public class Player : MonoBehaviour
     private Vector3 velocity;
     #endregion
 
-    readonly private float  playerWidth = 0.3f;
+
+    readonly private float playerWidth = 0.3f;
+    readonly private float playerHeight = 1.5f;
+    //readonly private float  playerWidthOffSet = 0.3f;
     //private float boundsTolerance = 0.3f;
     //private float vericalMomentum = 0f;
 
@@ -31,10 +34,10 @@ public class Player : MonoBehaviour
     //private bool isRunning = false;
     //private bool jumpRequested = false;
 
-    public Transform highlightBlock;
+    [SerializeField] private Transform highlightBlock;
     private Vector3 placeBlock = new Vector3();
-    public float checkIncrement = 0.1f;
-    public float reach = 8.0f;
+    private float checkIncrement = 0.1f;
+    private float reach = 8.0f;
 
     void Start()
     {
@@ -75,15 +78,18 @@ public class Player : MonoBehaviour
         {
             SetCursor();
         }
-        if (Input.GetMouseButtonDown(0))
+        if(true == highlightBlock.gameObject.activeSelf)
         {
-            world.GetChunkFromPos(highlightBlock.position).
-                ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(highlightBlock.position).VexelPos), 0);
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            world.GetChunkFromPos(placeBlock).
-                ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(placeBlock).VexelPos), 2);
+            if (Input.GetMouseButtonDown(0))
+            {
+                world.GetChunkFromPos(highlightBlock.position).
+                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(highlightBlock.position).VexelPos), 0);
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                world.GetChunkFromPos(placeBlock).
+                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(placeBlock).VexelPos), 2);
+            }
         }
     }
     private void CalculateVelocity()
@@ -105,33 +111,43 @@ public class Player : MonoBehaviour
         // 0.2 0.8
         isGrounded =
             world.CheckBlockSolid(new Vector3(pos.x - playerWidth, pos.y + yVelocity, pos.z - playerWidth)) ||
+            world.CheckBlockSolid(new Vector3(pos.x - playerWidth, pos.y + yVelocity, pos.z  +playerWidth)) ||
+                                                                                                         
+            world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z  -playerWidth)) ||
+            world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z  +playerWidth)) ||
+            
             world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z - playerWidth)) ||
+            world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z - playerWidth)) ||
+            
             world.CheckBlockSolid(new Vector3(pos.x + playerWidth, pos.y + yVelocity, pos.z + playerWidth)) ||
             world.CheckBlockSolid(new Vector3(pos.x - playerWidth, pos.y + yVelocity, pos.z + playerWidth));
         return isGrounded ? 0 : yVelocity;
     }
     private Vector3 CalculateMove(in Vector3 pos)
     {
+        float yVelocity = isGrounded ? 0 : Time.fixedDeltaTime * gravity;
         Vector3 moveVelocity = Time.fixedDeltaTime * walkSpeed * ((transform.forward * vertical) + (transform.right * horizontal));
         Vector3[] collisionVertex = new Vector3[8]
         {
-            pos + new Vector3(moveVelocity.x - playerWidth, moveVelocity.y + 0.2f, -playerWidth),
-            pos + new Vector3(moveVelocity.x - playerWidth, moveVelocity.y + 0.2f, +playerWidth),
-                                                                                   
-            pos + new Vector3(moveVelocity.x + playerWidth, moveVelocity.y + 0.2f, -playerWidth),
-            pos + new Vector3(moveVelocity.x + playerWidth, moveVelocity.y + 0.2f, +playerWidth),
+            pos + new Vector3(moveVelocity.x - playerWidth, yVelocity, -playerWidth),
+            pos + new Vector3(moveVelocity.x - playerWidth, yVelocity, +playerWidth),
+                                                                            
+            pos + new Vector3(moveVelocity.x + playerWidth, yVelocity, -playerWidth),
+            pos + new Vector3(moveVelocity.x + playerWidth, yVelocity, +playerWidth),
 
-            pos + new Vector3(-playerWidth, moveVelocity.y + 0.2f, moveVelocity.z - playerWidth),
-            pos + new Vector3(+playerWidth, moveVelocity.y + 0.2f, moveVelocity.z - playerWidth),
-                              
-            pos + new Vector3(-playerWidth, moveVelocity.y + 0.2f, moveVelocity.z + playerWidth),
-            pos + new Vector3(+playerWidth, moveVelocity.y + 0.2f, moveVelocity.z + playerWidth)
+            pos + new Vector3(-playerWidth, yVelocity, moveVelocity.z - playerWidth),
+            pos + new Vector3(+playerWidth, yVelocity, moveVelocity.z - playerWidth),
+                                            
+            pos + new Vector3(-playerWidth, yVelocity, moveVelocity.z + playerWidth),
+            pos + new Vector3(+playerWidth, yVelocity, moveVelocity.z + playerWidth)
 
         };
         if (moveVelocity.x < 0)
         {
             if (world.CheckBlockSolid(collisionVertex[0]) ||
-                world.CheckBlockSolid(collisionVertex[1])) 
+                world.CheckBlockSolid(collisionVertex[1]) ||
+                world.CheckBlockSolid(collisionVertex[0] + (Vector3.up * playerHeight)) ||
+                world.CheckBlockSolid(collisionVertex[1] + (Vector3.up * playerHeight)))
             {
                 moveVelocity.x = 0;
             }
@@ -139,7 +155,9 @@ public class Player : MonoBehaviour
         else if (moveVelocity.x > 0)
         {
             if (world.CheckBlockSolid(collisionVertex[2]) ||
-                world.CheckBlockSolid(collisionVertex[3])) 
+                world.CheckBlockSolid(collisionVertex[3]) ||
+                world.CheckBlockSolid(collisionVertex[2] + (Vector3.up * playerHeight)) ||
+                world.CheckBlockSolid(collisionVertex[3] + (Vector3.up * playerHeight))) 
             {
                 moveVelocity.x = 0;
             }
@@ -148,7 +166,9 @@ public class Player : MonoBehaviour
         if (moveVelocity.z < 0)
         {
             if (world.CheckBlockSolid(collisionVertex[4]) ||
-                world.CheckBlockSolid(collisionVertex[5]))
+                world.CheckBlockSolid(collisionVertex[5]) ||
+                world.CheckBlockSolid(collisionVertex[4] + (Vector3.up * playerHeight)) ||
+                world.CheckBlockSolid(collisionVertex[5] + (Vector3.up * playerHeight)))
             {
                 moveVelocity.z = 0;
             }
@@ -156,7 +176,9 @@ public class Player : MonoBehaviour
         else if (moveVelocity.z > 0)
         {
             if (world.CheckBlockSolid(collisionVertex[6]) ||
-                world.CheckBlockSolid(collisionVertex[7]))
+                world.CheckBlockSolid(collisionVertex[7]) ||
+                world.CheckBlockSolid(collisionVertex[6] + (Vector3.up * playerHeight)) ||
+                world.CheckBlockSolid(collisionVertex[7] + (Vector3.up * playerHeight)))
             {
                 moveVelocity.z = 0;
             }
@@ -191,7 +213,6 @@ public class Player : MonoBehaviour
         while(step < reach)
         {
             Vector3 pos = cameraTransform.position + (cameraTransform.forward * step);
-            // 원인 : 위치 정규화 때문에 다른 청크의 블럭을 참조하지 못한다.
             if(world.CheckBlockSolid(pos))
             {
                 highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));

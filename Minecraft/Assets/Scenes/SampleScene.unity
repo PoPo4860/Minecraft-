@@ -678,8 +678,6 @@ MonoBehaviour:
   gravity: -9.8
   maxGravity: -9.8
   highlightBlock: {fileID: 151982176}
-  checkIncrement: 0.1
-  reach: 8
 --- !u!1 &1358716206
 GameObject:
   m_ObjectHideFlags: 0
