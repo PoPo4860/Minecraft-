@@ -95,7 +95,7 @@ public class Player : MonoBehaviour
             else if (Input.GetMouseButtonDown(1))
             {
                 world.GetChunkFromPos(placeBlock).
-                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(placeBlock).VexelPos), 2);
+                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(placeBlock).VexelPos), 17);
             }
         }
     }

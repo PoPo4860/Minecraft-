@@ -6,12 +6,13 @@ public class Chunk
 {
     private ushort[,,] voxelMap =
         new ushort[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    public World world;
+    private World world;
 
+    private Queue<Vector3Int> createOrePos = new Queue<Vector3Int>();
+    private Queue<Vector3Int> trackingOrePos = new Queue<Vector3Int>();
 
     #region 헬퍼
     private int[] vertexData = new int[] { 0, 1, 2, 2, 1, 3 };
-
     int[,] vectorCoord = new int[4,2] { { -1, 0 }, { +1, 0 }, { 0, -1 }, { 0, +1 } };
     private Vector2Int VectorCoord(int num) => new Vector2Int(coord.x + vectorCoord[num,0], coord.z + vectorCoord[num,1]);
     private Vector3Int VectorBlock(Vector3 voxelFacePos, int i)
@@ -28,8 +29,6 @@ public class Chunk
                 return new Vector3Int((int)voxelFacePos.x, (int)voxelFacePos.y, 0);
         }
     }
-
-
     #endregion
 
     #region 메쉬데이터
@@ -81,7 +80,7 @@ public class Chunk
             new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
         ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
 
-        PopulateVoxelMap();
+        PopulateChunkMap();
         ChunkObject.SetActive(false);
     }
     public IEnumerator CreateChunkMesh()
@@ -174,36 +173,61 @@ public class Chunk
         // 변경사항 적용
         meshFilter.mesh.RecalculateNormals();
     }
-    private void PopulateVoxelMap()
+    private void PopulateChunkMap()
     {
-        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
+        for (int y = VoxelData.ChunkHeight-1; y > 0; --y)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    if (y == 0)
+                    voxelMap[x, y, z] = PopulateBlock(x, y, z);
+                    if (0 == Random.Range(0, 1000) && y < 40)
                     {
-                        voxelMap[x, y, z] = 2;
-                        continue;
-                    }
-                    int height = Perlin.GetPerlinNoise(coord, world.seed, x, z);
-                    if (height < y)
-                    {
-                        voxelMap[x, y, z] = 0;
-                    }
-                    else if (height == y)
-                    {
-                        voxelMap[x, y, z] = 2;
-                    }
-                    else if ((height > y))
-                    {
-                        voxelMap[x, y, z] = 3;
                     }
                 }
             }
         }
+        Debug.Log(createOrePos.Count);
+        SetOre();
     }
+    private ushort PopulateBlock(in int x, in int y, in int z)
+    {
+        if (60 < y)
+            return CodeData.BLOCK_AIR;
+        if (1 == y)
+            return CodeData.BLOCK_BEDROCK;
+
+        float cavePerlin = Perlin.GetPerlinNoiseCave(coord, world.worldSeed, x, y, z);
+        if (0.499f < cavePerlin && cavePerlin < 0.5f)
+            createOrePos.Enqueue(new Vector3Int(x, y, z));
+
+        if (Perlin.GetPerlinNoiseCave(coord, world.worldSeed, x, y, z) < 0.5f)
+            return CodeData.BLOCK_AIR;
+
+        float terrainResult = Perlin.GetPerlinNoiseTerrain(coord, world.worldSeed, x, y, z);
+        if (terrainResult < 0 /*result < 0*/)
+            return CodeData.BLOCK_AIR;
+
+        if (2 < terrainResult/*result > 2*/)
+            return CodeData.BLOCK_STONE;
+        
+        if (0 == voxelMap[x, y + 1, z])
+            return CodeData.BLOCK_GRASS;
+        
+        return CodeData.BLOCK_DIRT;
+    }
+
+    private void SetOre()
+    {
+        while(0 != createOrePos.Count)
+        {
+            Vector3Int basePos = createOrePos.Peek();
+            voxelMap[basePos.x, basePos.y, basePos.z] = 17;
+            createOrePos.Dequeue();
+        }
+    }
+
     private void CreateMeshkData(Vector3Int voxelPos)
     {
         if (GetBlockID(voxelPos) == 0)

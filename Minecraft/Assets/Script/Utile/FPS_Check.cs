@@ -10,7 +10,6 @@ public class FPS_Check : MonoBehaviour
     public float Red, Green, Blue;
 
     float deltaTime = 0.0f;
-
     private void Start()
     {
         fFont_Size = fFont_Size == 0 ? 50 : fFont_Size;
@@ -19,6 +18,13 @@ public class FPS_Check : MonoBehaviour
     void Update()
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+        if (Time.time > 5f)
+        {
+            if (1.0f / deltaTime < 60)
+            {
+                Debug.Log(deltaTime);
+            }
+        }
     }
 
     void OnGUI()

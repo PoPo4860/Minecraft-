@@ -5,7 +5,7 @@ public class World : MonoBehaviour
 {
     public Material Atlas;
     [SerializeField] private GameObject PlayerObject;
-    [HideInInspector] public int seed;
+    [HideInInspector] public int worldSeed;
     private int worldSizeInChunks = 5;
     private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
@@ -13,7 +13,7 @@ public class World : MonoBehaviour
     private Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
     private void Start()
     {
-        seed = Random.Range(0, 10000);
+        worldSeed = Random.Range(0, 10000);
         GenerateWorld();
     }
     private void Update()

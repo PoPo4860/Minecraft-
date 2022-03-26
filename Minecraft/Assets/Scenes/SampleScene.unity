@@ -614,7 +614,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Atlas: {fileID: 2100000, guid: 0127e444c1b96ea44bc374a617d4e709, type: 2}
   PlayerObject: {fileID: 827087652}
-  seed: 0
+  worldSeed: 0
 --- !u!4 &711807305
 Transform:
   m_ObjectHideFlags: 0
@@ -655,7 +655,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 827087652}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5, y: 45, z: 5}
+  m_LocalPosition: {x: 5, y: 69, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1397391618}

@@ -5,14 +5,10 @@ public static class CodeData
 {
     /// <summary> <블럭코드, 텍스쳐 정보>가 담긴다. </summary>
     private static readonly Dictionary<ushort, ushort[]> BlockInfo = new Dictionary<ushort, ushort[]>();
-    
-    // 정적 생성자는 인스턴스가 처음 호출될떄 생성자가 호출된다.
     static CodeData()
     {
         ReadToBlockInfo();
-
     }
-
     public static ushort GetBlockTextureAtlases(ushort blockCode, int num)
     {
         ushort[] textureAtlases = new ushort[6];
@@ -46,6 +42,13 @@ public static class CodeData
             BlockInfo.Add(blockCode, TextureAtlasesNum);
         }
     }
+
+    public static readonly ushort BLOCK_AIR = 0;
+    public static readonly ushort BLOCK_STONE = 1;
+    public static readonly ushort BLOCK_GRASS = 2;
+    public static readonly ushort BLOCK_DIRT = 3;
+    public static readonly ushort BLOCK_BEDROCK = 7;
+    public static readonly ushort BLOCK_OAKTREE = 17;
 }
 
 
