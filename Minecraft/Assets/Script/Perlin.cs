@@ -41,12 +41,6 @@ public class Perlin
         // Return the noise value
         return PerlinValue * heightMultiplier;
     }
-    /// scale : [ perlin noise ]뷰의 스케일
-    /// highMultiplier : 지형의 최대 높이
-    /// octaves : 반복 횟수 (많을수록 지형이 상세해집니다)
-    /// persion : 높을수록 지형이 거칠어집니다(이 값은 0에서 1 사이여야 합니다).
-    /// lacunity : 높을수록 지형이 더 많은 "특징"을 갖게 됩니다(양수여야 하낟).
-    /// 
 
     public static float GetPerlinNoiseTerrain(in ChunkCoord coord, in int seed, in int x, in int y, in int z, in float scale = 15)
     {
@@ -91,4 +85,6 @@ public class Perlin
         //val -= (y / 50);
         return value;
     }
+
 }
+

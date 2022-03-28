@@ -48,6 +48,9 @@ public static class CodeData
     public static readonly ushort BLOCK_GRASS = 2;
     public static readonly ushort BLOCK_DIRT = 3;
     public static readonly ushort BLOCK_BEDROCK = 7;
+    public static readonly ushort BLOCK_IRON = 15;
+    public static readonly ushort BLOCK_COAL = 16;
+    public static readonly ushort BLOCK_DIAMOND = 56;
     public static readonly ushort BLOCK_OAKTREE = 17;
 }
 

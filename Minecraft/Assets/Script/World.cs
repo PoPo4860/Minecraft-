@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
-    public Material Atlas;
+    public Material TextureAtlas;
+    public Material TextureAtlasTrans;
     [SerializeField] private GameObject PlayerObject;
     [HideInInspector] public int worldSeed;
     private int worldSizeInChunks = 5;

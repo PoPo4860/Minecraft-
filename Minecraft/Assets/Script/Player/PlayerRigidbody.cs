@@ -8,7 +8,7 @@ public class PlayerRigidbody : MonoBehaviour
     readonly private static float playerHeight = 1.5f;
     private bool isGrounded = false;
     public float gravity = -9.8f;
-    private float downMAxGravity = -15.8f;
+    private float downMAxGravity = -30f;
     private float jumpPower = 9.8f;
     private bool crouch = false;
     private Vector3 moveVelocity;
@@ -115,9 +115,7 @@ public class PlayerRigidbody : MonoBehaviour
         if (gravity > 0)
         {
             if(CheckCollision(new Vector3(0, yVelocity + 0.3f, 0), Direction.Up))
-            {
                 gravity = 0;
-            }
         }
 
         // 하단 충돌
