@@ -9,6 +9,7 @@ public class Chunk
     private World world;
 
     private Queue<Vector3Int> createOrePos = new Queue<Vector3Int>();
+    private Queue<Vector3Int> createTreePos = new Queue<Vector3Int>();
 
     #region 메쉬데이터
     private int vertexIndex = 0;
@@ -122,11 +123,11 @@ public class Chunk
                     if (0 == GetBlockID(voxelPos))
                         continue;
 
-                    bool isTrans = (18 == GetBlockID(voxelPos)) ? true : false;
+                    bool isTrans = (CodeData.BLOCK_LEAF == GetBlockID(voxelPos)) ? true : false;
                     for (int face = 0; face < 6; ++face)
                     {
                         int blockCode = GetBlockID(voxelPos + VoxelData.faceChecks[face]);
-                        if (18==blockCode || CodeData.BLOCK_AIR == blockCode)
+                        if (CodeData.BLOCK_LEAF == blockCode || CodeData.BLOCK_AIR == blockCode)
                         {
                             foreach (int i in ChunkHelperData.vertexData)
                             {
@@ -174,13 +175,11 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
                     voxelMap[x, y, z] = PopulateBlock(x, y, z);
-                    if (0 == Random.Range(0, 1000) && y < 40)
-                    {
-                    }
                 }
             }
         }
         SetOre();
+        SetTree();
     }
     private ushort PopulateBlock(in int x, in int y, in int z)
     {
@@ -204,11 +203,14 @@ public class Chunk
             return CodeData.BLOCK_STONE;
         
         if (0 == voxelMap[x, y + 1, z])
+        {
+            if (0 == Random.Range(0, 100))
+                createTreePos.Enqueue(new Vector3Int(x, y + 1, z));
             return CodeData.BLOCK_GRASS;
+        }
         
         return CodeData.BLOCK_DIRT;
     }
-
     private void SetOre()
     {
         while(0 != createOrePos.Count)
@@ -244,6 +246,56 @@ public class Chunk
                 voxelMap[posX, posY, posZ] = blockCode;
         }
     }
+    private void SetTree()
+    {
+        while(0 != createTreePos.Count)
+        {
+            Vector3Int pos = createTreePos.Peek();
+            createTreePos.Dequeue();
+
+            if (pos.x < 2 || VoxelData.ChunkWidth - 3 < pos.x)
+                continue;
+            if (pos.z < 2 || VoxelData.ChunkWidth - 3 < pos.z)
+                continue;
+
+            bool isCanTree = true;
+            for (int y = 0; y < 6; ++y)
+            {
+                for (int i = 0; i < 25; ++i)
+                {
+                    if (-1 == ChunkHelperData.treePos[y, i])
+                        continue;
+
+                    int posX = pos.x + ((i % 5) - 2);
+                    int posY = pos.y + y;
+                    int posZ = pos.z + ((i / 5) - 2);
+                    int blockCode = GetBlockID(new Vector3(posX, posY, posZ));
+                    if (CodeData.BLOCK_AIR != blockCode && CodeData.BLOCK_LEAF != blockCode)
+                    {
+                        isCanTree = false;
+                        break;
+                    }
+                }
+                if (false == isCanTree)
+                    break;
+            }
+
+            if(false == isCanTree)
+                continue;
+
+            for (int y = 0; y < 6; ++y)
+            {
+                for (int i = 0; i < 25; ++i)
+                {
+                    int posX = pos.x + ((i % 5) - 2);
+                    int posY = pos.y + y;
+                    int posZ = pos.z + ((i / 5) - 2);
+                    if (-1 != ChunkHelperData.treePos[y, i])
+                        voxelMap[posX, posY, posZ] = (ushort)ChunkHelperData.treePos[y, i];
+                }
+            }
+        }
+    }
 
     private void CreateMeshkData(in Vector3Int voxelPos)
     {
@@ -253,7 +305,7 @@ public class Chunk
         for (int face = 0; face < 6; ++face)
         {
             int faceBlockCode = GetBlockID(voxelPos + VoxelData.faceChecks[face]);
-            if (0 == faceBlockCode || 18 == faceBlockCode)
+            if (CodeData.BLOCK_AIR == faceBlockCode || CodeData.BLOCK_LEAF == faceBlockCode)
             {
                 for (int i = 0; i < 4; ++i)
                     vertices[voxelPos.x, voxelPos.y, voxelPos.z].Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + voxelPos);
@@ -297,7 +349,6 @@ public class Chunk
 
         return voxelMap[(int)voxelPos.x, (int)voxelPos.y, (int)voxelPos.z];
     }
-
     private Chunk CheckProximityChunk(Vector2Int chunkPos)
     {
         Chunk chunk = world.GetChunkFromCoord(chunkPos);

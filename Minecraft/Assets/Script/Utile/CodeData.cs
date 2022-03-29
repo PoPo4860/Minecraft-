@@ -52,6 +52,7 @@ public static class CodeData
     public static readonly ushort BLOCK_COAL = 16;
     public static readonly ushort BLOCK_DIAMOND = 56;
     public static readonly ushort BLOCK_OAKTREE = 17;
+    public static readonly ushort BLOCK_LEAF = 18;
 }
 
 

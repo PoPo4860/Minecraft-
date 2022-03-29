@@ -20,6 +20,44 @@ public static class ChunkHelperData
         new Vector3Int(0, 0, 1),                      new Vector3Int(0, 0,-1),
         new Vector3Int(0,-1, 1),new Vector3Int(0,-1,0),new Vector3Int(0,-1,-1)
     };
+    public readonly static int[,] treePos = new int[6, 25]
+    {
+        {   -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1,
+            -1, -1, CodeData.BLOCK_OAKTREE, -1, -1,
+            -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1 },
+
+        {   -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1,
+            -1, -1, CodeData.BLOCK_OAKTREE, -1, -1,
+            -1, -1, -1, -1, -1,
+            -1, -1, -1, -1, -1 },
+
+        {   CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_OAKTREE, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF     },
+
+        {   CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_OAKTREE, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF,
+            CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF, CodeData.BLOCK_LEAF     },
+        
+        {   -1, -1, -1, -1, -1 ,
+            -1, CodeData.BLOCK_LEAF ,CodeData.BLOCK_LEAF     ,CodeData.BLOCK_LEAF ,-1 ,
+            -1, CodeData.BLOCK_LEAF ,CodeData.BLOCK_OAKTREE  ,CodeData.BLOCK_LEAF ,-1 ,
+            -1, CodeData.BLOCK_LEAF ,CodeData.BLOCK_LEAF     ,CodeData.BLOCK_LEAF ,-1 ,
+            -1, -1, -1, -1, -1 },
+        
+        {   -1, -1,                  -1,                   -1,                  -1,
+            -1, -1,                  CodeData.BLOCK_LEAF , -1,                  -1,
+            -1, CodeData.BLOCK_LEAF ,CodeData.BLOCK_LEAF ,CodeData.BLOCK_LEAF , -1,
+            -1, -1,                  CodeData.BLOCK_LEAF , -1,                  -1,
+            -1, -1,                  -1,                   -1,                  -1 },
+    };
 
     public static Vector2Int VectorCoord(in int num, in ChunkCoord coord) => new Vector2Int(coord.x + vectorCoord[num, 0], coord.z + vectorCoord[num, 1]);
     public static Vector3Int VectorBlock(in Vector3 voxelFacePos, in int i)
