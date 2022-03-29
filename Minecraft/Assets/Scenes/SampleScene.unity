@@ -612,8 +612,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d17065072ef60e641982c1ce784a8d10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TextureAtlas: {fileID: 0}
-  TextureAtlasTrans: {fileID: 0}
+  TextureAtlas: {fileID: 2100000, guid: 0127e444c1b96ea44bc374a617d4e709, type: 2}
+  TextureAtlasTrans: {fileID: 2100000, guid: 1ef7be84f75f8a54ab479003fdb2b915, type: 2}
   PlayerObject: {fileID: 827087652}
   worldSeed: 0
 --- !u!4 &711807305

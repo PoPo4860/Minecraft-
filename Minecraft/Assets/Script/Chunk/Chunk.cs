@@ -4,31 +4,32 @@ using UnityEngine;
 
 public class Chunk
 {
-    private ushort[,,] voxelMap =
+    private readonly  ushort[,,] voxelMap =
         new ushort[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    private World world;
+    private readonly World world;
 
-    private Queue<Vector3Int> createOrePos = new Queue<Vector3Int>();
-    private Queue<Vector3Int> createTreePos = new Queue<Vector3Int>();
+    private readonly Queue<Vector3Int> createOrePos = new Queue<Vector3Int>();
+    private readonly Queue<Vector3Int> createTreePos = new Queue<Vector3Int>();
 
     #region 메쉬데이터
     private int vertexIndex = 0;
-    private List<Vector3>[,,] vertices = new List<Vector3>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    private List<int>[,,] triangles = new List<int>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    private List<int>[,,] transparencyTriangles = new List<int>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    private List<Vector2>[,,] uv = new List<Vector2>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private readonly List<Vector3>[,,] vertices = new List<Vector3>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private readonly List<int>[,,] triangles = new List<int>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    //private List<int>[,,] transparencyTriangles = new List<int>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private readonly List<Vector2>[,,] uv = new List<Vector2>[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    private readonly List<Color> colors = new List<Color>();
 
-    List<Vector3> meshVertices = new List<Vector3>();
-    List<int> meshTriangles = new List<int>();
-    List<int> meshtransparencyTriangles = new List<int>();
-    List<Vector2> meshUv = new List<Vector2>();
+    private readonly List<Vector3> meshVertices = new List<Vector3>();
+    private readonly List<int> meshTriangles = new List<int>();
+    //List<int> meshtransparencyTriangles = new List<int>();
+    private readonly List<Vector2> meshUv = new List<Vector2>();
     #endregion
 
     #region 오브젝트 데이터
-    public GameObject ChunkObject; // 청크가 생성될 대상 게임오브젝트
-    private MeshRenderer meshRenderer;
-    private MeshFilter meshFilter;
-    private Material[] materials = new Material[2];
+    public readonly GameObject ChunkObject; // 청크가 생성될 대상 게임오브젝트
+    private readonly MeshRenderer meshRenderer;
+    private readonly MeshFilter meshFilter;
+    //private Material[] materials = new Material[2];
     #endregion
 
     #region 청크 데이터
@@ -53,15 +54,15 @@ public class Chunk
                 {
                     vertices[x, y, z] = new List<Vector3>();
                     triangles[x, y, z] = new List<int>();
-                    transparencyTriangles[x, y, z] = new List<int>();
+                    //transparencyTriangles[x, y, z] = new List<int>();
                     uv[x, y, z] = new List<Vector2>();
                 }
             }
         }
 
-        materials[0] = world.TextureAtlas;
-        materials[1] = world.TextureAtlasTrans;
-        meshRenderer.materials = materials;
+        //materials[0] = world.TextureAtlas;
+        //materials[1] = world.TextureAtlasTrans;
+        meshRenderer.material = world.TextureAtlas;
         ChunkObject.transform.SetParent(world.transform);
         ChunkObject.transform.position =
             new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
@@ -107,9 +108,12 @@ public class Chunk
         meshFilter.mesh.Clear();
         meshVertices.Clear();
         meshTriangles.Clear();
-        meshtransparencyTriangles.Clear();
+        colors.Clear();
+        //meshtransparencyTriangles.Clear();
         meshUv.Clear();
         vertexIndex = 0;
+
+
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
@@ -117,27 +121,56 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
                     triangles[x, y, z].Clear();
-                    transparencyTriangles[x, y, z].Clear();
+                    //transparencyTriangles[x, y, z].Clear();
 
                     Vector3Int voxelPos = new Vector3Int(x, y, z);
                     if (0 == GetBlockID(voxelPos))
                         continue;
 
-                    bool isTrans = (CodeData.BLOCK_LEAF == GetBlockID(voxelPos)) ? true : false;
+                    int yPos = y + 1;
+                    bool inShade = false;
+                    while (yPos < VoxelData.ChunkHeight)
+                    {
+                        int blockCode = GetBlockID(new Vector3(x, yPos, z));
+                        if (CodeData.BLOCK_AIR != blockCode && CodeData.BLOCK_LEAF != blockCode)
+                        {
+                            inShade = true;
+                            break;
+                        }
+                        ++yPos;
+                    }
+
+                    //bool isTrans = (CodeData.BLOCK_LEAF == GetBlockID(voxelPos)) ? true : false;
                     for (int face = 0; face < 6; ++face)
                     {
                         int blockCode = GetBlockID(voxelPos + VoxelData.faceChecks[face]);
                         if (CodeData.BLOCK_LEAF == blockCode || CodeData.BLOCK_AIR == blockCode)
                         {
+
                             foreach (int i in ChunkHelperData.vertexData)
                             {
-                                if (isTrans)
-                                    transparencyTriangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
-                                else
-                                    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
+                                triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
+                                //if (isTrans)
+                                //    transparencyTriangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
+                                //else
+                                //    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
                             }
                             vertexIndex += 4;
+
+
+
+                            float lightLevel;
+                            if (inShade)
+                                lightLevel = 0.4f;
+                            else
+                                lightLevel = 0f;
+
+                            colors.Add(new Color(0, 0, 0, lightLevel));
+                            colors.Add(new Color(0, 0, 0, lightLevel));
+                            colors.Add(new Color(0, 0, 0, lightLevel));
+                            colors.Add(new Color(0, 0, 0, lightLevel));
                         }
+
                     }
                 }
             }
@@ -154,16 +187,18 @@ public class Chunk
 
                     meshVertices.AddRange(vertices[x, y, z]);
                     meshTriangles.AddRange(triangles[x, y, z]);
-                    meshtransparencyTriangles.AddRange(transparencyTriangles[x, y, z]);
+                    //meshtransparencyTriangles.AddRange(transparencyTriangles[x, y, z]);
                     meshUv.AddRange(uv[x, y, z]);
                 }
             }
         }
         meshFilter.mesh.vertices = meshVertices.ToArray();
-        meshFilter.mesh.subMeshCount = 2;
-        meshFilter.mesh.SetTriangles(meshTriangles.ToArray(), 0);
-        meshFilter.mesh.SetTriangles(meshtransparencyTriangles.ToArray(), 1);
+        //meshFilter.mesh.subMeshCount = 2;
+        //meshFilter.mesh.SetTriangles(meshTriangles.ToArray(), 0);
+        //meshFilter.mesh.SetTriangles(meshtransparencyTriangles.ToArray(), 1);
+        meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();
+        meshFilter.mesh.colors = colors.ToArray();
         meshFilter.mesh.RecalculateNormals();
     }
     private void PopulateChunkMap()
@@ -296,7 +331,6 @@ public class Chunk
             }
         }
     }
-
     private void CreateMeshkData(in Vector3Int voxelPos)
     {
         if (GetBlockID(voxelPos) == 0)
@@ -340,11 +374,11 @@ public class Chunk
     {
         for(int i = 0; i < 4; ++i)
         {
-            if(ChunkHelperData.asd(voxelPos, i))
+            if(ChunkHelperData.Asd(voxelPos, i))
                 return CheckProximityChunk(ChunkHelperData.VectorCoord(i, coord)).GetBlockID(ChunkHelperData.VectorBlock(voxelPos, i));
         }
 
-        if (ChunkHelperData.asd(voxelPos, 4))
+        if (ChunkHelperData.Asd(voxelPos, 4))
             return 0;
 
         return voxelMap[(int)voxelPos.x, (int)voxelPos.y, (int)voxelPos.z];
@@ -363,7 +397,7 @@ public class Chunk
         if (0 == GetBlockID(voxelPos))
             return;
         vertices[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
-        transparencyTriangles[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
+        //transparencyTriangles[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
         triangles[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
         uv[voxelPos.x, voxelPos.y, voxelPos.z].Clear();
     }
@@ -374,12 +408,12 @@ public class Chunk
             Vector3Int voxelFacePos = voxelPos + VoxelData.faceChecks[face];
             for (int i = 0; i < 5; ++i)
             {
-                if(i == 4 && false == ChunkHelperData.asd(voxelFacePos, 4))
+                if(i == 4 && false == ChunkHelperData.Asd(voxelFacePos, 4))
                 {
                     ClearBolckData(voxelFacePos);
                     break;
                 }
-                if (ChunkHelperData.asd(voxelFacePos, i))
+                if (ChunkHelperData.Asd(voxelFacePos, i))
                 {
                     CheckProximityChunk(ChunkHelperData.VectorCoord(i, coord)).ClearBolckData(ChunkHelperData.VectorBlock(voxelPos, i));
                     break;
@@ -401,13 +435,13 @@ public class Chunk
             Vector3Int voxelFacePos = voxelPos + VoxelData.faceChecks[face];
             for (int i = 0; i < 5; ++i)
             {
-                if (i == 4 && false == ChunkHelperData.asd(voxelFacePos, 4))
+                if (i == 4 && false == ChunkHelperData.Asd(voxelFacePos, 4))
                 {
                     CreateMeshkData(voxelFacePos);
                     break;
                 }
 
-                if (ChunkHelperData.asd(voxelFacePos, i))
+                if (ChunkHelperData.Asd(voxelFacePos, i))
                 {
                     CheckProximityChunk(ChunkHelperData.VectorCoord(i, coord)).CreateMeshkData(ChunkHelperData.VectorBlock(voxelPos, i));
                     break;

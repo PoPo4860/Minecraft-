@@ -26,8 +26,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private Transform highlightBlock;
     private Vector3 placeBlock = new Vector3();
-    private float checkIncrement = 0.1f;
-    private float reach = 8.0f;
+    private readonly float checkIncrement = 0.1f;
+    private readonly float reach = 8.0f;
 
     public PlayerRigidbody playerRigi;
     void Start()
@@ -60,7 +60,7 @@ public class Player : MonoBehaviour
         vertical = Input.GetAxisRaw("Vertical");
         mouseX = Input.GetAxis("Mouse X") * 5;
         mouseY = Input.GetAxis("Mouse Y") * 5;
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        //float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Input.GetKey(KeyCode.Space))
             playerRigi.InputJump();
 

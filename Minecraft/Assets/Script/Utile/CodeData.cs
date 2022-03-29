@@ -11,8 +11,7 @@ public static class CodeData
     }
     public static ushort GetBlockTextureAtlases(ushort blockCode, int num)
     {
-        ushort[] textureAtlases = new ushort[6];
-        if (false == BlockInfo.TryGetValue(blockCode, out textureAtlases))
+        if (false == BlockInfo.TryGetValue(blockCode, out ushort[] textureAtlases))
         {
             UnityEngine.Debug.LogError("블럭 코드값 잘못줬는데? 병형신아");
         };
@@ -31,8 +30,7 @@ public static class CodeData
         {
             string[] words = textValue[i].Split(',');
 
-            ushort blockCode;
-            UInt16.TryParse(words[0], out blockCode);
+            UInt16.TryParse(words[0], out ushort blockCode);
             
             ushort[] TextureAtlasesNum = new ushort[6];
             for (int j = 1; j < 7; ++j) 

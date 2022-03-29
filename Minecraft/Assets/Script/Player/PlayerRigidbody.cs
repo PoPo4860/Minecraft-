@@ -8,14 +8,14 @@ public class PlayerRigidbody : MonoBehaviour
     readonly private static float playerHeight = 1.5f;
     private bool isGrounded = false;
     public float gravity = -9.8f;
-    private float downMAxGravity = -30f;
-    private float jumpPower = 9.8f;
+    private readonly float downMAxGravity = -30f;
+    private readonly float jumpPower = 9.8f;
     private bool crouch = false;
     private Vector3 moveVelocity;
     [HideInInspector] public Vector3 velocity;
 
     public World world;
-    private Vector3[] collisionVertex = new Vector3[4]
+    private readonly Vector3[] collisionVertex = new Vector3[4]
     {
         new Vector3(-playerWidth, 0, +playerWidth),
         new Vector3(-playerWidth, 0, -playerWidth),

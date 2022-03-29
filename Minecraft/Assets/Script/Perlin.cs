@@ -22,25 +22,6 @@ public class Perlin
     //    offset : 터레인의 최소높이
     //    y : 현재 y좌표
     //}
-    public static float GetNoiseAt(int x, int z, int seed ,float scale, float heightMultiplier, int octaves, float persistance, float lacunarity)
-    {
-        float PerlinValue = 0f;
-        float amplitude = 1f;
-        float frequency = 1f;
-
-        for (int i = 0; i < octaves; i++)
-        {
-            // Get the perlin value at that octave and add it to the sum
-            PerlinValue += Mathf.PerlinNoise(x * frequency + seed, z * frequency + seed) * amplitude;
-
-            // Decrease the amplitude and the frequency
-            amplitude *= persistance;
-            frequency *= lacunarity;
-        }
-
-        // Return the noise value
-        return PerlinValue * heightMultiplier;
-    }
 
     public static float GetPerlinNoiseTerrain(in ChunkCoord coord, in int seed, in int x, in int y, in int z, in float scale = 15)
     {

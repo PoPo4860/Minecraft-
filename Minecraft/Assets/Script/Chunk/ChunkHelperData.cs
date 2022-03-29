@@ -58,39 +58,22 @@ public static class ChunkHelperData
             -1, -1,                  CodeData.BLOCK_LEAF , -1,                  -1,
             -1, -1,                  -1,                   -1,                  -1 },
     };
-
     public static Vector2Int VectorCoord(in int num, in ChunkCoord coord) => new Vector2Int(coord.x + vectorCoord[num, 0], coord.z + vectorCoord[num, 1]);
-    public static Vector3Int VectorBlock(in Vector3 voxelFacePos, in int i)
+    public static Vector3Int VectorBlock(in Vector3 voxelFacePos, in int i) => i switch
     {
-        switch (i)
-        {
-            case 0:
-                return new Vector3Int(VoxelData.ChunkWidth - 1, (int)voxelFacePos.y, (int)voxelFacePos.z);
-            case 1:
-                return new Vector3Int(0, (int)voxelFacePos.y, (int)voxelFacePos.z);
-            case 2:
-                return new Vector3Int((int)voxelFacePos.x, (int)voxelFacePos.y, VoxelData.ChunkWidth - 1);
-            default:
-                return new Vector3Int((int)voxelFacePos.x, (int)voxelFacePos.y, 0);
-        }
-    }
-    
-    public static bool asd(in Vector3 voxelPos, in int faceNum)
+        0 => new Vector3Int(VoxelData.ChunkWidth - 1, (int)voxelFacePos.y, (int)voxelFacePos.z),
+        1 => new Vector3Int(0, (int)voxelFacePos.y, (int)voxelFacePos.z),
+        2 => new Vector3Int((int) voxelFacePos.x, (int) voxelFacePos.y, VoxelData.ChunkWidth - 1),
+        _ => new Vector3Int((int)voxelFacePos.x, (int)voxelFacePos.y, 0),
+    };
+
+    public static bool Asd(in Vector3 voxelPos, in int faceNum) => faceNum switch
     {
-        switch (faceNum)
-        {
-            case 0:
-                return (voxelPos.x <= -1) ? true : false;
-            case 1:
-                return (voxelPos.x >= VoxelData.ChunkWidth) ? true : false;
-            case 2:
-                return (voxelPos.z <= -1) ? true : false;
-            case 3:
-                return (voxelPos.z >= VoxelData.ChunkWidth) ? true : false;
-            case 4:
-                return (voxelPos.y <= -1 || voxelPos.y >= VoxelData.ChunkHeight) ? true : false;
-            default:
-                return false;
-        }
-    }
+        0 => (voxelPos.x <= -1),
+        1 => (voxelPos.x >= VoxelData.ChunkWidth),
+        2 => (voxelPos.z <= -1),
+        3 => (voxelPos.z >= VoxelData.ChunkWidth),
+        4 => (voxelPos.y <= -1 || voxelPos.y >= VoxelData.ChunkHeight),
+        _ => false,
+    };
 }

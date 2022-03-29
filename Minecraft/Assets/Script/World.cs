@@ -7,11 +7,17 @@ public class World : MonoBehaviour
     public Material TextureAtlasTrans;
     [SerializeField] private GameObject PlayerObject;
     [HideInInspector] public int worldSeed;
-    private int worldSizeInChunks = 5;
-    private Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
+    
+    [Range(0.95f, 0f)] public float globalLightLevel;
+
+    public Color day;
+    public Color night;
+
+    private readonly int worldSizeInChunks = 5;
+    private readonly Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
-    private Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
+    private readonly Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
     private void Start()
     {
         worldSeed = Random.Range(0, 10000);
@@ -20,6 +26,10 @@ public class World : MonoBehaviour
     private void Update()
     {
         UpdateChunksInViewRange();
+
+        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
+        Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel);
+
         if (chunkUpdataList.Count != 0)
         {
             Chunk chunk = chunkUpdataList.Peek();
