@@ -6,9 +6,14 @@ public class World : MonoBehaviour
     public Material TextureAtlas;
     public Material TextureAtlasTrans;
     [SerializeField] private GameObject PlayerObject;
-    [HideInInspector] public int worldSeed;
     
-    [Range(0.95f, 0f)] public float globalLightLevel;
+    [Header("World Generation Values")]
+    [HideInInspector] public int worldSeed;
+
+    [Header("Performance")]
+    public bool enableThreading;
+
+    [Range(0f, 1f)] public float globalLightLevel;
 
     public Color day;
     public Color night;
@@ -21,6 +26,9 @@ public class World : MonoBehaviour
     private void Start()
     {
         worldSeed = Random.Range(0, 10000);
+
+        Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
+        Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
         GenerateWorld();
     }
     private void Update()
@@ -28,7 +36,7 @@ public class World : MonoBehaviour
         UpdateChunksInViewRange();
 
         Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
-        Camera.main.backgroundColor = Color.Lerp(day, night, globalLightLevel);
+        Camera.main.backgroundColor = Color.Lerp(night, day, globalLightLevel);
 
         if (chunkUpdataList.Count != 0)
         {
@@ -193,6 +201,6 @@ public class World : MonoBehaviour
     {
         Utile.VoxelPosAndChunkCoord result =  Utile.PosNormalization(pos);
 
-        return 0 != GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetBlockID(result.VexelPos);
+        return 0 != GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetVoxelState(result.VexelPos).id;
     }
 }
