@@ -90,12 +90,12 @@ public class Player : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 world.GetChunkFromPos(highlightBlock.position).
-                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(highlightBlock.position).VexelPos), CodeData.BLOCK_AIR);
+                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(highlightBlock.position).VexelPos), CodeData.BLOCK_AIR);
             }
             else if (Input.GetMouseButtonDown(1))
             {
                 world.GetChunkFromPos(placeBlock).
-                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.PosNormalization(placeBlock).VexelPos), CodeData.BLOCK_LEAF);
+                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).VexelPos), CodeData.BLOCK_BEDROCK);
             }
         }
     }

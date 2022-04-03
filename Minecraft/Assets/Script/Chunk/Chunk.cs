@@ -56,21 +56,17 @@ public class Chunk
                     triangles[x, y, z] = new List<int>();
                     uv[x, y, z] = new List<Vector2>();
                     voxelMap[x, y, z] = new VoxelState();
-                    //transparencyTriangles[x, y, z] = new List<int>();
                 }
             }
         }
 
-        //materials[0] = world.TextureAtlas;
-        //materials[1] = world.TextureAtlasTrans;
         meshRenderer.material = world.TextureAtlas;
         ChunkObject.transform.SetParent(world.transform);
         ChunkObject.transform.position =
             new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
         ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";
-
         PopulateChunkMap();
-        //CalculateLight();
+        InitLight();
         ChunkObject.SetActive(false);
     }
     public IEnumerator CreateChunkMesh()
@@ -106,7 +102,6 @@ public class Chunk
         meshVertices.Clear();
         meshTriangles.Clear();
         colors.Clear();
-        //meshtransparencyTriangles.Clear();
         meshUv.Clear();
         vertexIndex = 0;
 
@@ -118,8 +113,6 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
                     triangles[x, y, z].Clear();
-                    //transparencyTriangles[x, y, z].Clear();
-
                     Vector3Int voxelPos = new Vector3Int(x, y, z);
                     if (0 == GetVoxelState(voxelPos).id)
                         continue;
@@ -138,32 +131,25 @@ public class Chunk
                     //bool isTrans = (CodeData.BLOCK_LEAF == GetBlockID(voxelPos)) ? true : false;
                     for (int face = 0; face < 6; ++face)
                     {
-                        VoxelState voxelState = GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
-                        if (CodeData.BLOCK_LEAF == voxelState.id || CodeData.BLOCK_AIR == voxelState.id)
+                        VoxelState blockCode = GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
+                        if (CodeData.BLOCK_LEAF == blockCode.id || CodeData.BLOCK_AIR == blockCode.id)
                         {
 
                             foreach (int i in ChunkHelperData.vertexData)
-                            {
                                 triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
-                                //if (isTrans)
-                                //    transparencyTriangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
-                                //else
-                                //    triangles[voxelPos.x, voxelPos.y, voxelPos.z].Add(vertexIndex + i);
-                            }
+
                             vertexIndex += 4;
 
-                            float lightLevel = voxelState.globalLightPercent;
-                            colors.Add(new Color(0, 0, 0, lightLevel));
-                            colors.Add(new Color(0, 0, 0, lightLevel));
-                            colors.Add(new Color(0, 0, 0, lightLevel));
-                            colors.Add(new Color(0, 0, 0, lightLevel));
+                            colors.Add(new Color(0, 0, 0, blockCode.globalLightPercent));
+                            colors.Add(new Color(0, 0, 0, blockCode.globalLightPercent));
+                            colors.Add(new Color(0, 0, 0, blockCode.globalLightPercent));
+                            colors.Add(new Color(0, 0, 0, blockCode.globalLightPercent));
                         }
-
                     }
                 }
             }
         }
-        
+
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
@@ -175,15 +161,11 @@ public class Chunk
 
                     meshVertices.AddRange(vertices[x, y, z]);
                     meshTriangles.AddRange(triangles[x, y, z]);
-                    //meshtransparencyTriangles.AddRange(transparencyTriangles[x, y, z]);
                     meshUv.AddRange(uv[x, y, z]);
                 }
             }
         }
         meshFilter.mesh.vertices = meshVertices.ToArray();
-        //meshFilter.mesh.subMeshCount = 2;
-        //meshFilter.mesh.SetTriangles(meshTriangles.ToArray(), 0);
-        //meshFilter.mesh.SetTriangles(meshtransparencyTriangles.ToArray(), 1);
         meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();
         meshFilter.mesh.colors = colors.ToArray();
@@ -238,8 +220,7 @@ public class Chunk
     {
         while (0 != createOrePos.Count)
         {
-            Vector3Int basePos = createOrePos.Peek();
-            createOrePos.Dequeue();
+            Vector3Int basePos = createOrePos.Dequeue();
 
             if (20 <= basePos.y && 0 == Random.Range(0, 2))
                 SetOre(basePos, CodeData.BLOCK_COAL, 2);
@@ -273,8 +254,7 @@ public class Chunk
     {
         while (0 != createTreePos.Count)
         {
-            Vector3Int pos = createTreePos.Peek();
-            createTreePos.Dequeue();
+            Vector3Int pos = createTreePos.Dequeue();
 
             if (pos.x < 2 || VoxelData.ChunkWidth - 3 < pos.x)
                 continue;
@@ -363,22 +343,42 @@ public class Chunk
         for (int i = 0; i < 4; ++i)
         {
             if (ChunkHelperData.Asd(voxelPos, i))
-                return CheckProximityChunk(ChunkHelperData.VectorCoord(i, coord))?.
-                    GetVoxelState(ChunkHelperData.VectorBlock(voxelPos, i));
+            {
+                Vector3Int worldPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, voxelPos);
+                Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(worldPos);
+                return world.GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z))?.GetVoxelState(result.VexelPos);
+            }
         }
 
         if (ChunkHelperData.Asd(voxelPos, 4))
             return null;
-
         return voxelMap[(int)voxelPos.x, (int)voxelPos.y, (int)voxelPos.z];
+    }
+    public VoxelState GetVoxelState(in Vector3Int voxelPos)
+    {
+        for (int i = 0; i < 4; ++i)
+        {
+            if (ChunkHelperData.Asd(voxelPos, i))
+            {
+                Vector3Int worldPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, voxelPos);
+                Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(worldPos);
+                return world.GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z))?.GetVoxelState(result.VexelPos);
+            }
+        }
+
+        if (ChunkHelperData.Asd(voxelPos, 4))
+            return null;
+        return voxelMap[voxelPos.x, voxelPos.y, voxelPos.z];
+    }
+    public void SetVoxelState(in VoxelState newVoxel, in Vector3 pos)
+    {
+        voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = newVoxel;
     }
     private Chunk CheckProximityChunk(Vector2Int chunkPos)
     {
         Chunk chunk = world.GetChunkFromCoord(chunkPos);
         if (chunk == null)
-        {
             return null;
-        }
         return chunk;
     }
     private void ClearBolckData(in Vector3Int voxelPos)
@@ -392,6 +392,7 @@ public class Chunk
     }
     public void ModifyChunkData(in Vector3Int voxelPos, ushort blockCode)
     {
+        #region 플레이어 입력값 주변 블럭 데이터 초기화
         for (int face = 0; face < 6; ++face)
         {
             Vector3Int voxelFacePos = voxelPos + VoxelData.faceChecks[face];
@@ -409,7 +410,9 @@ public class Chunk
                 }
             }
         }
+        #endregion 
 
+        #region 플레이어 입력값 적용
         if (blockCode != CodeData.BLOCK_AIR)
             voxelMap[voxelPos.x, voxelPos.y, voxelPos.z].id = blockCode;
         else
@@ -417,7 +420,9 @@ public class Chunk
             ClearBolckData(voxelPos);
             voxelMap[voxelPos.x, voxelPos.y, voxelPos.z].id = 0;
         }
+        #endregion 
 
+        #region 메쉬데이터 생성
         CreateMeshkData(voxelPos);
         for (int face = 0; face < 6; ++face)
         {
@@ -437,8 +442,10 @@ public class Chunk
                 }
             }
         }
-        ApplyMeshData();
+        #endregion
 
+        #region 메쉬데이터 적용
+        ApplyMeshData();
         if (voxelPos.x == 0)
             CheckProximityChunk(ChunkHelperData.VectorCoord(0, coord)).ApplyMeshData();
         else if (voxelPos.x == 15)
@@ -447,11 +454,11 @@ public class Chunk
             CheckProximityChunk(ChunkHelperData.VectorCoord(2, coord)).ApplyMeshData();
         else if (voxelPos.z == 15)
             CheckProximityChunk(ChunkHelperData.VectorCoord(3, coord)).ApplyMeshData();
+        #endregion
     }
 
-    void CalculateLight()
+    private void InitLight()
     {
-        Queue<Vector3Int> listVoxels = new Queue<Vector3Int>();
         for (int x = 0; x < VoxelData.ChunkWidth; ++x)
         {
             for (int z = 0; z < VoxelData.ChunkWidth; ++z)
@@ -460,38 +467,64 @@ public class Chunk
                 for (int y = VoxelData.ChunkHeight - 1; y >= 0; --y)
                 {
                     VoxelState thisVoxel = voxelMap[x, y, z];
-                    if (0 < thisVoxel.id) 
+                    if (0 < thisVoxel.id)
                         lightRay = (thisVoxel.id == CodeData.BLOCK_LEAF) ? 0.5f : 0f;
+                    thisVoxel.globalLightPercent = lightRay;
+                    voxelMap[x, y, z] = thisVoxel;
+                }
+            }
+        }
+    }
+    private void CalculateLight()
+    {
+        Queue<Vector3Int> calculateLightList = new Queue<Vector3Int>();
+        for (int x = 0; x < VoxelData.ChunkWidth; ++x)
+        {
+            for (int z = 0; z < VoxelData.ChunkWidth; ++z)
+            {
+                float lightRay = 1f;
+                for (int y = VoxelData.ChunkHeight - 1; y >= 0; --y)
+                {
+                    VoxelState thisVoxel = voxelMap[x, y, z];
+                    if (0 != thisVoxel.id)
+                        lightRay = (thisVoxel.id == CodeData.BLOCK_LEAF) ? 0.5f : 0f;
+
                     thisVoxel.globalLightPercent = lightRay;
                     voxelMap[x, y, z] = thisVoxel;
 
                     if (lightRay > VoxelData.lightFalloff)
-                        listVoxels.Enqueue(new Vector3Int(x, y, z));
+                    {
+                        Vector3Int worldPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, new Vector3Int(x, y, z));
+                        calculateLightList.Enqueue(worldPos);
+                    }
                 }
             }
         }
-
-        while (listVoxels.Count > 0)
+        while (calculateLightList.Count > 0)
         {
-            Vector3Int v = listVoxels.Dequeue();
+            Vector3Int worldPos = calculateLightList.Dequeue();
+            Utile.ChunkCoordInPos baseVoxel = Utile.GetCoordInVoxelPosFromWorldPos(worldPos);
 
             for (int p = 0; p < 6; ++p)
             {
-                Vector3 currentVoxel = v + VoxelData.faceChecks[p];
-                Vector3Int neighbor = new Vector3Int((int)currentVoxel.x, (int)currentVoxel.y, (int)currentVoxel.z);
+                Vector3Int neighborWorldPos = worldPos + VoxelData.faceChecks[p];
+                Utile.ChunkCoordInPos neighborVoxel = Utile.GetCoordInVoxelPosFromWorldPos(neighborWorldPos);
+                Chunk neighborChunk = world.GetChunkFromCoord(neighborVoxel.chunkCoord);
+                if (null == neighborChunk)
+                    continue;
 
-                VoxelState vox = GetVoxelState(neighbor);
+                VoxelState vox = neighborChunk.GetVoxelState(neighborVoxel.VexelPos);
                 if (null != vox)
                 {
-                    if (vox.globalLightPercent < GetVoxelState(v).globalLightPercent - VoxelData.lightFalloff)
+                    VoxelState voxel = world.GetChunkFromCoord(baseVoxel.chunkCoord).GetVoxelState(baseVoxel.VexelPos);
+                    if (vox.globalLightPercent < voxel.globalLightPercent - VoxelData.lightFalloff)
                     {
-                        vox.globalLightPercent = GetVoxelState(v).globalLightPercent - VoxelData.lightFalloff;
-
+                        vox.globalLightPercent = voxel.globalLightPercent - VoxelData.lightFalloff;
+                        neighborChunk.SetVoxelState(vox, neighborVoxel.VexelPos);
                         if (VoxelData.lightFalloff < vox.globalLightPercent)
-                            listVoxels.Enqueue(neighbor);
+                            calculateLightList.Enqueue(neighborWorldPos);
                     }
                 }
-
             }
         }
     }

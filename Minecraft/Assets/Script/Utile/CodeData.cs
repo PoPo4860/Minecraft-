@@ -4,23 +4,28 @@ using System.IO;
 public static class CodeData
 {
     /// <summary> <블럭코드, 텍스쳐 정보>가 담긴다. </summary>
-    private static readonly Dictionary<ushort, ushort[]> BlockInfo = new Dictionary<ushort, ushort[]>();
+    private static readonly Dictionary<ushort, BlockType> BlockInfo = new Dictionary<ushort, BlockType>();
     static CodeData()
     {
         ReadToBlockInfo();
     }
     public static ushort GetBlockTextureAtlases(ushort blockCode, int num)
     {
-        if (false == BlockInfo.TryGetValue(blockCode, out ushort[] textureAtlases))
+        if (false == BlockInfo.TryGetValue(blockCode, out BlockType textureAtlases))
         {
             UnityEngine.Debug.LogError("블럭 코드값 잘못줬는데? 병형신아");
         };
-        return textureAtlases[num];
+        return textureAtlases.textureAtlases[num];
     }
-    public static int GetBolckInfoSize()
+    public static BlockType GetBlockInfo(ushort blockCode)
     {
-        return BlockInfo.Count;
+        if (false == BlockInfo.TryGetValue(blockCode, out BlockType searchBlockType))
+        {
+            UnityEngine.Debug.LogError("블럭 코드값 잘못줬는데? 병형신아");
+        };
+        return searchBlockType;
     }
+
     private static void ReadToBlockInfo()
     {
         // 읽어올 text file 의 경로를 지정 합니다.
@@ -29,15 +34,15 @@ public static class CodeData
         for (int i = 0; i < textValue.Length; ++i)
         {
             string[] words = textValue[i].Split(',');
-
-            UInt16.TryParse(words[0], out ushort blockCode);
-            
-            ushort[] TextureAtlasesNum = new ushort[6];
-            for (int j = 1; j < 7; ++j) 
-            {
-                UInt16.TryParse(words[j], out TextureAtlasesNum[j - 1]);
-            }
-            BlockInfo.Add(blockCode, TextureAtlasesNum);
+            BlockType newBlock = new BlockType();
+            newBlock.blockName = words[0];
+            ushort.TryParse(words[1], out ushort blockCode);
+            for (int j = 2; j <= 7; ++j)
+                UInt16.TryParse(words[j], out newBlock.textureAtlases[j - 2]);
+            bool.TryParse(words[8], out newBlock.isSolid);
+            bool.TryParse(words[9], out newBlock.renderNeighborFaces);
+            byte.TryParse(words[10], out newBlock.opacity);
+            BlockInfo.Add(blockCode, newBlock);
         }
     }
 

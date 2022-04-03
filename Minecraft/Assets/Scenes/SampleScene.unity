@@ -523,7 +523,8 @@ MonoBehaviour:
   TextureAtlasTrans: {fileID: 2100000, guid: 1ef7be84f75f8a54ab479003fdb2b915, type: 2}
   PlayerObject: {fileID: 827087652}
   worldSeed: 0
-  globalLightLevel: 0
+  enableThreading: 0
+  globalLightLevel: 1
   day: {r: 0.41037738, g: 0.71922725, b: 1, a: 0}
   night: {r: 0.0983446, g: 0.0983446, b: 0.24528301, a: 0}
 --- !u!4 &711807305

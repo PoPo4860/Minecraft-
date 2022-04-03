@@ -85,9 +85,15 @@ public class World : MonoBehaviour
         chunks.TryGetValue(chunkPos, out Chunk getChunk);
         return getChunk;
     }
+    public Chunk GetChunkFromCoord(ChunkCoord chunkPos)
+    {
+        chunks.TryGetValue(new Vector2Int(chunkPos.x, chunkPos.z), out Chunk getChunk);
+        return getChunk;
+    }
     public Chunk GetChunkFromPos (Vector3 pos)
     {
-        Utile.VoxelPosAndChunkCoord result = Utile.PosNormalization(pos);
+        Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(pos);
+        
         chunks.TryGetValue(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z), out Chunk getChunk);
         return getChunk;
     }
@@ -199,8 +205,8 @@ public class World : MonoBehaviour
     }
     public bool CheckBlockSolid(in Vector3 pos)
     {
-        Utile.VoxelPosAndChunkCoord result =  Utile.PosNormalization(pos);
-
-        return 0 != GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetVoxelState(result.VexelPos).id;
+        Utile.ChunkCoordInPos result =  Utile.GetCoordInVoxelPosFromWorldPos(pos);
+        ushort blockCode = GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetVoxelState(result.VexelPos).id;
+        return CodeData.GetBlockInfo(blockCode).isSolid;
     }
 }

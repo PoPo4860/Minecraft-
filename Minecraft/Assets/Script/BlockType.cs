@@ -1,10 +1,10 @@
-public enum BlockType
+public class BlockType
 {
-    Air, Stone, Earth , Tree
-}
-public struct Block
-{
-    public ushort blockID;
-    public BlockType blockType;
-    public float transparency;
+    public ushort[] textureAtlases = new ushort[6];
+
+    public string blockName;
+    public bool isSolid;
+    public bool renderNeighborFaces;
+    public byte opacity;
+
 }
