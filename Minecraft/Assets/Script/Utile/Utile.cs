@@ -17,11 +17,11 @@ static class Utile
         }
     }
 
-    static public void TimeWatchStart()
+    static public void StartTimeWatch()
     {
         calculationTime.Start();
     }
-    static public void TimeWatchStop()
+    static public void StopTimeWatch()
     {
         calculationTime.Stop();
         Debug.Log(calculationTime.ElapsedMilliseconds.ToString() + "ms");

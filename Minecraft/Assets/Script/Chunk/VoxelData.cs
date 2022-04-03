@@ -10,8 +10,13 @@ public static class VoxelData
     //빛값
     public static float minLightLevel = 0.15f;
     public static float maxLightLevel = 0.8f;
-    public static float lightFalloff = 0.08f;
-    
+    public static float unitOfLight
+    {
+        get { return 1 / 16f; }
+    }
+
+
+
     // 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
     public static readonly float NormalizedTextureAtlasWidth = 1f / TextureAtlasWidth;
     public static readonly float NormalizedTextureAtlasHeight = 1f / TextureAtlasHeight;
