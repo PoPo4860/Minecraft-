@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class World : MonoBehaviour
 {
+    private static World instance = null;
+
     public Material TextureAtlas;
     public Material TextureAtlasTrans;
     [SerializeField] private GameObject PlayerObject;
@@ -23,6 +25,31 @@ public class World : MonoBehaviour
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
     private readonly Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
+
+    private void Awake()
+    {
+        if (null == instance)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    public static World Instance
+    {
+        get
+        {
+            if (null == instance)
+            {
+                return null;
+            }
+            return instance;
+        }
+    }
+
     private void Start()
     {
         worldSeed = Random.Range(0, 10000);
@@ -96,6 +123,11 @@ public class World : MonoBehaviour
         
         chunks.TryGetValue(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z), out Chunk getChunk);
         return getChunk;
+    }
+    public VoxelState GetVoxelFromWorldPos(Vector3Int gobalPos)
+    {
+        Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(gobalPos);
+        return GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetVoxelState(result.VexelPos);
     }
     private ChunkCoord GetChunkCoordFromWorldPos(in Vector3 worldPos)
     {

@@ -6,7 +6,6 @@ public class Chunk
 {
     public readonly VoxelState[,,] voxelMap =
         new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
-    private readonly World world;
 
     private readonly Queue<Vector3Int> createOrePos = new Queue<Vector3Int>();
     private readonly Queue<Vector3Int> createTreePos = new Queue<Vector3Int>();
@@ -30,11 +29,13 @@ public class Chunk
     public ChunkState chunkState;
     public ChunkCoord coord;
     #endregion
-
+    private World world
+    {
+        get { return World.Instance; }
+    }
     public Chunk(ChunkCoord coord, World world)
     {
         this.coord = coord;
-        this.world = world;
         chunkState = ChunkState.CoroutineStart;
         ChunkObject = new GameObject();
         meshRenderer = ChunkObject.AddComponent<MeshRenderer>();
@@ -50,7 +51,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    voxelMap[x, y, z] = new VoxelState(this);
+                    voxelMap[x, y, z] = new VoxelState(this, new Vector3Int(x, y, z));
                 }
             }
         }
@@ -81,6 +82,7 @@ public class Chunk
                 }
             }
         }
+
         meshFilter.mesh.vertices = meshVertices.ToArray();
         meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();

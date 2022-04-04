@@ -10,6 +10,7 @@ public static class VoxelData
     //빛값
     public static float minLightLevel = 0.15f;
     public static float maxLightLevel = 0.8f;
+
     public static float unitOfLight
     {
         get { return 1 / 16f; }
@@ -23,6 +24,10 @@ public static class VoxelData
 
     public static readonly byte ChunkWidth = 16;
     public static readonly byte ChunkHeight = 80;
+
+    public static readonly int[] revFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
+
+
     /// <summary> 큐브의 8개 버텍스의 상대 위치 </summary>
     public static readonly Vector3[] voxelVerts = new Vector3[8]
     {   // 정점을 설정
