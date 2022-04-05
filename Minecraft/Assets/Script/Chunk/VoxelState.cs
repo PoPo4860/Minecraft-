@@ -9,6 +9,7 @@ public class VoxelState
     [System.NonSerialized] public Chunk chunk;
     [System.NonSerialized] public VoxelNeighbours neighbours;
     [System.NonSerialized] public Vector3Int pos;
+    [System.NonSerialized] public ChunkCoord chunkCoord;
     public byte light
     {
         get { return _light; }
@@ -18,6 +19,8 @@ public class VoxelState
                 byte oldLightValue = _light;
                 byte oldCaseValue = castLight;
 
+                _light = value;
+
                 if (_light < oldLightValue)
                 {
                     List<int> neigboursToDarken = new List<int>();
@@ -25,23 +28,17 @@ public class VoxelState
                     {
                         if (neighbours[p] != null)
                         {
-                            if(neighbours[p].light < oldCaseValue)
+                            if(neighbours[p].light <= oldCaseValue)
                                 neigboursToDarken.Add(p);
                             else
-                            {
                                 neighbours[p].PropogateLight();
-                            }
                         }
                     }
                     foreach(int i in neigboursToDarken)
-                    {
                         neighbours[i].light = 0;
-                    }
 
                     if(chunk != null)
-                    {
                         World.Instance.ChunkListPush(chunk);
-                    }
                 }
                 else if (_light > 1)
                     PropogateLight();
@@ -70,10 +67,9 @@ public class VoxelState
                 if (neighbours[p].light < castLight)
                     neighbours[p].light = castLight;
             }
+
             if(chunk != null)
-            {
                 World.Instance.ChunkListPush(chunk);
-            }
         }
     }
 
@@ -85,11 +81,12 @@ public class VoxelState
     {
         get { return light * VoxelData.unitOfLight; }
     }
-    public VoxelState(Chunk _chunk, Vector3Int _pos, ushort _id = 0)
+    public VoxelState(Chunk _chunk, Vector3Int _pos, ChunkCoord _chunkCoord, ushort _id = 0)
     {
         neighbours = new VoxelNeighbours(this);
         id = _id;
         chunk = _chunk;
+        chunkCoord = _chunkCoord;
         pos = _pos;
         _light = 0;
     }
@@ -99,9 +96,9 @@ public class VoxelState
         get
         {
             return new Vector3Int(
-                pos.x + (int)chunk.ChunkObject.transform.position.x,
+                pos.x + chunkCoord.x,
                 pos.y,
-                pos.x + (int)chunk.ChunkObject.transform.position.x);
+                pos.z + chunkCoord.z);
         }
     }
 }
@@ -120,7 +117,7 @@ public class VoxelNeighbours
         {
             if (_neighbours[index] == null)
             {
-                _neighbours[index] = World.Instance.GetVoxelFromWorldPos(parent.globalPos+VoxelData.faceChecks[index]);
+                _neighbours[index] = World.Instance.GetVoxelFromWorldPos(parent.globalPos + VoxelData.faceChecks[index]);
                 ReturnNeighbour(index);
             }
             return _neighbours[index]; 
@@ -135,7 +132,7 @@ public class VoxelNeighbours
     {
         if (_neighbours[index] == null)
             return;
-
+        
         if (_neighbours[index].neighbours[VoxelData.revFaceCheckIndex[index]] != parent)
             _neighbours[index].neighbours[VoxelData.revFaceCheckIndex[index]] = parent;
     }

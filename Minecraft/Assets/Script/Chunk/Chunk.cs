@@ -51,7 +51,7 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
-                    voxelMap[x, y, z] = new VoxelState(this, new Vector3Int(x, y, z));
+                    voxelMap[x, y, z] = new VoxelState(this, new Vector3Int(x, y, z), coord);
                 }
             }
         }
@@ -77,10 +77,13 @@ public class Chunk
             {
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
+                    if (y == 5 && x == 5 && z == 5)
+                        continue;
+
                     for (int p = 0; p < 6; ++p)
                     {
                         Vector3 gobalPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, new Vector3(x, y, z));
-                        voxelMap[x, y, z].neighbours[p] = GetVoxelState(gobalPos + VoxelData.faceChecks[p]);
+                        voxelMap[x, y, z].neighbours[p] = GetVoxelState(new Vector3(x, y, z) + VoxelData.faceChecks[p]);
                     }
                 }
             }
@@ -279,7 +282,15 @@ public class Chunk
         {
 
             VoxelState neighborVoxel = GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
-            if (false == neighborVoxel.properties.renderNeighborFaces)
+
+            //if (null == neighborVoxel)
+            //{
+            //    Vector3Int gobalPos =  Utile.GetWorldPosFormCoordInVoxelPos(coord, voxelPos + VoxelData.faceChecks[face]);
+            //    Utile.ChunkCoordInPos result =  Utile.GetCoordInVoxelPosFromWorldPos(gobalPos);
+            //    world.CreateNewChunk(result.chunkCoord.x, result.chunkCoord.z);
+            //    neighborVoxel = GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
+            //}
+            if (false == neighborVoxel?.properties.renderNeighborFaces)
                 continue;
 
             for (int i = 0; i < 4; ++i)
@@ -292,8 +303,15 @@ public class Chunk
                 meshTriangles.Add(vertexIndex + i);
 
             vertexIndex += 4;
-
-            float lightLevel = currentVoxel.neighbours[face].light;
+            float lightLevel;
+            if(currentVoxel.neighbours[face] == null)
+            {
+                lightLevel = 0;
+            }
+            else
+            {
+                lightLevel = currentVoxel.neighbours[face].lightAsFloat;
+            }
             colors.Add(new Color(0, 0, 0, lightLevel));
             colors.Add(new Color(0, 0, 0, lightLevel));
             colors.Add(new Color(0, 0, 0, lightLevel));
@@ -379,7 +397,6 @@ public class Chunk
             return;
 
         VoxelState voxel = voxelMap[pos.x, pos.y, pos.z];
-        BlockType newVoxel = CodeData.GetBlockInfo(_id);
         byte oldOpacity = voxel.properties.opacity;
 
         voxel.id = _id;
