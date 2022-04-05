@@ -56,7 +56,6 @@ public class Chunk
             }
         }
         PopulateChunkMap();
-        Lighting.RecalculateNaturaLight(this);
         ChunkObject.SetActive(false);
     }
     public IEnumerator CreateChunkMesh()
@@ -70,9 +69,29 @@ public class Chunk
                 world.CreateNewChunk(ChunkHelperData.VectorCoord(i, coord));
             }
         }
+
+
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
-            if (y % 5 == 5) 
+            for (int x = 0; x < VoxelData.ChunkWidth; ++x)
+            {
+                for (int z = 0; z < VoxelData.ChunkWidth; ++z)
+                {
+                    for (int p = 0; p < 6; ++p)
+                    {
+                        Vector3 gobalPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, new Vector3(x, y, z));
+                        voxelMap[x, y, z].neighbours[p] = GetVoxelState(gobalPos + VoxelData.faceChecks[p]);
+                    }
+                }
+            }
+        }
+
+
+        Lighting.RecalculateNaturaLight(this);
+
+        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
+        {
+            if (y % 5 == 0) 
                 yield return null;
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {
@@ -83,15 +102,17 @@ public class Chunk
             }
         }
 
+
         meshFilter.mesh.vertices = meshVertices.ToArray();
         meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();
         meshFilter.mesh.colors = colors.ToArray();
         meshFilter.mesh.RecalculateNormals();
 
+        World.Instance.ChunkListPush(this);
         chunkState = ChunkState.CoroutineEnd;
     }
-    private void ApplyMeshData()
+    public void ApplyMeshData()
     {
         // 메시에 데이터들 초기화
         meshFilter.mesh.Clear();
@@ -100,6 +121,7 @@ public class Chunk
         colors.Clear();
         meshUv.Clear();
         vertexIndex = 0;
+
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
@@ -115,6 +137,8 @@ public class Chunk
         meshFilter.mesh.uv = meshUv.ToArray();
         meshFilter.mesh.colors = colors.ToArray();
         meshFilter.mesh.RecalculateNormals();
+
+
     }
     private void PopulateChunkMap()
     {
@@ -125,6 +149,7 @@ public class Chunk
                 for (int z = 0; z < VoxelData.ChunkWidth; ++z)
                 {
                     voxelMap[x, y, z].id = PopulateBlock(x, y, z);
+ 
                 }
             }
         }
@@ -268,7 +293,7 @@ public class Chunk
 
             vertexIndex += 4;
 
-            float lightLevel = neighborVoxel.lightAsFloat;
+            float lightLevel = currentVoxel.neighbours[face].light;
             colors.Add(new Color(0, 0, 0, lightLevel));
             colors.Add(new Color(0, 0, 0, lightLevel));
             colors.Add(new Color(0, 0, 0, lightLevel));
@@ -348,6 +373,26 @@ public class Chunk
     {
         voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = newVoxel;
     }
+    public void SetVoxelState(in Vector3Int pos, in ushort _id)
+    {
+        if (voxelMap[pos.x, pos.y, pos.z].id == _id)
+            return;
+
+        VoxelState voxel = voxelMap[pos.x, pos.y, pos.z];
+        BlockType newVoxel = CodeData.GetBlockInfo(_id);
+        byte oldOpacity = voxel.properties.opacity;
+
+        voxel.id = _id;
+
+        if (voxel.properties.opacity != oldOpacity &&
+            (pos.y == VoxelData.ChunkHeight - 1 || voxelMap[pos.x, pos.y + 1, pos.z].light == 15)) 
+        {
+            Lighting.CastNaturaLight(this, pos.x, pos.z, pos.y + 1);
+        }
+        World.Instance.ChunkListPush(this);
+
+
+    }
     private Chunk CheckProximityChunk(Vector2Int chunkPos)
     {
         Chunk chunk = world.GetChunkFromCoord(chunkPos);
@@ -358,24 +403,20 @@ public class Chunk
     public void ModifyChunkData(in Vector3Int voxelPos, ushort blockCode)
     {
         #region 플레이어 입력값 적용
-        if (blockCode != CodeData.BLOCK_AIR)
-            voxelMap[voxelPos.x, voxelPos.y, voxelPos.z].id = blockCode;
-        else
-        {
-            voxelMap[voxelPos.x, voxelPos.y, voxelPos.z].id = 0;
-        }
-        #endregion 
+        
+        SetVoxelState(voxelPos, blockCode);
+        #endregion
 
         #region 메쉬데이터 적용
-        ApplyMeshData();
+        World.Instance.ChunkListPush(this);
         if (voxelPos.x == 0)
-            CheckProximityChunk(ChunkHelperData.VectorCoord(0, coord)).ApplyMeshData();
+            World.Instance.ChunkListPush(CheckProximityChunk(ChunkHelperData.VectorCoord(0, coord)));
         else if (voxelPos.x == 15)
-            CheckProximityChunk(ChunkHelperData.VectorCoord(1, coord)).ApplyMeshData();
+            World.Instance.ChunkListPush(CheckProximityChunk(ChunkHelperData.VectorCoord(1, coord)));
         if (voxelPos.z == 0)
-            CheckProximityChunk(ChunkHelperData.VectorCoord(2, coord)).ApplyMeshData();
+            World.Instance.ChunkListPush(CheckProximityChunk(ChunkHelperData.VectorCoord(2, coord)));
         else if (voxelPos.z == 15)
-            CheckProximityChunk(ChunkHelperData.VectorCoord(3, coord)).ApplyMeshData();
+            World.Instance.ChunkListPush(CheckProximityChunk(ChunkHelperData.VectorCoord(3, coord)));
         #endregion
     }
 }

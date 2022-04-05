@@ -16,8 +16,6 @@ public static class VoxelData
         get { return 1 / 16f; }
     }
 
-
-
     // 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
     public static readonly float NormalizedTextureAtlasWidth = 1f / TextureAtlasWidth;
     public static readonly float NormalizedTextureAtlasHeight = 1f / TextureAtlasHeight;

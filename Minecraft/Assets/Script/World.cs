@@ -24,7 +24,8 @@ public class World : MonoBehaviour
     private readonly Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
-    private readonly Queue<Chunk> chunkUpdataList = new Queue<Chunk>();
+    private readonly Queue<Chunk> chunkUpdataQueue = new Queue<Chunk>();
+    private readonly List<Chunk> chunkModifyList = new List<Chunk>();
 
     private void Awake()
     {
@@ -65,25 +66,41 @@ public class World : MonoBehaviour
         Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
         Camera.main.backgroundColor = Color.Lerp(night, day, globalLightLevel);
 
-        if (chunkUpdataList.Count != 0)
+        if (chunkUpdataQueue.Count != 0)
         {
-            Chunk chunk = chunkUpdataList.Peek();
+            Chunk chunk = chunkUpdataQueue.Peek();
             if(chunk.chunkState == Chunk.ChunkState.CoroutineStart)
             {
                 StartCoroutine(chunk.CreateChunkMesh());
             }
             else if (chunk.chunkState == Chunk.ChunkState.CoroutineEnd)
             {
-                chunkUpdataList.Dequeue();
+                chunkUpdataQueue.Dequeue();
             }
         }
+
+        for(int i = 0; i < chunkModifyList.Count; ++i)
+        {
+            chunkModifyList[i].ApplyMeshData();
+        }
+        chunkModifyList.Clear();
+
     }
     public void ChunkQueuePush(Chunk chunk)
     {
-        if (false == chunkUpdataList.Contains(chunk))
+        if (false == chunkUpdataQueue.Contains(chunk))
         {
-            chunkUpdataList.Enqueue(chunk);
+            chunkUpdataQueue.Enqueue(chunk);
         }   
+    }
+    public void ChunkListPush(Chunk newChunk)
+    {
+        foreach (Chunk chunk in chunkModifyList)
+        {
+            if (chunk.coord == newChunk.coord)
+                return;
+        }
+        chunkModifyList.Add(newChunk);
     }
     private void GenerateWorld()
     {
@@ -127,7 +144,7 @@ public class World : MonoBehaviour
     public VoxelState GetVoxelFromWorldPos(Vector3Int gobalPos)
     {
         Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(gobalPos);
-        return GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetVoxelState(result.VexelPos);
+        return GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z))?.GetVoxelState(result.VexelPos);
     }
     private ChunkCoord GetChunkCoordFromWorldPos(in Vector3 worldPos)
     {

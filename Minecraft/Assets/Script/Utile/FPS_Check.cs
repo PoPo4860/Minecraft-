@@ -22,7 +22,7 @@ public class FPS_Check : MonoBehaviour
         {
             if (1.0f / deltaTime < 60)
             {
-                Debug.Log(deltaTime);
+                Debug.Log("60 프레임 아래로 내려감");
             }
         }
     }

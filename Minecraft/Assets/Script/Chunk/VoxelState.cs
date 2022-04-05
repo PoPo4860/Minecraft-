@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -14,7 +15,35 @@ public class VoxelState
         set { 
             if(value != _light)
             {
-                if (_light > 1)
+                byte oldLightValue = _light;
+                byte oldCaseValue = castLight;
+
+                if (_light < oldLightValue)
+                {
+                    List<int> neigboursToDarken = new List<int>();
+                    for (int p = 0; p < 6; ++p)
+                    {
+                        if (neighbours[p] != null)
+                        {
+                            if(neighbours[p].light < oldCaseValue)
+                                neigboursToDarken.Add(p);
+                            else
+                            {
+                                neighbours[p].PropogateLight();
+                            }
+                        }
+                    }
+                    foreach(int i in neigboursToDarken)
+                    {
+                        neighbours[i].light = 0;
+                    }
+
+                    if(chunk != null)
+                    {
+                        World.Instance.ChunkListPush(chunk);
+                    }
+                }
+                else if (_light > 1)
                     PropogateLight();
             }
         }
@@ -40,6 +69,10 @@ public class VoxelState
             {
                 if (neighbours[p].light < castLight)
                     neighbours[p].light = castLight;
+            }
+            if(chunk != null)
+            {
+                World.Instance.ChunkListPush(chunk);
             }
         }
     }
@@ -82,17 +115,21 @@ public class VoxelNeighbours
     public int Length { get { return _neighbours.Length; } }
     
     public VoxelState this[int index]
-    {
-
+    { 
         get
         {
             if (_neighbours[index] == null)
             {
                 _neighbours[index] = World.Instance.GetVoxelFromWorldPos(parent.globalPos+VoxelData.faceChecks[index]);
+                ReturnNeighbour(index);
             }
             return _neighbours[index]; 
         }
-        set { _neighbours[index] = value; }
+        set 
+        { 
+            _neighbours[index] = value;
+            ReturnNeighbour(index);
+        }
     }
     void ReturnNeighbour(int index)
     {

@@ -4,7 +4,6 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     #region .
-    [SerializeField] private World world;
     private float walkSpeed = 6f;
 
     #endregion
@@ -30,6 +29,10 @@ public class Player : MonoBehaviour
     private readonly float reach = 8.0f;
 
     public PlayerRigidbody playerRigi;
+    private World world
+    {
+        get { return World.Instance; }
+    }
     void Start()
     {
         Camera camera = GetComponentInChildren<Camera>();
