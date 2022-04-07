@@ -12,7 +12,6 @@ public class Chunk
 
     #region 메쉬데이터
     private int vertexIndex = 0;
-    private readonly List<Color> colors = new List<Color>();
     private readonly List<Vector3> meshVertices = new List<Vector3>();
     private readonly List<int> meshTriangles = new List<int>();
     private readonly List<Vector2> meshUv = new List<Vector2>();
@@ -70,31 +69,9 @@ public class Chunk
             }
         }
 
-
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
-            for (int x = 0; x < VoxelData.ChunkWidth; ++x)
-            {
-                for (int z = 0; z < VoxelData.ChunkWidth; ++z)
-                {
-                    if (y == 5 && x == 5 && z == 5)
-                        continue;
-
-                    for (int p = 0; p < 6; ++p)
-                    {
-                        Vector3 gobalPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, new Vector3(x, y, z));
-                        voxelMap[x, y, z].neighbours[p] = GetVoxelState(new Vector3(x, y, z) + VoxelData.faceChecks[p]);
-                    }
-                }
-            }
-        }
-
-
-        Lighting.RecalculateNaturaLight(this);
-
-        for (int y = 0; y < VoxelData.ChunkHeight; ++y)
-        {
-            if (y % 5 == 0) 
+            if (y % 5 == 10) 
                 yield return null;
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {
@@ -105,11 +82,9 @@ public class Chunk
             }
         }
 
-
         meshFilter.mesh.vertices = meshVertices.ToArray();
         meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();
-        meshFilter.mesh.colors = colors.ToArray();
         meshFilter.mesh.RecalculateNormals();
 
         World.Instance.ChunkListPush(this);
@@ -121,7 +96,6 @@ public class Chunk
         meshFilter.mesh.Clear();
         meshVertices.Clear();
         meshTriangles.Clear();
-        colors.Clear();
         meshUv.Clear();
         vertexIndex = 0;
 
@@ -138,10 +112,7 @@ public class Chunk
         meshFilter.mesh.vertices = meshVertices.ToArray();
         meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();
-        meshFilter.mesh.colors = colors.ToArray();
         meshFilter.mesh.RecalculateNormals();
-
-
     }
     private void PopulateChunkMap()
     {
@@ -283,13 +254,6 @@ public class Chunk
 
             VoxelState neighborVoxel = GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
 
-            //if (null == neighborVoxel)
-            //{
-            //    Vector3Int gobalPos =  Utile.GetWorldPosFormCoordInVoxelPos(coord, voxelPos + VoxelData.faceChecks[face]);
-            //    Utile.ChunkCoordInPos result =  Utile.GetCoordInVoxelPosFromWorldPos(gobalPos);
-            //    world.CreateNewChunk(result.chunkCoord.x, result.chunkCoord.z);
-            //    neighborVoxel = GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
-            //}
             if (false == neighborVoxel?.properties.renderNeighborFaces)
                 continue;
 
@@ -303,19 +267,6 @@ public class Chunk
                 meshTriangles.Add(vertexIndex + i);
 
             vertexIndex += 4;
-            float lightLevel;
-            if(currentVoxel.neighbours[face] == null)
-            {
-                lightLevel = 0;
-            }
-            else
-            {
-                lightLevel = currentVoxel.neighbours[face].lightAsFloat;
-            }
-            colors.Add(new Color(0, 0, 0, lightLevel));
-            colors.Add(new Color(0, 0, 0, lightLevel));
-            colors.Add(new Color(0, 0, 0, lightLevel));
-            colors.Add(new Color(0, 0, 0, lightLevel));
         }
     }
     private void AddTextureUV(int atlasesCode)
@@ -370,42 +321,13 @@ public class Chunk
             return null;
         return voxelMap[voxelPos.x, voxelPos.y, voxelPos.z];
     }
-    public VoxelState GetVoxelState(in int x, in int y, in int z)
-    {
-        Vector3Int voxelPos = new Vector3Int(x, y, z);
-        for (int i = 0; i < 4; ++i)
-        {
-            if (ChunkHelperData.Asd(voxelPos, i))
-            {
-                Vector3Int worldPos = Utile.GetWorldPosFormCoordInVoxelPos(coord, voxelPos);
-                Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(worldPos);
-                return world.GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z))?.GetVoxelState(result.VexelPos);
-            }
-        }
-
-        if (ChunkHelperData.Asd(voxelPos, 4))
-            return null;
-        return voxelMap[voxelPos.x, voxelPos.y, voxelPos.z];
-    }
-    public void SetVoxelState(in VoxelState newVoxel, in Vector3 pos)
-    {
-        voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = newVoxel;
-    }
     public void SetVoxelState(in Vector3Int pos, in ushort _id)
     {
         if (voxelMap[pos.x, pos.y, pos.z].id == _id)
             return;
 
         VoxelState voxel = voxelMap[pos.x, pos.y, pos.z];
-        byte oldOpacity = voxel.properties.opacity;
-
         voxel.id = _id;
-
-        if (voxel.properties.opacity != oldOpacity &&
-            (pos.y == VoxelData.ChunkHeight - 1 || voxelMap[pos.x, pos.y + 1, pos.z].light == 15)) 
-        {
-            Lighting.CastNaturaLight(this, pos.x, pos.z, pos.y + 1);
-        }
         World.Instance.ChunkListPush(this);
 
 

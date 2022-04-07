@@ -78,13 +78,14 @@ public class World : MonoBehaviour
                 chunkUpdataQueue.Dequeue();
             }
         }
-
-        for(int i = 0; i < chunkModifyList.Count; ++i)
+        if(chunkUpdataQueue.Count == 0)
         {
-            chunkModifyList[i].ApplyMeshData();
+            for (int i = 0; i < chunkModifyList.Count; ++i)
+            {
+                chunkModifyList[i].ApplyMeshData();
+            }
+            chunkModifyList.Clear();
         }
-        chunkModifyList.Clear();
-
     }
     public void ChunkQueuePush(Chunk chunk)
     {
@@ -95,6 +96,9 @@ public class World : MonoBehaviour
     }
     public void ChunkListPush(Chunk newChunk)
     {
+        if (newChunk.chunkState == Chunk.ChunkState.CoroutineStart)
+            return;
+
         foreach (Chunk chunk in chunkModifyList)
         {
             if (chunk.coord == newChunk.coord)

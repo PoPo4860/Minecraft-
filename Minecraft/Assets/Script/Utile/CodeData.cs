@@ -4,12 +4,12 @@ using System.IO;
 public static class CodeData
 {
     /// <summary> <블럭코드, 텍스쳐 정보>가 담긴다. </summary>
-    private static readonly Dictionary<ushort, BlockType> BlockInfo = new Dictionary<ushort, BlockType>();
+    private static readonly Dictionary<int, BlockType> BlockInfo = new Dictionary<int, BlockType>();
     static CodeData()
     {
         ReadToBlockInfo();
     }
-    public static ushort GetBlockTextureAtlases(ushort blockCode, int num)
+    public static ushort GetBlockTextureAtlases(int blockCode, int num)
     {
         if (false == BlockInfo.TryGetValue(blockCode, out BlockType textureAtlases))
         {
@@ -17,7 +17,7 @@ public static class CodeData
         };
         return textureAtlases.textureAtlases[num];
     }
-    public static BlockType GetBlockInfo(ushort blockCode)
+    public static BlockType GetBlockInfo(int blockCode)
     {
         if (false == BlockInfo.TryGetValue(blockCode, out BlockType searchBlockType))
         {
