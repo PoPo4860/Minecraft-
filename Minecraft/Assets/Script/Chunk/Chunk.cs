@@ -60,7 +60,7 @@ public class Chunk
 
         for (int y = 0; y < VoxelData.ChunkHeight; ++y)
         {
-            if (y % 5 == 10) 
+            if (y % 3 == 0) 
                 yield return null;
             for (int x = 0; x < VoxelData.ChunkWidth; ++x)
             {

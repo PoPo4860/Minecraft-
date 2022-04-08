@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,11 +14,11 @@ public class World : MonoBehaviour
     [Header("World Generation Values")]
     [HideInInspector] public int worldSeed;
 
-    private readonly int worldSizeInChunks = 5;
+    private readonly int worldSizeInChunks = 1;
     private readonly Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
-    private readonly List<Chunk> chunkCreateList = new List<Chunk>();
+    private readonly List<ChunkCoord> chunkCreateList = new List<ChunkCoord>();
     private Chunk currentCreateChunk;
     private void Awake()
     {
@@ -47,11 +48,17 @@ public class World : MonoBehaviour
     {
         worldSeed = UnityEngine.Random.Range(0, 10000);
         GenerateWorld();
+        UpdateChunksInViewRange(playerCurrentChounkCoord);
+        chunkCreateList.Sort(new ChunkSort(playerCurrentChounkCoord));
     }
     private void Update()
     {
-        UpdateChunksInViewRange();
-
+        ChunkCoord newPlayerChunkcoord = GetChunkCoordFromWorldPos(PlayerObject.transform.position);
+        if (playerCurrentChounkCoord != newPlayerChunkcoord)
+        {
+            UpdateChunksInViewRange(newPlayerChunkcoord);
+            chunkCreateList.Sort(new ChunkSort(playerCurrentChounkCoord));
+        }
         CreateChunk();
     }
 
@@ -59,49 +66,50 @@ public class World : MonoBehaviour
     {
         if (currentCreateChunk != null)
         {
-            if (currentCreateChunk.chunkState == Chunk.ChunkState.CoroutineEnd)
+            if (currentCreateChunk.chunkState == Chunk.ChunkState.CoroutineStart)
+                StartCoroutine(currentCreateChunk.CreateChunkMesh());
+            else if (currentCreateChunk.chunkState == Chunk.ChunkState.CoroutineEnd)
                 currentCreateChunk = null;
             else
                 return;
         }
         if (chunkCreateList.Count != 0 && currentCreateChunk == null)
         {
-            ChunkSort newSort = new ChunkSort(playerCurrentChounkCoord);
-            chunkCreateList.Sort(newSort);
             int index = chunkCreateList.Count - 1;
-            currentCreateChunk = chunkCreateList[index];
+            currentCreateChunk = GetChunkFromCoord(chunkCreateList[index]);
+            if (currentCreateChunk == null)
+                currentCreateChunk = CreateNewChunk(chunkCreateList[index]);
             StartCoroutine(currentCreateChunk.CreateChunkMesh());
             chunkCreateList.RemoveAt(index);
         }
     }
-    public void ChunkQueuePush(Chunk chunk)
+    public void ChunkQueuePush(ChunkCoord coord)
     {
-        if (false == chunkCreateList.Contains(chunk))
+        if (false == chunkCreateList.Contains(coord))
         {
-            chunkCreateList.Add(chunk);
+            chunkCreateList.Add(coord);
         }   
     }
-
     private void GenerateWorld()
     {
         for (int x = -worldSizeInChunks; x < worldSizeInChunks; x++)
         {
             for (int z = -worldSizeInChunks; z < worldSizeInChunks; z++)
             {
-                ChunkQueuePush(CreateNewChunk(x, z));
+                CreateNewChunk(new ChunkCoord(x, z));
             }
         }
-    }
-    public Chunk CreateNewChunk(in int x, in int z)
-    {
-        Chunk chunk = new Chunk(new ChunkCoord(x, z), this);
-        chunks.Add(new Vector2Int(x, z), chunk);
-        return chunk;
     }
     public Chunk CreateNewChunk(in Vector2Int chunkPos)
     {
         Chunk chunk = new Chunk(new ChunkCoord(chunkPos.x, chunkPos.y), this);
         chunks.Add(chunkPos, chunk);
+        return chunk;
+    }
+    public Chunk CreateNewChunk(in ChunkCoord chunkPos)
+    {
+        Chunk chunk = new Chunk(chunkPos, this);
+        chunks.Add(new Vector2Int(chunkPos.x, chunkPos.z), chunk);
         return chunk;
     }
     public Chunk GetChunkFromCoord(Vector2Int chunkPos)
@@ -121,12 +129,6 @@ public class World : MonoBehaviour
         chunks.TryGetValue(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z), out Chunk getChunk);
         return getChunk;
     }
-    public VoxelState GetVoxelFromWorldPos(Vector3Int gobalPos)
-    {
-        Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(gobalPos);
-        return GetChunkFromCoord(result.chunkCoord)?
-            .chunkMapData.GetVoxelState(result.voxelPos);
-    }
     private ChunkCoord GetChunkCoordFromWorldPos(in Vector3 worldPos)
     {
         int x = (int)(worldPos.x / VoxelData.ChunkWidth);
@@ -136,102 +138,27 @@ public class World : MonoBehaviour
         if (worldPos.z < 0) --z;
         return new ChunkCoord(x, z);
     }
-    private void UpdateChunksInViewRange()
+    private void UpdateChunksInViewRange(ChunkCoord newCoord)
     {
-        ChunkCoord newPlayerChunkcoord = GetChunkCoordFromWorldPos(PlayerObject.transform.position);
-        if (playerCurrentChounkCoord != newPlayerChunkcoord)
+        int view = 10;
+        for (int x = -view; x < view; ++x)
         {
-            int?[,] currentViewChinkCoord = new int?[37, 2]{
-                              {-1,-3 },{+0,-3 },{+1,-3 },
-                     {-2,-2 },{-1,-2 },{+0,-2 },{+1,-2 },{+2,-2 },
-            {-3,-1 },{-2,-1 },{-1,-1 },{+0,-1 },{+1,-1 },{+2,-1 },{+3,-1 },
-            {-3,+0 },{-2,+0 },{-1,+0 },{+0,+0 },{+1,+0 },{+2,+0 },{+3,+0 },
-            {-3,+1 },{-2,+1 },{-1,+1 },{+0,+1 },{+1,+1 },{+2,+1 },{+3,+1 },
-                     {-2,+2 },{-1,+2 },{+0,+2 },{+1,+2 },{+2,+2 },
-                              {-1,+3 },{+0,+3 },{+1,+3 }};
-            int?[,] newViewChinkCoord = new int?[37, 2]{
-                              {-1,-3 },{+0,-3 },{+1,-3 },
-                     {-2,-2 },{-1,-2 },{+0,-2 },{+1,-2 },{+2,-2 },
-            {-3,-1 },{-2,-1 },{-1,-1 },{+0,-1 },{+1,-1 },{+2,-1 },{+3,-1 },
-            {-3,+0 },{-2,+0 },{-1,+0 },{+0,+0 },{+1,+0 },{+2,+0 },{+3,+0 },
-            {-3,+1 },{-2,+1 },{-1,+1 },{+0,+1 },{+1,+1 },{+2,+1 },{+3,+1 },
-                     {-2,+2 },{-1,+2 },{+0,+2 },{+1,+2 },{+2,+2 },
-                              {-1,+3 },{+0,+3 },{+1,+3 }};
-            for (int i = 0; i < 37; ++i)
+            for (int z = -view; z < view; ++z)
             {
-                currentViewChinkCoord[i, 0] += playerCurrentChounkCoord.x;
-                currentViewChinkCoord[i, 1] += playerCurrentChounkCoord.z;
-                newViewChinkCoord[i, 0] += newPlayerChunkcoord.x;
-                newViewChinkCoord[i, 1] += newPlayerChunkcoord.z;
-            }
+                ChunkCoord coord = new ChunkCoord(playerCurrentChounkCoord.x + x, playerCurrentChounkCoord.z + z);
+                Chunk chunk = GetChunkFromCoord(coord);
 
-            // 두 좌표배열의 중복되는 좌표값을 null로 바꿔주는 반복문
-            for (int currentNum = 0; currentNum < 37; ++currentNum)
-            {
-                for (int newNum = 0; newNum < 37; ++newNum)
-                {
-                    // 좌표값이 null인경우(중복좌표라 지워진 경우) 다음좌표를 검색.
-                    if (newViewChinkCoord[newNum, 0] == null)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        // 겹치는 좌표값이 있다면 좌표를 지워준다.
-                        if (newViewChinkCoord[newNum, 0] == currentViewChinkCoord[currentNum, 0] &&
-                            newViewChinkCoord[newNum, 1] == currentViewChinkCoord[currentNum, 1])
-                        {
-                            newViewChinkCoord[newNum, 0] = null;
-                            newViewChinkCoord[newNum, 1] = null;
-                            currentViewChinkCoord[currentNum, 0] = null;
-                            currentViewChinkCoord[currentNum, 1] = null;
-                            break;
-                        }
-                    }
-                }
-                // 좌표값이 null인경우(중복좌표라 지워진 경우) 다음좌표를 검색.
-                if (currentViewChinkCoord[currentNum, 0] == null)
-                {
-                    continue;
-                }
-            }
+                if (null == chunk)
+                    ChunkQueuePush(coord);
+                else if (Chunk.ChunkState.CoroutineStart == chunk.chunkState)
+                    ChunkQueuePush(coord);
+                else if (Chunk.ChunkState.CoroutineEnd == chunk.chunkState && chunk.ChunkObject.gameObject.activeSelf == false)
+                    chunk.ChunkObject.gameObject.SetActive(true);
 
-            for (int i = 0; i < 37; ++i)
-            {
-                if (currentViewChinkCoord[i, 0] != null)
-                {
-                    int x = (int)currentViewChinkCoord[i, 0];
-                    int z = (int)currentViewChinkCoord[i, 1];
-                    GetChunkFromCoord(new Vector2Int(x, z)).ChunkObject.SetActive(false);
-                }
-                if (newViewChinkCoord[i, 0] != null)
-                {
-                    int x = (int)newViewChinkCoord[i, 0];
-                    int z = (int)newViewChinkCoord[i, 1];
-                    Chunk chunk = GetChunkFromCoord(new Vector2Int(x, z));
-                    if (chunk == null)
-                    {
-                        Chunk newChunk = new Chunk(new ChunkCoord(x, z), this);
-                        ChunkQueuePush(newChunk);
-                        chunks.Add(new Vector2Int(x, z), newChunk);
-                    }
-                    else
-                    {
-                        if(chunk.chunkState == Chunk.ChunkState.CoroutineStart)
-                        {
-                            ChunkQueuePush(chunk);
-                        }
-                        else
-                        {
-                            chunk.ChunkObject.SetActive(true);
-                        }
-                    }
-                }
             }
-
-            // 플레이어의 현재 좌표값 갱신
-            playerCurrentChounkCoord = newPlayerChunkcoord;
         }
+        // 플레이어의 현재 좌표값 갱신
+        playerCurrentChounkCoord = newCoord;
     }
     public bool CheckBlockSolid(in Vector3 pos)
     {
@@ -241,7 +168,8 @@ public class World : MonoBehaviour
         return CodeData.GetBlockInfo(blockCode).isSolid;
     }
 }
-class ChunkSort : IComparer<Chunk>
+
+class ChunkSort : IComparer<ChunkCoord>
 {
     public ChunkCoord coord;
     public ChunkSort(ChunkCoord _coord) //생성자
@@ -249,20 +177,13 @@ class ChunkSort : IComparer<Chunk>
         coord = _coord;
     }
 
-    public int Compare(Chunk a, Chunk b)
+    public int Compare(ChunkCoord a, ChunkCoord b)
     {
-        int aCoordx = Mathf.Abs(a.coord.x);
-        int aCoordz = Mathf.Abs(a.coord.z);
-        int bCoordx = Mathf.Abs(b.coord.x);
-        int bCoordz = Mathf.Abs(b.coord.z);
-        int coordx = Mathf.Abs(coord.x);
-        int coordz = Mathf.Abs(coord.z);
-        int aChunk = (Mathf.Abs(aCoordx - coordx) + Mathf.Abs(aCoordz - coordz));
-        int bChunk = (Mathf.Abs(bCoordx - coordx) + Mathf.Abs(bCoordz - coordz));
-
-        if (aChunk > bChunk)
+        float aDis = Vector2.Distance(new Vector2(coord.x, coord.z), new Vector2(a.x, a.z));
+        float bDis = Vector2.Distance(new Vector2(coord.x, coord.z), new Vector2(b.x, b.z));
+        if (aDis > bDis)
             return -1;
-        else if (aChunk < bChunk)
+        else if (aDis < bDis)
             return 1;
         else
             return 0;
