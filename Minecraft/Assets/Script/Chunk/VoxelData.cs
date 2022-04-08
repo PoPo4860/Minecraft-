@@ -7,10 +7,6 @@ public static class VoxelData
     public static readonly int TextureAtlasWidth = 20;
     public static readonly int TextureAtlasHeight = 20;
 
-    //ºû°ª
-    public static float minLightLevel = 0.15f;
-    public static float maxLightLevel = 0.8f;
-
     public static float unitOfLight
     {
         get { return 1 / 16f; }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,21 +13,12 @@ public class World : MonoBehaviour
     [Header("World Generation Values")]
     [HideInInspector] public int worldSeed;
 
-    [Header("Performance")]
-    public bool enableThreading;
-
-    [Range(0f, 1f)] public float globalLightLevel;
-
-    public Color day;
-    public Color night;
-
     private readonly int worldSizeInChunks = 5;
     private readonly Dictionary<Vector2Int, Chunk> chunks = new Dictionary<Vector2Int, Chunk>();
 
     private ChunkCoord playerCurrentChounkCoord = new ChunkCoord(0,0);
-    private readonly Queue<Chunk> chunkUpdataQueue = new Queue<Chunk>();
-    private readonly List<Chunk> chunkModifyList = new List<Chunk>();
-
+    private readonly List<Chunk> chunkCreateList = new List<Chunk>();
+    private Chunk currentCreateChunk;
     private void Awake()
     {
         if (null == instance)
@@ -53,59 +45,43 @@ public class World : MonoBehaviour
 
     private void Start()
     {
-        worldSeed = Random.Range(0, 10000);
-
-        Shader.SetGlobalFloat("minGlobalLightLevel", VoxelData.minLightLevel);
-        Shader.SetGlobalFloat("maxGlobalLightLevel", VoxelData.maxLightLevel);
+        worldSeed = UnityEngine.Random.Range(0, 10000);
         GenerateWorld();
     }
     private void Update()
     {
         UpdateChunksInViewRange();
 
-        Shader.SetGlobalFloat("GlobalLightLevel", globalLightLevel);
-        Camera.main.backgroundColor = Color.Lerp(night, day, globalLightLevel);
+        CreateChunk();
+    }
 
-        if (chunkUpdataQueue.Count != 0)
+    private void CreateChunk()
+    {
+        if (currentCreateChunk != null)
         {
-            Chunk chunk = chunkUpdataQueue.Peek();
-            if(chunk.chunkState == Chunk.ChunkState.CoroutineStart)
-            {
-                StartCoroutine(chunk.CreateChunkMesh());
-            }
-            else if (chunk.chunkState == Chunk.ChunkState.CoroutineEnd)
-            {
-                chunkUpdataQueue.Dequeue();
-            }
+            if (currentCreateChunk.chunkState == Chunk.ChunkState.CoroutineEnd)
+                currentCreateChunk = null;
+            else
+                return;
         }
-        if(chunkUpdataQueue.Count == 0)
+        if (chunkCreateList.Count != 0 && currentCreateChunk == null)
         {
-            for (int i = 0; i < chunkModifyList.Count; ++i)
-            {
-                chunkModifyList[i].ApplyMeshData();
-            }
-            chunkModifyList.Clear();
+            ChunkSort newSort = new ChunkSort(playerCurrentChounkCoord);
+            chunkCreateList.Sort(newSort);
+            int index = chunkCreateList.Count - 1;
+            currentCreateChunk = chunkCreateList[index];
+            StartCoroutine(currentCreateChunk.CreateChunkMesh());
+            chunkCreateList.RemoveAt(index);
         }
     }
     public void ChunkQueuePush(Chunk chunk)
     {
-        if (false == chunkUpdataQueue.Contains(chunk))
+        if (false == chunkCreateList.Contains(chunk))
         {
-            chunkUpdataQueue.Enqueue(chunk);
+            chunkCreateList.Add(chunk);
         }   
     }
-    public void ChunkListPush(Chunk newChunk)
-    {
-        if (newChunk.chunkState == Chunk.ChunkState.CoroutineStart)
-            return;
 
-        foreach (Chunk chunk in chunkModifyList)
-        {
-            if (chunk.coord == newChunk.coord)
-                return;
-        }
-        chunkModifyList.Add(newChunk);
-    }
     private void GenerateWorld()
     {
         for (int x = -worldSizeInChunks; x < worldSizeInChunks; x++)
@@ -148,7 +124,8 @@ public class World : MonoBehaviour
     public VoxelState GetVoxelFromWorldPos(Vector3Int gobalPos)
     {
         Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(gobalPos);
-        return GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z))?.GetVoxelState(result.VexelPos);
+        return GetChunkFromCoord(result.chunkCoord)?
+            .chunkMapData.GetVoxelState(result.voxelPos);
     }
     private ChunkCoord GetChunkCoordFromWorldPos(in Vector3 worldPos)
     {
@@ -259,7 +236,35 @@ public class World : MonoBehaviour
     public bool CheckBlockSolid(in Vector3 pos)
     {
         Utile.ChunkCoordInPos result =  Utile.GetCoordInVoxelPosFromWorldPos(pos);
-        ushort blockCode = GetChunkFromCoord(new Vector2Int(result.chunkCoord.x, result.chunkCoord.z)).GetVoxelState(result.VexelPos).id;
+        ushort blockCode = GetChunkFromCoord(result.chunkCoord).
+            chunkMapData.GetVoxelState(result.voxelPos).id;
         return CodeData.GetBlockInfo(blockCode).isSolid;
+    }
+}
+class ChunkSort : IComparer<Chunk>
+{
+    public ChunkCoord coord;
+    public ChunkSort(ChunkCoord _coord) //»ý¼ºÀÚ
+    {
+        coord = _coord;
+    }
+
+    public int Compare(Chunk a, Chunk b)
+    {
+        int aCoordx = Mathf.Abs(a.coord.x);
+        int aCoordz = Mathf.Abs(a.coord.z);
+        int bCoordx = Mathf.Abs(b.coord.x);
+        int bCoordz = Mathf.Abs(b.coord.z);
+        int coordx = Mathf.Abs(coord.x);
+        int coordz = Mathf.Abs(coord.z);
+        int aChunk = (Mathf.Abs(aCoordx - coordx) + Mathf.Abs(aCoordz - coordz));
+        int bChunk = (Mathf.Abs(bCoordx - coordx) + Mathf.Abs(bCoordz - coordz));
+
+        if (aChunk > bChunk)
+            return -1;
+        else if (aChunk < bChunk)
+            return 1;
+        else
+            return 0;
     }
 }

@@ -5,31 +5,28 @@ using UnityEngine;
 public class VoxelState
 {
     public ushort id;
-    [System.NonSerialized] public Chunk chunk;
-    [System.NonSerialized] public Vector3Int pos;
-    [System.NonSerialized] public ChunkCoord chunkCoord;
+    private readonly Vector3Int voxelPos;
+    private readonly ChunkMapData chunkMapData;
     public BlockType properties
     {
         get { return CodeData.GetBlockInfo(id); }
     }
 
-    public VoxelState(Chunk _chunk, Vector3Int _pos, ChunkCoord _chunkCoord, ushort _id = 0)
+    public Vector3Int gobalPos
     {
-        id = _id;
-        chunk = _chunk;
-        chunkCoord = _chunkCoord;
-        pos = _pos;
+        get {
+            return new Vector3Int(
+        (chunkMapData.coord.x * VoxelData.ChunkWidth) + voxelPos.x,
+        voxelPos.y,
+        (chunkMapData.coord.z * VoxelData.ChunkWidth) + voxelPos.z);
+        }
     }
 
-    public Vector3Int globalPos
+    public VoxelState(ChunkMapData _chunkMapData, Vector3Int _voxelPos, ushort _id = 0)
     {
-        get
-        {
-            return new Vector3Int(
-                pos.x + chunkCoord.x,
-                pos.y,
-                pos.z + chunkCoord.z);
-        }
+        voxelPos = _voxelPos;
+        chunkMapData = _chunkMapData;
+        id = _id;
     }
 }
 

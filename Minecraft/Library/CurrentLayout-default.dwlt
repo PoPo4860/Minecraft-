@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 1920
     height: 997
   m_ShowMode: 4
-  m_Title: Inspector
+  m_Title: Project
   m_RootView: {fileID: 2}
-  m_MinSize: {x: 875, y: 542}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -46,7 +46,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 997
-  m_MinSize: {x: 875, y: 542}
+  m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -122,7 +122,7 @@ MonoBehaviour:
   m_MinSize: {x: 679, y: 492}
   m_MaxSize: {x: 14002, y: 14042}
   vertical: 0
-  controlID: 93
+  controlID: 101
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 492}
   m_MaxSize: {x: 10001, y: 14042}
   vertical: 1
-  controlID: 94
+  controlID: 102
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 95
+  controlID: 103
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -307,9 +307,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 98f1ffff
-      m_LastClickedID: -3688
-      m_ExpandedIDs: 70fbffff503d0000543d0000623d0000783d00007e3d0000
+      m_SelectedIDs: 140c0000
+      m_LastClickedID: 0
+      m_ExpandedIDs: 70fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -369,9 +369,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 6.1741724, y: 55.114418, z: 11.385333}
+    m_Target: {x: 69.05595, y: 35.756863, z: 62.74342}
     speed: 2
-    m_Value: {x: 6.1741724, y: 55.114418, z: 11.385333}
+    m_Value: {x: 69.05595, y: 35.756863, z: 62.74342}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -418,20 +418,20 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.10773022, y: -0.35309142, z: 0.052416362, w: -0.9302153}
+    m_Target: {x: -0.27561402, y: 0.14059477, z: -0.028151097, w: -0.9528343}
     speed: 2
-    m_Value: {x: -0.10757622, y: -0.35093725, z: 0.052142013, w: -0.9287366}
+    m_Value: {x: -0.27561402, y: 0.14059477, z: -0.028151097, w: -0.9528343}
   m_Size:
-    m_Target: 10
+    m_Target: 15.109152
     speed: 2
-    m_Value: 33.922394
+    m_Value: 15.109152
   m_Ortho:
     m_Target: 0
     speed: 2
     m_Value: 0
   m_CameraSettings:
-    m_Speed: 1.2803606
-    m_SpeedNormalized: 0.6400003
+    m_Speed: 0.60069996
+    m_SpeedNormalized: 0.29999998
     m_SpeedMin: 0.001
     m_SpeedMax: 2
     m_EasingEnabled: 1
@@ -497,8 +497,8 @@ MonoBehaviour:
     vZoomLockedByDefault: 0
     m_HBaseRangeMin: -716
     m_HBaseRangeMax: 716
-    m_VBaseRangeMin: -317
-    m_VBaseRangeMax: 317
+    m_VBaseRangeMin: -327.5
+    m_VBaseRangeMax: 327.5
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -515,11 +515,11 @@ MonoBehaviour:
     m_DrawArea:
       serializedVersion: 2
       x: 0
-      y: 21
+      y: 0
       width: 1432
-      height: 634
+      height: 655
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 716, y: 317}
+    m_Translation: {x: 716, y: 327.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
@@ -527,9 +527,9 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
       x: -716
-      y: -317
+      y: -327.5
       width: 1432
-      height: 634
+      height: 655
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 1432, y: 655}
@@ -576,23 +576,23 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Materials
+    - Assets/Script/Chunk
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 69
   m_LastFolders:
-  - Assets/Materials
+  - Assets/Script/Chunk
   m_LastFoldersGridSize: 69
   m_LastProjectPath: "C:\\Users\\dltng\\Desktop\\\uB9C8\uC778\uD06C\uB798\uD504\uD2B8
     \uBAA8\uC791\\Minecraft-\\Minecraft"
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 10}
-    m_SelectedIDs: ea3d0000
-    m_LastClickedID: 15850
-    m_ExpandedIDs: 00000000da3d0000dc3d0000de3d0000f23d000000ca9a3b
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: fc3d0000
+    m_LastClickedID: 15868
+    m_ExpandedIDs: 00000000e03d0000e23d0000e43d0000f63d000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -620,7 +620,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 00000000da3d0000dc3d0000de3d0000
+    m_ExpandedIDs: 00000000e03d0000e23d0000e43d0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

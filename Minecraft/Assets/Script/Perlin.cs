@@ -23,11 +23,11 @@ public class Perlin
     //    y : ÇöÀç yÁÂÇ¥
     //}
 
-    public static float GetPerlinNoiseTerrain(in ChunkCoord coord, in int seed, in int x, in int y, in int z, in float scale = 15)
+    public static float GetPerlinNoiseTerrain(in ChunkCoord coord, in int seed, in Vector3Int pos, in float scale = 15)
     {
-        float X = (coord.x * VoxelData.ChunkWidth) + x;
-        float Y = y;
-        float Z = (coord.z * VoxelData.ChunkWidth) + z;
+        float X = (coord.x * VoxelData.ChunkWidth) + pos.x;
+        float Y = pos.y;
+        float Z = (coord.z * VoxelData.ChunkWidth) + pos.z;
         X = (X / scale) + seed;
         Y = (Y / scale) + seed;
         Z = (Z / scale) + seed;
@@ -41,15 +41,15 @@ public class Perlin
         float XZ = Mathf.PerlinNoise(X, Z);
         float minHight = 20;
         float value = (XY + YZ + ZX + YX + ZY + XZ) / 6f;
-        value = value * 40 + minHight - y;
+        value = value * 40 + minHight - pos.y;
         
         return value;
     }
-    public static float GetPerlinNoiseCave(in ChunkCoord coord, in int seed, in int x, in int y, in int z, in float scale = 15)
+    public static float GetPerlinNoiseCave(in ChunkCoord coord, in int seed, in Vector3Int pos, in float scale = 15)
     {
-        float X = (coord.x * VoxelData.ChunkWidth) + x;
-        float Y = y;
-        float Z = (coord.z * VoxelData.ChunkWidth) + z;
+        float X = (coord.x * VoxelData.ChunkWidth) + pos.x;
+        float Y = pos.y;
+        float Z = (coord.z * VoxelData.ChunkWidth) + pos.z;
         X = (X / scale) + (seed*3);
         Y = (Y / scale) + (seed*3);
         Z = (Z / scale) + (seed*3);

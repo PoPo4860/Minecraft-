@@ -8,11 +8,11 @@ static class Utile
 
     public struct ChunkCoordInPos
     {
-        public Vector3 VexelPos;
+        public Vector3 voxelPos;
         public ChunkCoord chunkCoord;
         public ChunkCoordInPos(Vector3 newVexelPos, ChunkCoord newChunkCoord)
          {
-            VexelPos = newVexelPos;
+            voxelPos = newVexelPos;
             chunkCoord = newChunkCoord;
         }
     }
