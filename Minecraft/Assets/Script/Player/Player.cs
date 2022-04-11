@@ -16,17 +16,13 @@ public class Player : MonoBehaviour
     private float mouseY;
     #endregion
 
-    //private float boundsTolerance = 0.3f;
-    //private float vericalMomentum = 0f;
-
-    //private bool isJumping = false;
-    //private bool isRunning = false;
-    //private bool jumpRequested = false;
-
     [SerializeField] private Transform highlightBlock;
     private Vector3 placeBlock = new Vector3();
     private readonly float checkIncrement = 0.1f;
     private readonly float reach = 8.0f;
+    public GameObject playerUI;
+
+    private bool activePlayerUI = false;
 
     public PlayerRigidbody playerRigi;
     private World world
@@ -41,13 +37,22 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        GetPlayerInputs();
+        GetPlayerUiInput();
+
+        if (true == activePlayerUI)
+            return;
+
+        GetPlayerControlInput();
         PlaceCursorBlocks();
     }
     void SetCursor()
     {
         Cursor.visible = !Cursor.visible;
         Cursor.lockState = Cursor.lockState != CursorLockMode.None ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+    void SetCursor(bool check)
+    {
+        playerUI.SetActive(check);
     }
     private void FixedUpdate()
     {
@@ -57,7 +62,19 @@ public class Player : MonoBehaviour
     {
         MoveAndRotate();
     }
-    private void GetPlayerInputs()
+    private void GetPlayerUiInput()
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+            activePlayerUI = !activePlayerUI;
+
+        horizontal = 0;
+        vertical = 0;
+        mouseX = 0;
+        mouseY = 0;
+        SetCursor(activePlayerUI);
+    }
+
+    private void GetPlayerControlInput()
     {
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
@@ -67,8 +84,8 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
             playerRigi.InputJump();
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-            SetCursor();
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //    SetCursor();
 
         if (Input.GetKeyDown(KeyCode.R)) 
             walkSpeed = 10;
