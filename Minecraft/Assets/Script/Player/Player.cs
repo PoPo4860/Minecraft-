@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     private float mouseY;
     #endregion
 
+    
+
     [SerializeField] private Transform highlightBlock;
     private Vector3 placeBlock = new Vector3();
     private readonly float checkIncrement = 0.1f;
@@ -25,6 +27,7 @@ public class Player : MonoBehaviour
     private bool activePlayerUI = false;
 
     public PlayerRigidbody playerRigi;
+    public PlayerQuickSlot playerQuickSlot;
     private World world
     {
         get { return World.Instance; }
@@ -33,24 +36,19 @@ public class Player : MonoBehaviour
     {
         Camera camera = GetComponentInChildren<Camera>();
         cameraTransform = camera.transform;
-        SetCursor();
+        playerUI.SetActive(false);
     }
     void Update()
     {
-        GetPlayerUiInput();
-
+        GetPlayerUIInput();
         if (true == activePlayerUI)
             return;
 
         GetPlayerControlInput();
         PlaceCursorBlocks();
     }
-    void SetCursor()
-    {
-        Cursor.visible = !Cursor.visible;
-        Cursor.lockState = Cursor.lockState != CursorLockMode.None ? CursorLockMode.None : CursorLockMode.Locked;
-    }
-    void SetCursor(bool check)
+
+    void SetPlayerUI(bool check)
     {
         playerUI.SetActive(check);
     }
@@ -62,30 +60,27 @@ public class Player : MonoBehaviour
     {
         MoveAndRotate();
     }
-    private void GetPlayerUiInput()
+    private void GetPlayerUIInput()
     {
         if (Input.GetKeyDown(KeyCode.E))
+        {
             activePlayerUI = !activePlayerUI;
-
-        horizontal = 0;
-        vertical = 0;
-        mouseX = 0;
-        mouseY = 0;
-        SetCursor(activePlayerUI);
+            SetPlayerUI(activePlayerUI);
+            horizontal = 0;
+            vertical = 0;
+            mouseX = 0;
+            mouseY = 0;
+        }
     }
-
     private void GetPlayerControlInput()
     {
+        #region 플레이어 움직임 관련
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
         mouseX = Input.GetAxis("Mouse X") * 5;
         mouseY = Input.GetAxis("Mouse Y") * 5;
-        //float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (Input.GetKey(KeyCode.Space))
             playerRigi.InputJump();
-
-        //if (Input.GetKeyDown(KeyCode.Escape))
-        //    SetCursor();
 
         if (Input.GetKeyDown(KeyCode.R)) 
             walkSpeed = 10;
@@ -104,7 +99,11 @@ public class Player : MonoBehaviour
             playerRigi.InputShift(false);
             walkSpeed = 6;
         }
+        #endregion 
 
+        #region 퀵 슬롯 관련
+
+        #endregion
         if (true == highlightBlock.gameObject.activeSelf)
         {
             if (Input.GetMouseButtonDown(0))
@@ -114,11 +113,13 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(1))
             {
+                ushort itemCode = playerQuickSlot.UseQuickSlotItemCode();
                 world.GetChunkFromPos(placeBlock).
-                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos), CodeData.BLOCK_BEDROCK);
+                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos), itemCode);
             }
         }
     }
+
     private void MoveAndRotate()
     {
         transform.Rotate(Vector3.up * mouseX);
