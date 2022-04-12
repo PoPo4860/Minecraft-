@@ -2929,7 +2929,7 @@ MonoBehaviour:
   - {fileID: 968495997}
   - {fileID: 1229454311}
   playerQuickSlot: {fileID: 147060193}
-  moustItemSlot: {fileID: 0}
+  moustItemSlot: {fileID: 1722827892}
 --- !u!114 &625029013
 MonoBehaviour:
   m_ObjectHideFlags: 0

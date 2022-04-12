@@ -11,12 +11,11 @@ public class InventorySlotButton : MonoBehaviour,
     public enum ItemState { Empty, itemSlot};
 
     public ItemState state;
-    public PlayerInventory playerInventory;
     // 이미지 누름
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (ItemState.itemSlot == state) 
-            playerInventory.ClickSlot(slotNumber);
+        if (ItemState.itemSlot == state)
+            PlayerInventory.Instance.ClickSlot(slotNumber);
     }
 
     // 이미지 뗌 (눌러있는 상태여야만 호출 및 누른 이미지에서 호출)

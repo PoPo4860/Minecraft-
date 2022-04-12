@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 public class PlayerInventory : MonoBehaviour
 {
-    private ItemSlot[,] itemSlot = new ItemSlot[4, 9];
+    private ItemSlot[] itemSlot = new ItemSlot[4*9];
 
     [Header("인벤토리 아이템 슬롯")]
     public Image[] itemSlotTexture;
@@ -18,16 +18,34 @@ public class PlayerInventory : MonoBehaviour
     public MouseItemSlot moustItemSlot;
 
     private const int slotInMaxItem = 64;
-    
-    
+
+
+    private static PlayerInventory instance;
+    private void Awake()
+    {
+        if (null == instance)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
+    public static PlayerInventory Instance
+    {
+        get
+        {
+            if (null == instance)
+            {
+                return null;
+            }
+            return instance;
+        }
+    }
+
     void Start()
     {
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < 36; ++i)
         {
-            for (int j = 0; j < 9; ++j)
-            {
-                itemSlot[i,j] = new ItemSlot();
-            }
+            itemSlot[i] = new ItemSlot();
         }
     }
     void Update()
@@ -43,48 +61,48 @@ public class PlayerInventory : MonoBehaviour
     }
     public void ClickSlot(int slotNum)
     {
-        int x = slotNum % 9;
-        int y = slotNum / 9;
-        moustItemSlot.SwapItemSlot(ref itemSlot[y, x]);
-        SetItemSlotImage(new Vector2Int(x, y));
+        //int x = slotNum % 9;
+        //int y = slotNum / 9;
+        moustItemSlot.SwapItemSlot(ref itemSlot[slotNum]);
+        SetItemSlotImage(slotNum);
     }
-    private void SetItemSlotImage(in Vector2Int itemSlotPos)
+    private void SetItemSlotImage(int slotNum)
     {
-        int num = 0;
-        for (int y = 0; y < itemSlotPos.y; ++y) 
-            num += 9;
-        num += itemSlotPos.x;
+        //int num = 0;
+        //for (int y = 0; y < itemSlotPos.y; ++y) 
+        //    num += 9;
+        //num += itemSlotPos.x;
 
-        int itemCode = itemSlot[itemSlotPos.y, itemSlotPos.x].itemCode;
+        int itemCode = itemSlot[slotNum].itemCode;
         string itemName = CodeData.GetBlockInfo(itemCode).blockName;
-        itemSlotTexture[num].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
+        itemSlotTexture[slotNum].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
 
-        int itemNum = itemSlot[itemSlotPos.y, itemSlotPos.x].itemNum;
-        itemSlotText[num].text = 0 == itemNum ? "" : $"{itemNum}";
+        int itemNum = itemSlot[slotNum].itemNum;
+        itemSlotText[slotNum].text = 0 == itemNum ? "" : $"{itemNum}";
 
         // 퀵슬롯 설정
-        if (3 == itemSlotPos.y) 
+        if (27 <= slotNum) 
         {
-            itemQuickSlotTexture[itemSlotPos.x].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
-            itemQuickSlotText[itemSlotPos.x].text = 0 == itemNum ? "" : $"{itemNum}";
+            itemQuickSlotTexture[slotNum - 27].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
+            itemQuickSlotText[slotNum - 27].text = 0 == itemNum ? "" : $"{itemNum}";
         }
     }
     public void AddInventoryItem(in int itemCode, in int itemNum)
     {
-        if(true == CheckCanAddInventory(itemCode, out Vector2Int itemSlotPos))
+        if(true == CheckCanAddInventory(itemCode, out int itemSlotNum))
         {
-            if(CodeData.BLOCK_AIR == itemSlot[itemSlotPos.y,itemSlotPos.x].itemCode)
+            if(CodeData.BLOCK_AIR == itemSlot[itemSlotNum].itemCode)
             {   // 해당 위치가 비어있다면
-                itemSlot[itemSlotPos.y, itemSlotPos.x].itemCode = itemCode;
-                itemSlot[itemSlotPos.y, itemSlotPos.x].itemNum = itemNum;
-                SetInventoryItem(itemSlot[itemSlotPos.y, itemSlotPos.x], itemCode);
+                itemSlot[itemSlotNum].itemCode = itemCode;
+                itemSlot[itemSlotNum].itemNum = itemNum;
+                SetInventoryItem(itemSlot[itemSlotNum], itemCode);
             }
             else
             {   // 해당 위치에 아이템이 있다면
-                itemSlot[itemSlotPos.y, itemSlotPos.x].itemNum += itemNum;
-                SetInventoryItem(itemSlot[itemSlotPos.y, itemSlotPos.x], itemCode);
+                itemSlot[itemSlotNum].itemNum += itemNum;
+                SetInventoryItem(itemSlot[itemSlotNum], itemCode);
             }
-            SetItemSlotImage(itemSlotPos);
+            SetItemSlotImage(itemSlotNum);
         }
     }
     private void SetInventoryItem(ItemSlot itemSlot, int itemCode)
@@ -96,32 +114,23 @@ public class PlayerInventory : MonoBehaviour
             AddInventoryItem(itemCode, remainItem);
         }
     }
-    public bool CheckCanAddInventory(in int itemCode, out Vector2Int itemSlotPos)
+    public bool CheckCanAddInventory(in int itemCode, out int itemSlotNum)
     {
-        itemSlotPos = new Vector2Int(-1, -1);
-        for (int i = 0; i < 4; ++i)
+        itemSlotNum = -1;
+        for (int i = 0; i < 36; ++i)
         {
-            ++itemSlotPos.y;
-            itemSlotPos.x = -1;
-            for (int j = 0; j < 9; ++j)
-            {
-                ++itemSlotPos.x;
-                if (itemCode == itemSlot[i, j].itemCode && itemSlot[i, j].itemNum < slotInMaxItem)
-                    return true;
-            }
+            ++itemSlotNum;
+
+            if (itemCode == itemSlot[itemSlotNum].itemCode && itemSlot[itemSlotNum].itemNum < slotInMaxItem)
+                return true;
         }
 
-        itemSlotPos = new Vector2Int(-1, -1);
-        for (int i = 0; i < 4; ++i)
+        itemSlotNum = -1;
+        for (int i = 0; i < 36; ++i)
         {
-            ++itemSlotPos.y;
-            itemSlotPos.x = -1;
-            for (int j = 0; j < 9; ++j)
-            {
-                ++itemSlotPos.x;
-                if (0 == itemSlot[i, j].itemCode)
-                    return true;
-            }
+            ++itemSlotNum;
+            if (0 == itemSlot[itemSlotNum].itemCode)
+                return true;
         }
 
         return false;
@@ -129,20 +138,21 @@ public class PlayerInventory : MonoBehaviour
 
     public ItemSlot GetQuickItemSlot(int slotNum)
     {
-        return itemSlot[3, slotNum];
+        return itemSlot[slotNum + 27];
     }
     public ItemSlot RightClickQuickSlotItem(int slotNum)
     {
-        int bufferItemCode = itemSlot[3, slotNum].itemCode;
-        int bufferItemNum = itemSlot[3, slotNum].itemNum;
+        slotNum += 27;
+        int bufferItemCode = itemSlot[slotNum].itemCode;
+        int bufferItemNum = itemSlot[slotNum].itemNum;
 
         if(0 != bufferItemNum)
-            --itemSlot[3, slotNum].itemNum;
+            --itemSlot[slotNum].itemNum;
 
-        if(0 == itemSlot[3, slotNum].itemNum)
-            itemSlot[3, slotNum].itemCode = 0;
+        if(0 == itemSlot[slotNum].itemNum)
+            itemSlot[slotNum].itemCode = 0;
         
-        SetItemSlotImage(new Vector2Int(slotNum, 3));
+        SetItemSlotImage(slotNum);
         if(0 != bufferItemNum)
             return new ItemSlot(bufferItemCode, bufferItemNum);
         else

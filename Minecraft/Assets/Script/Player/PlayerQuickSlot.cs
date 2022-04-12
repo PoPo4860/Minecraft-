@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class PlayerQuickSlot : MonoBehaviour
 {
-    public PlayerInventory playerInventory;
     public RectTransform selectQuickSlotRect;
     public Text selectQuickSlotText;
     public RectTransform[] quickSlot;
@@ -23,7 +22,7 @@ public class PlayerQuickSlot : MonoBehaviour
         {
             currentSelectNum = GetItemQuickSlotNumFromInput();
             selectQuickSlotRect.position = quickSlot[currentSelectNum].position;
-            int itemCode = playerInventory.GetQuickItemSlot(currentSelectNum).itemCode;
+            int itemCode = PlayerInventory.Instance.GetQuickItemSlot(currentSelectNum).itemCode;
             if (CodeData.BLOCK_AIR != itemCode)
                 selectQuickSlotText.text = CodeData.GetBlockInfo(itemCode).blockName;
             else
@@ -33,7 +32,7 @@ public class PlayerQuickSlot : MonoBehaviour
 
     public ushort UseQuickSlotItemCode()
     {
-        return (ushort)playerInventory.RightClickQuickSlotItem(currentSelectNum).itemCode;
+        return (ushort)PlayerInventory.Instance.RightClickQuickSlotItem(currentSelectNum).itemCode;
     }
     private int GetItemQuickSlotNumFromInput()
     {

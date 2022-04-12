@@ -21,7 +21,6 @@ public class MouseItemSlot : MonoBehaviour
         mousePoint.x -= (Screen.width / 2);
         mousePoint.y -= (Screen.height / 2);
         mouseSlotTransform.anchoredPosition = mousePoint;
-
     }
     public void SwapItemSlot(ref ItemSlot itemSlot)
     {
