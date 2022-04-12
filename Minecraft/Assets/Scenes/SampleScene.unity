@@ -593,7 +593,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 17
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &92160636
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -684,7 +685,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 26
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &125820153
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1105,7 +1107,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 16
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &219430629
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1196,7 +1199,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 8
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &259148898
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1362,7 +1366,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 15
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &387383047
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1815,7 +1820,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 30
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &449875490
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1985,7 +1991,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 3
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &474246380
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2388,7 +2395,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 22
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &542001207
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2558,7 +2566,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 33
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &579396877
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2728,7 +2737,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 25
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &621997318
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2919,6 +2929,7 @@ MonoBehaviour:
   - {fileID: 968495997}
   - {fileID: 1229454311}
   playerQuickSlot: {fileID: 147060193}
+  moustItemSlot: {fileID: 0}
 --- !u!114 &625029013
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2932,7 +2943,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
-  item: 0
+  state: 0
+  playerInventory: {fileID: 0}
 --- !u!1 &634373072
 GameObject:
   m_ObjectHideFlags: 0
@@ -3094,7 +3106,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 4
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &647228944
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3311,7 +3324,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 6
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &736339658
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3685,7 +3699,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 1
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!114 &796404709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4039,7 +4054,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 9
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &900640470
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4206,7 +4222,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 12
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &946061161
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -4694,7 +4711,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!1 &1163446645
 GameObject:
   m_ObjectHideFlags: 0
@@ -5014,7 +5032,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 18
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1200326906
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5105,7 +5124,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 2
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1219245456
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5351,7 +5371,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 35
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1232938786
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5442,7 +5463,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 14
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1251192628
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5773,7 +5795,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 10
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1362869342
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5938,7 +5961,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 28
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1402435877
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6108,7 +6132,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 20
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1427223121
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6436,7 +6461,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 21
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1445676281
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6527,7 +6553,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 23
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1446522127
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6697,7 +6724,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 29
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1471237234
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6788,7 +6816,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 5
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1561985180
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6926,7 +6955,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 31
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1627793270
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7096,7 +7126,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 7
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1668761777
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7355,6 +7386,98 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715831773}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1722827890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1722827891}
+  - component: {fileID: 1722827894}
+  - component: {fileID: 1722827893}
+  - component: {fileID: 1722827892}
+  m_Layer: 5
+  m_Name: MouseItemSlot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1722827891
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722827890}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_Children:
+  - {fileID: 2100851338}
+  m_Father: {fileID: 1810778122}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -162, y: 6}
+  m_SizeDelta: {x: 16, y: 16}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1722827892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722827890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f36d04563b5cb54a90645bb1b0e10d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseSlotTransform: {fileID: 1722827891}
+  mouseSlotImage: {fileID: 1722827893}
+  mouseSlotText: {fileID: 2100851339}
+--- !u!114 &1722827893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722827890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 79bf2a0923d0ba34b9932113dda2a558, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1722827894
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1722827890}
+  m_CullTransparentMesh: 1
 --- !u!1 &1735651712
 GameObject:
   m_ObjectHideFlags: 0
@@ -7516,7 +7639,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 11
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1752743245
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7765,7 +7889,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 13
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1790316929
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7805,6 +7930,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 625029009}
+  - {fileID: 1722827891}
   m_Father: {fileID: 170917612}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -7861,7 +7987,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
-  item: 1
+  state: 0
+  playerInventory: {fileID: 625029012}
 --- !u!1 &1836126950
 GameObject:
   m_ObjectHideFlags: 0
@@ -7944,7 +8071,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 34
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1836126954
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8035,7 +8163,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 32
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1836804455
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8126,7 +8255,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 27
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &1872176072
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8691,7 +8821,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 19
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &2073210623
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8940,7 +9071,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 24
-  item: 0
+  state: 1
+  playerInventory: {fileID: 625029012}
 --- !u!222 &2087231702
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8948,6 +9080,85 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2087231698}
+  m_CullTransparentMesh: 1
+--- !u!1 &2100851337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2100851338}
+  - component: {fileID: 2100851340}
+  - component: {fileID: 2100851339}
+  m_Layer: 5
+  m_Name: ItemText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2100851338
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100851337}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1722827891}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 12, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2100851339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100851337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: bb2dffc07ad704a28aa9186221cc902e, type: 2}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 293
+    m_Alignment: 2
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
+    m_LineSpacing: 1
+  m_Text: 
+--- !u!222 &2100851340
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100851337}
   m_CullTransparentMesh: 1
 --- !u!1 &2115008415
 GameObject:
