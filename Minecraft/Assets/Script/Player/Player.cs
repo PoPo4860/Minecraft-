@@ -101,9 +101,6 @@ public class Player : MonoBehaviour
         }
         #endregion 
 
-        #region Äü ½½·Ô °ü·Ã
-
-        #endregion
         if (true == highlightBlock.gameObject.activeSelf)
         {
             if (Input.GetMouseButtonDown(0))

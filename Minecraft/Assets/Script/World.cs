@@ -11,7 +11,6 @@ public class World : MonoBehaviour
     public Material TextureAtlasTrans;
     [SerializeField] private GameObject PlayerObject;
     
-    [Header("World Generation Values")]
     [HideInInspector] public int worldSeed;
 
     private readonly int worldSizeInChunks = 1;

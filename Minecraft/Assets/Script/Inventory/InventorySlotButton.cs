@@ -15,7 +15,15 @@ public class InventorySlotButton : MonoBehaviour,
     public void OnPointerDown(PointerEventData eventData)
     {
         if (ItemState.itemSlot == state)
-            PlayerInventory.Instance.ClickSlot(slotNumber);
+        {
+            if(PointerEventData.InputButton.Left == eventData.button)
+                PlayerInventory.Instance.LeftClickSlot(slotNumber);
+
+            if (PointerEventData.InputButton.Right == eventData.button)
+                PlayerInventory.Instance.RightClickSlot(slotNumber);
+
+
+        }
     }
 
     // 이미지 뗌 (눌러있는 상태여야만 호출 및 누른 이미지에서 호출)

@@ -8,13 +8,18 @@ public class MouseItemSlot : MonoBehaviour
     public RectTransform mouseSlotTransform;
     public Image mouseSlotImage;
     public Text mouseSlotText;
-    [HideInInspector] public ItemSlot mouseItemSlot = new ItemSlot();
+    private ItemSlot mouseItemSlot = new ItemSlot();
+    public ItemSlot itemSlot
+    {
+        get { return mouseItemSlot; }
+        set { mouseItemSlot = value; }
+    }
+    
 
     private Vector3 mousePoint;
     void Start()
     {
     }
-
     void Update()
     {
         mousePoint = Input.mousePosition;
@@ -22,14 +27,15 @@ public class MouseItemSlot : MonoBehaviour
         mousePoint.y -= (Screen.height / 2);
         mouseSlotTransform.anchoredPosition = mousePoint;
     }
+
     public void SwapItemSlot(ref ItemSlot itemSlot)
     {
         ItemSlot temp = itemSlot;
         itemSlot = mouseItemSlot;
         mouseItemSlot = temp;
-        SetItemSlotImage();
     }
-    private void SetItemSlotImage()
+
+    public void SetItemSlotImage()
     {
         int itemCode = mouseItemSlot.itemCode;
         string itemName = CodeData.GetBlockInfo(itemCode).blockName;
@@ -42,5 +48,17 @@ public class MouseItemSlot : MonoBehaviour
     private void OnEnable()
     {
         SetItemSlotImage();
+    }
+    private void OnDisable()
+    {
+        int itemCode = mouseItemSlot.itemCode;
+        int itemNum = mouseItemSlot.itemNum;
+        if (0 != itemCode && 0 != itemNum)
+        {
+            PlayerInventory.Instance.AddInventoryItem(itemCode, itemNum);
+            mouseItemSlot.itemCode = 0;
+            mouseItemSlot.itemNum = 0;
+        }
+
     }
 }

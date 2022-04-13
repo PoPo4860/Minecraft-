@@ -21,14 +21,6 @@ public class PlayerInventory : MonoBehaviour
 
 
     private static PlayerInventory instance;
-    private void Awake()
-    {
-        if (null == instance)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
-
     public static PlayerInventory Instance
     {
         get
@@ -40,7 +32,23 @@ public class PlayerInventory : MonoBehaviour
             return instance;
         }
     }
-
+    private void Awake()
+    {
+        if (null == instance)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+    private void OnEnable()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+    private void OnDisable()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
     void Start()
     {
         for (int i = 0; i < 36; ++i)
@@ -59,20 +67,8 @@ public class PlayerInventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
             AddInventoryItem(CodeData.BLOCK_GRASS, 10);
     }
-    public void ClickSlot(int slotNum)
-    {
-        //int x = slotNum % 9;
-        //int y = slotNum / 9;
-        moustItemSlot.SwapItemSlot(ref itemSlot[slotNum]);
-        SetItemSlotImage(slotNum);
-    }
     private void SetItemSlotImage(int slotNum)
     {
-        //int num = 0;
-        //for (int y = 0; y < itemSlotPos.y; ++y) 
-        //    num += 9;
-        //num += itemSlotPos.x;
-
         int itemCode = itemSlot[slotNum].itemCode;
         string itemName = CodeData.GetBlockInfo(itemCode).blockName;
         itemSlotTexture[slotNum].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
@@ -135,6 +131,60 @@ public class PlayerInventory : MonoBehaviour
 
         return false;
     }
+    public void LeftClickSlot(int slotNum)
+    {
+        if (true == moustItemSlot.itemSlot.empty && true == itemSlot[slotNum].empty)
+            return;
+
+        // 슬롯간 교환이 일어나야 할때
+        if (true == moustItemSlot.itemSlot.empty ||
+            true == itemSlot[slotNum].empty ||
+            itemSlot[slotNum].isMax ||
+            itemSlot[slotNum] != moustItemSlot.itemSlot)
+            moustItemSlot.SwapItemSlot(ref itemSlot[slotNum]);
+
+        // 슬롯에 아이템을 추가해야 할때
+        if(itemSlot[slotNum] == moustItemSlot.itemSlot)
+        {
+            int canAddItemNum = 64 - itemSlot[slotNum].itemNum;
+            if (moustItemSlot.itemSlot.itemNum <= canAddItemNum)
+            {
+                itemSlot[slotNum] += moustItemSlot.itemSlot;
+                moustItemSlot.itemSlot.Clear();
+            }
+            else
+            {
+                itemSlot[slotNum].itemNum = 64;
+                moustItemSlot.itemSlot -= canAddItemNum;
+            }
+        }
+        SetItemSlotImage(slotNum);
+        moustItemSlot.SetItemSlotImage();
+    }
+
+    public void RightClickSlot(int slotNum)
+    {
+        if (true == moustItemSlot.itemSlot.empty)
+            return;
+
+        if (true == itemSlot[slotNum].empty)
+        {
+            itemSlot[slotNum].itemCode = moustItemSlot.itemSlot.itemCode;
+            ++itemSlot[slotNum];
+            --moustItemSlot.itemSlot;
+        }
+
+        else if (false == itemSlot[slotNum].isMax && moustItemSlot.itemSlot == itemSlot[slotNum])
+        {
+            ++itemSlot[slotNum];
+            --moustItemSlot.itemSlot;
+        }
+
+
+
+        SetItemSlotImage(slotNum);
+        moustItemSlot.SetItemSlotImage();
+    }
 
     public ItemSlot GetQuickItemSlot(int slotNum)
     {
@@ -146,28 +196,14 @@ public class PlayerInventory : MonoBehaviour
         int bufferItemCode = itemSlot[slotNum].itemCode;
         int bufferItemNum = itemSlot[slotNum].itemNum;
 
-        if(0 != bufferItemNum)
-            --itemSlot[slotNum].itemNum;
-
-        if(0 == itemSlot[slotNum].itemNum)
-            itemSlot[slotNum].itemCode = 0;
+        if(false == itemSlot[slotNum].empty)
+            --itemSlot[slotNum];
         
         SetItemSlotImage(slotNum);
         if(0 != bufferItemNum)
             return new ItemSlot(bufferItemCode, bufferItemNum);
         else
             return new ItemSlot(0, bufferItemNum);
-
     }
 
-    private void OnEnable()
-    {
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-    }
-    private void OnDisable()
-    {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-    }
 }
