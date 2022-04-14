@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerQuickSlot : MonoBehaviour
 {
+    public RectTransform[] quickSlot;
     public RectTransform selectQuickSlotRect;
     public Text selectQuickSlotText;
-    public RectTransform[] quickSlot;
 
     private int currentSelectNum = 0;
     private void Start()

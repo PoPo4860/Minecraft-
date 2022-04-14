@@ -8,15 +8,38 @@ public class MouseItemSlot : MonoBehaviour
     public RectTransform mouseSlotTransform;
     public Image mouseSlotImage;
     public Text mouseSlotText;
-    private ItemSlot mouseItemSlot = new ItemSlot();
+    public ItemSlot ItemSlot;
+    public static MouseItemSlot instance;
+    private Vector3 mousePoint;
+
+    public static MouseItemSlot Instance
+    {
+        get
+        {
+            if (null == instance)
+            {
+                return null;
+            }
+            return instance;
+        }
+    }
     public ItemSlot itemSlot
     {
-        get { return mouseItemSlot; }
-        set { mouseItemSlot = value; }
+        get { return ItemSlot; }
+        set 
+        { 
+            ItemSlot = value;
+            //SetItemSlotImage();
+        }
     }
-    
 
-    private Vector3 mousePoint;
+    private void Awake()
+    {
+        if (null == instance)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
     void Start()
     {
     }
@@ -27,22 +50,31 @@ public class MouseItemSlot : MonoBehaviour
         mousePoint.y -= (Screen.height / 2);
         mouseSlotTransform.anchoredPosition = mousePoint;
     }
-
-    public void SwapItemSlot(ref ItemSlot itemSlot)
+    public void ClearItemSlot()
     {
-        ItemSlot temp = itemSlot;
-        itemSlot = mouseItemSlot;
-        mouseItemSlot = temp;
+        itemSlot.Clear();
+        SetItemSlotImage();
+    }
+    public void SwapItemSlot(ref ItemSlot _itemSlot)
+    {
+        int tempCode = itemSlot.itemCode;
+        int tempNum = ItemSlot.itemNum;
+        itemSlot.itemCode = _itemSlot.itemCode;
+        ItemSlot.itemNum = _itemSlot.itemNum;
+        _itemSlot.itemCode = tempCode;
+        _itemSlot.itemNum = tempNum;
+
+        SetItemSlotImage();
     }
 
     public void SetItemSlotImage()
     {
-        int itemCode = mouseItemSlot.itemCode;
-        string itemName = CodeData.GetBlockInfo(itemCode).blockName;
-        mouseSlotImage.sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
+        //int itemCode = _itemSlot.itemCode;
+        //string itemName = CodeData.GetBlockInfo(itemCode).blockName;
+        //mouseSlotImage.sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
 
-        int itemNum = mouseItemSlot.itemNum;
-        mouseSlotText.text = 0 == itemNum ? "" : $"{itemNum}";
+        //int itemNum = _itemSlot.itemNum;
+        //mouseSlotText.text = 0 == itemNum ? "" : $"{itemNum}";
     }
 
     private void OnEnable()
@@ -51,13 +83,13 @@ public class MouseItemSlot : MonoBehaviour
     }
     private void OnDisable()
     {
-        int itemCode = mouseItemSlot.itemCode;
-        int itemNum = mouseItemSlot.itemNum;
+        int itemCode = ItemSlot.itemCode;
+        int itemNum = ItemSlot.itemNum;
         if (0 != itemCode && 0 != itemNum)
         {
             PlayerInventory.Instance.AddInventoryItem(itemCode, itemNum);
-            mouseItemSlot.itemCode = 0;
-            mouseItemSlot.itemNum = 0;
+            ItemSlot.itemCode = 0;
+            ItemSlot.itemNum = 0;
         }
 
     }

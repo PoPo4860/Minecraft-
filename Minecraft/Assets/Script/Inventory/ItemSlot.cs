@@ -1,15 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ItemSlot
+public class ItemSlot : MonoBehaviour
 {
-    public int itemCode = 0;
-    public int itemNum = 0;
-    public ItemSlot(int _itemCode = 0, int _itemNum = 0)
+    private int _itemCode = 0;
+    private int _itemNum = 0;
+
+    public int itemNum
     {
-        itemCode = _itemCode;
-        itemNum = _itemNum;
+        get { return _itemNum; }
+        set
+        {
+            _itemNum = value;
+            SetItemImage();
+        }
+    }
+    public int itemCode
+    {
+        get { return _itemCode; }
+        set
+        {
+            _itemCode = value;
+        }
+    }
+
+    private Image itemImage;
+    private Text itemText;
+
+    public void Start()
+    {
+        itemImage = GetComponent<Image>();
+        itemText = GetComponentInChildren<Text>();
     }
 
     public bool empty
@@ -20,48 +43,71 @@ public class ItemSlot
     { 
         get { return (64 == itemNum); } 
     }
-
     public void Clear()
     {
         itemCode = 0;
         itemNum = 0;
     }
+    public void SetItemImage()
+    {
+        string itemName = CodeData.GetBlockInfo(itemCode).blockName;
+        itemImage.sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
+        itemText.text = 0 == itemNum ? "" : $"{itemNum}";
+    }
 
     // 계산 연산자는 아이템 갯수를 기준으로 비교합니다.
     // 아이템 갯수가 0개 미만이면 0개를 반환, 64개 이상이면 64를 반환합니다.
     public static ItemSlot operator +(ItemSlot a) => a;
-    public static ItemSlot operator -(ItemSlot a) => new ItemSlot(a.itemCode, -a.itemNum);
+    public static ItemSlot operator -(ItemSlot a)
+    {
+        a.itemNum = -a.itemNum;
+        return a;
+    }
     public static ItemSlot operator +(ItemSlot a, ItemSlot b)
     {
         if(a.itemCode != b.itemCode)
         {
             Debug.LogWarning("잘못된 아이템 슬롯 더하기 연산");
-            return new ItemSlot(0, 0);
+            a.itemCode = 0;
+            a.itemNum = 0;
+            return a;
         }
         int newItemNum = (a.itemNum + b.itemNum) >= 64 ? 64 : a.itemNum + b.itemNum;
-        return new ItemSlot(a.itemCode, newItemNum);
+        a.itemNum = newItemNum;
+        return a;
     }
     public static ItemSlot operator +(ItemSlot a, int itemNum)
     {
         int newItemNum = (a.itemNum + itemNum) >= 64 ? 64 : a.itemNum + itemNum;
-        return new ItemSlot(a.itemCode, newItemNum);
+        a.itemNum = newItemNum;
+        return a;
     }
     public static ItemSlot operator -(ItemSlot a, ItemSlot b)
     {
         if (a.itemCode != b.itemCode)
         {
             Debug.LogWarning("잘못된 아이템 슬롯 빼기 연산");
-            return new ItemSlot(0, 0);
+            a.itemCode = 0;
+            a.itemNum = 0;
+            return a;
         }
 
         if (a.itemNum - b.itemNum < 0)
-            return new ItemSlot(0, 0);
+        {
+            a.itemCode = 0;
+            a.itemNum = 0;
+            return a;
+        }
         return a + (-b);
     }
     public static ItemSlot operator -(ItemSlot a, int itemNum)
     {
         if (a.itemNum - itemNum < 0)
-            return new ItemSlot(0, 0);
+        {
+            a.itemCode = 0;
+            a.itemNum = 0;
+            return a;
+        }
         return a + (-itemNum);
     }
     public static ItemSlot operator ++(ItemSlot a)
@@ -90,7 +136,6 @@ public class ItemSlot
     {
         return a.itemCode != b.itemCode;
     }
-   
     public override bool Equals(object obj)
     {
         return obj is ItemSlot slot &&
