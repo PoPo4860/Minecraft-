@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,25 +12,27 @@ public class ItemSlot : MonoBehaviour
         set
         {
             _itemNum = value;
+            if (0 == itemNum)
+                itemCode = 0;
+
             SetItemImage();
         }
     }
     public int itemCode
     {
         get { return _itemCode; }
-        set
-        {
-            _itemCode = value;
-        }
+        set { _itemCode = value; }
     }
 
-    private Image itemImage;
-    private Text itemText;
-
+    [HideInInspector] public Image itemImage;
+    [HideInInspector] public Text itemText;
+    
     public void Start()
     {
-        itemImage = GetComponent<Image>();
-        itemText = GetComponentInChildren<Text>();
+        if (null == itemImage)
+            itemImage = GetComponent<Image>();
+        if (null == itemText)
+            itemText = GetComponentInChildren<Text>();
     }
 
     public bool empty

@@ -26,11 +26,7 @@ public class MouseItemSlot : MonoBehaviour
     public ItemSlot itemSlot
     {
         get { return ItemSlot; }
-        set 
-        { 
-            ItemSlot = value;
-            //SetItemSlotImage();
-        }
+        set { ItemSlot = value; }
     }
 
     private void Awake()
@@ -40,9 +36,7 @@ public class MouseItemSlot : MonoBehaviour
         else
             Destroy(gameObject);
     }
-    void Start()
-    {
-    }
+
     void Update()
     {
         mousePoint = Input.mousePosition;
@@ -53,7 +47,6 @@ public class MouseItemSlot : MonoBehaviour
     public void ClearItemSlot()
     {
         itemSlot.Clear();
-        SetItemSlotImage();
     }
     public void SwapItemSlot(ref ItemSlot _itemSlot)
     {
@@ -64,23 +57,8 @@ public class MouseItemSlot : MonoBehaviour
         _itemSlot.itemCode = tempCode;
         _itemSlot.itemNum = tempNum;
 
-        SetItemSlotImage();
     }
 
-    public void SetItemSlotImage()
-    {
-        //int itemCode = _itemSlot.itemCode;
-        //string itemName = CodeData.GetBlockInfo(itemCode).blockName;
-        //mouseSlotImage.sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
-
-        //int itemNum = _itemSlot.itemNum;
-        //mouseSlotText.text = 0 == itemNum ? "" : $"{itemNum}";
-    }
-
-    private void OnEnable()
-    {
-        SetItemSlotImage();
-    }
     private void OnDisable()
     {
         int itemCode = ItemSlot.itemCode;

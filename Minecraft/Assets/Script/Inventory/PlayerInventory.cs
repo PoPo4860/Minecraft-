@@ -4,14 +4,6 @@ using UnityEngine.UI;
 public class PlayerInventory : MonoBehaviour
 {
     public ItemSlot[] itemSlot;
-
-    [Header("인벤토리 아이템 슬롯")]
-    public Image[] itemSlotTexture;
-    public Text[] itemSlotText;
-
-    [Header("아이템 퀵 슬롯")]
-    public Image[] itemQuickSlotTexture;
-    public Text[] itemQuickSlotText;
     public PlayerQuickSlot playerQuickSlot;
 
     private const int slotInMaxItem = 64;
@@ -45,10 +37,6 @@ public class PlayerInventory : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-    void Start()
-    {
-
-    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -60,48 +48,31 @@ public class PlayerInventory : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3))
             AddInventoryItem(CodeData.BLOCK_GRASS, 10);
     }
-    private void SetItemSlotImage(int slotNum)
+    public void AddInventoryItem(in int itemCode, in int itemNum, bool quickPriority = true)
     {
-        //int itemCode = itemSlot[slotNum].itemCode;
-        //string itemName = CodeData.GetBlockInfo(itemCode).blockName;
-        //itemSlotTexture[slotNum].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
-
-        //int itemNum = itemSlot[slotNum].itemNum;
-        //itemSlotText[slotNum].text = 0 == itemNum ? "" : $"{itemNum}";
-
-        //// 퀵슬롯 설정
-        //if (27 <= slotNum)
-        //{
-        //    itemQuickSlotTexture[slotNum - 27].sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
-        //    itemQuickSlotText[slotNum - 27].text = 0 == itemNum ? "" : $"{itemNum}";
-        //}
+        if (true == CheckCanAddInventory(itemCode, out int slotNum, quickPriority))
+        {
+            if (CodeData.BLOCK_AIR == itemSlot[slotNum].itemCode)
+            {   // 해당 위치가 비어있다면
+                itemSlot[slotNum].itemCode = itemCode;
+                itemSlot[slotNum].itemNum = itemNum;
+                AddInventoryItem(itemSlot[slotNum], itemCode, quickPriority);
+            }
+            else
+            {   // 해당 위치에 아이템이 있다면
+                itemSlot[slotNum].itemNum += itemNum;
+                AddInventoryItem(itemSlot[slotNum], itemCode, quickPriority);
+            }
+        }
+        SetQuickSlot(slotNum);
     }
-    private void SetInventoryItem(ItemSlot itemSlot, int itemCode, bool quickPriority = true)
+    private void AddInventoryItem(ItemSlot itemSlot, int itemCode, bool quickPriority = true)
     {
         int remainItem = itemSlot.itemNum - 64;
         if (0 < remainItem)
         {
             itemSlot.itemNum = 64;
             AddInventoryItem(itemCode, remainItem, quickPriority);
-        }
-    }
-
-    public void AddInventoryItem(in int itemCode, in int itemNum, bool quickPriority = true)
-    {
-        if (true == CheckCanAddInventory(itemCode, out int itemSlotNum, quickPriority))
-        {
-            if (CodeData.BLOCK_AIR == itemSlot[itemSlotNum].itemCode)
-            {   // 해당 위치가 비어있다면
-                itemSlot[itemSlotNum].itemCode = itemCode;
-                itemSlot[itemSlotNum].itemNum = itemNum;
-                SetInventoryItem(itemSlot[itemSlotNum], itemCode, quickPriority);
-            }
-            else
-            {   // 해당 위치에 아이템이 있다면
-                itemSlot[itemSlotNum].itemNum += itemNum;
-                SetInventoryItem(itemSlot[itemSlotNum], itemCode, quickPriority);
-            }
-            SetItemSlotImage(itemSlotNum);
         }
     }
     public bool CheckCanAddInventory(in int itemCode, out int itemSlotNum, bool quickPriority)
@@ -151,23 +122,22 @@ public class PlayerInventory : MonoBehaviour
         return false;
     }
 
-    public ItemSlot GetQuickItemSlot(int slotNum)
+    public void SetQuickSlot(int slotNum)
     {
-        return itemSlot[slotNum + 27];
+        if(27 <= slotNum)
+        {
+            playerQuickSlot.itemSlot[slotNum - 27].itemCode = itemSlot[slotNum].itemCode;
+            playerQuickSlot.itemSlot[slotNum - 27].itemNum = itemSlot[slotNum].itemNum;
+        }
     }
-    public ItemSlot RightClickQuickSlotItem(int slotNum)
+    public void RightClickQuickSlotItem(int slotNum, out int itemCdoe, out int itemNum)
     {
         slotNum += 27;
-        int bufferItemCode = itemSlot[slotNum].itemCode;
-        int bufferItemNum = itemSlot[slotNum].itemNum;
-
-        //if (false == itemSlot[slotNum].empty)
-        //    --itemSlot[slotNum];
-
-        SetItemSlotImage(slotNum);
-            return itemSlot[slotNum]--;
+        itemCdoe = itemSlot[slotNum].itemCode;
+        itemNum = itemSlot[slotNum].itemNum;
+        --itemSlot[slotNum];
+        SetQuickSlot(slotNum);
     }
-
     public void LeftClickSlot(int slotNum)
     {
         if (true == MouseItemSlot.Instance.itemSlot.empty &&
@@ -210,9 +180,7 @@ public class PlayerInventory : MonoBehaviour
             else
                 AddInventoryItem(itemCode, itemNum, false);
         }
-
-        SetItemSlotImage(slotNum);
-        //MouseItemSlot.Instance.SetItemSlotImage();
+        SetQuickSlot(slotNum);
     }
     public void RightClickSlot(int slotNum)
     {
@@ -241,7 +209,7 @@ public class PlayerInventory : MonoBehaviour
                 --MouseItemSlot.Instance.itemSlot;
             }
         }
-        SetItemSlotImage(slotNum);
-        //MouseItemSlot.Instance.SetItemSlotImage();
+        SetQuickSlot(slotNum);
+
     }
 }
