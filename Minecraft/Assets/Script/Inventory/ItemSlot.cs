@@ -27,7 +27,7 @@ public class ItemSlot : MonoBehaviour
     [HideInInspector] public Image itemImage;
     [HideInInspector] public Text itemText;
     
-    public void Start()
+    public void Awake()
     {
         if (null == itemImage)
             itemImage = GetComponent<Image>();

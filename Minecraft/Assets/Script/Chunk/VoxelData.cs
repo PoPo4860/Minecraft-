@@ -7,20 +7,12 @@ public static class VoxelData
     public static readonly int TextureAtlasWidth = 20;
     public static readonly int TextureAtlasHeight = 20;
 
-    public static float unitOfLight
-    {
-        get { return 1 / 16f; }
-    }
-
     // 텍스쳐 아틀라스 내에서 각 행, 열마다 텍스쳐가 갖는 크기 비율
     public static readonly float NormalizedTextureAtlasWidth = 1f / TextureAtlasWidth;
     public static readonly float NormalizedTextureAtlasHeight = 1f / TextureAtlasHeight;
 
     public static readonly byte ChunkWidth = 16;
     public static readonly byte ChunkHeight = 80;
-
-    public static readonly int[] revFaceCheckIndex = new int[6] { 1, 0, 3, 2, 5, 4 };
-
 
     /// <summary> 큐브의 8개 버텍스의 상대 위치 </summary>
     public static readonly Vector3[] voxelVerts = new Vector3[8]

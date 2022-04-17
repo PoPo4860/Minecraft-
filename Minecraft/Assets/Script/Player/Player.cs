@@ -54,7 +54,8 @@ public class Player : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        playerRigi.velocity = Time.fixedDeltaTime * walkSpeed * ((transform.forward * vertical) + (transform.right * horizontal));
+        Vector3 velocityVector = ((transform.forward * vertical) + (transform.right * horizontal));
+        playerRigi.velocity = Time.fixedDeltaTime * walkSpeed * velocityVector.normalized;
     }
     private void LateUpdate()
     {
@@ -103,12 +104,12 @@ public class Player : MonoBehaviour
 
         if (true == highlightBlock.gameObject.activeSelf)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                world.GetChunkFromPos(highlightBlock.position).
-                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(highlightBlock.position).voxelPos), CodeData.BLOCK_AIR);
-            }
-            else if (Input.GetMouseButtonDown(1))
+            //if (Input.GetMouseButtonDown(0))
+            //{
+            //    world.GetChunkFromPos(highlightBlock.position).
+            //        ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(highlightBlock.position).voxelPos), CodeData.BLOCK_AIR);
+            //}
+            if (Input.GetMouseButtonDown(1))
             {
                 ushort itemCode = playerQuickSlot.UseQuickSlotItemCode();
                 world.GetChunkFromPos(placeBlock).

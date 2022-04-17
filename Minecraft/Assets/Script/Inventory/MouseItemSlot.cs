@@ -8,7 +8,7 @@ public class MouseItemSlot : MonoBehaviour
     public RectTransform mouseSlotTransform;
     public Image mouseSlotImage;
     public Text mouseSlotText;
-    public ItemSlot ItemSlot;
+    public ItemSlot _itemSlot;
     public static MouseItemSlot instance;
     private Vector3 mousePoint;
 
@@ -25,8 +25,8 @@ public class MouseItemSlot : MonoBehaviour
     }
     public ItemSlot itemSlot
     {
-        get { return ItemSlot; }
-        set { ItemSlot = value; }
+        get { return _itemSlot; }
+        set { _itemSlot = value; }
     }
 
     private void Awake()
@@ -51,9 +51,9 @@ public class MouseItemSlot : MonoBehaviour
     public void SwapItemSlot(ref ItemSlot _itemSlot)
     {
         int tempCode = itemSlot.itemCode;
-        int tempNum = ItemSlot.itemNum;
+        int tempNum = this._itemSlot.itemNum;
         itemSlot.itemCode = _itemSlot.itemCode;
-        ItemSlot.itemNum = _itemSlot.itemNum;
+        this._itemSlot.itemNum = _itemSlot.itemNum;
         _itemSlot.itemCode = tempCode;
         _itemSlot.itemNum = tempNum;
 
@@ -61,13 +61,13 @@ public class MouseItemSlot : MonoBehaviour
 
     private void OnDisable()
     {
-        int itemCode = ItemSlot.itemCode;
-        int itemNum = ItemSlot.itemNum;
+        int itemCode = _itemSlot.itemCode;
+        int itemNum = _itemSlot.itemNum;
         if (0 != itemCode && 0 != itemNum)
         {
             PlayerInventory.Instance.AddInventoryItem(itemCode, itemNum);
-            ItemSlot.itemCode = 0;
-            ItemSlot.itemNum = 0;
+            _itemSlot.itemCode = 0;
+            _itemSlot.itemNum = 0;
         }
 
     }

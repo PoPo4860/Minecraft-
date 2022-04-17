@@ -2988,7 +2988,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49dff11647c029d47a87199c2fb45864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSlot: []
+  itemSlot:
+  - {fileID: 1163261872}
+  - {fileID: 796404711}
+  - {fileID: 1219245457}
+  - {fileID: 474246381}
+  - {fileID: 647228945}
+  - {fileID: 1561985181}
+  - {fileID: 736339659}
+  - {fileID: 1668761778}
+  - {fileID: 259148899}
+  - {fileID: 900640471}
+  - {fileID: 1362869343}
+  - {fileID: 1752743246}
+  - {fileID: 946061162}
+  - {fileID: 1790316930}
+  - {fileID: 1251192629}
+  - {fileID: 387383048}
+  - {fileID: 219430630}
+  - {fileID: 92160637}
+  - {fileID: 1200326907}
+  - {fileID: 2073210624}
+  - {fileID: 1427223122}
+  - {fileID: 1445676282}
+  - {fileID: 542001208}
+  - {fileID: 1446522128}
+  - {fileID: 2087231703}
+  - {fileID: 621997319}
+  - {fileID: 125820154}
+  - {fileID: 1872176073}
+  - {fileID: 1402435878}
+  - {fileID: 1471237235}
+  - {fileID: 449875491}
+  - {fileID: 1627793271}
+  - {fileID: 1836804456}
+  - {fileID: 579396878}
+  - {fileID: 1836126955}
+  - {fileID: 1232938787}
   playerQuickSlot: {fileID: 147060193}
 --- !u!114 &625029013
 MonoBehaviour:
@@ -7745,9 +7781,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1715831774}
+  - component: {fileID: 1715831775}
   - component: {fileID: 1715831777}
   - component: {fileID: 1715831776}
-  - component: {fileID: 1715831775}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -7763,25 +7799,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715831773}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 0.5, z: 0.5}
-  m_LocalScale: {x: 1.001, y: 1.001, z: 1.001}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 151982176}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &1715831775
-BoxCollider:
+--- !u!114 &1715831775
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715831773}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c89f7f9d285aca4689d166a2e009add, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteWidth: 9
+  spriteHeight: 1
 --- !u!23 &1715831776
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -7830,7 +7867,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1715831773}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 0}
 --- !u!1 &1722827890
 GameObject:
   m_ObjectHideFlags: 0
@@ -7886,7 +7923,7 @@ MonoBehaviour:
   mouseSlotTransform: {fileID: 1722827891}
   mouseSlotImage: {fileID: 1722827893}
   mouseSlotText: {fileID: 2100851339}
-  ItemSlot: {fileID: 1722827895}
+  _itemSlot: {fileID: 1722827895}
 --- !u!114 &1722827893
 MonoBehaviour:
   m_ObjectHideFlags: 0

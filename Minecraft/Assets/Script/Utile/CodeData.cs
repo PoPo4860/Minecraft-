@@ -35,17 +35,31 @@ public static class CodeData
         {
             string[] words = textValue[i].Split(',');
             BlockType newBlock = new BlockType();
+
             newBlock.blockName = words[0];
-            ushort.TryParse(words[1], out ushort blockCode);
+            ushort blockCode = ushort.Parse(words[1]);
             for (int j = 2; j <= 7; ++j)
-                UInt16.TryParse(words[j], out newBlock.textureAtlases[j - 2]);
-            bool.TryParse(words[8], out newBlock.isSolid);
-            bool.TryParse(words[9], out newBlock.renderNeighborFaces);
-            byte.TryParse(words[10], out newBlock.opacity);
+                newBlock.textureAtlases[j - 2] = UInt16.Parse(words[j]);
+            newBlock.isSolid = bool.Parse(words[8]);
+            newBlock.renderNeighborFaces = bool.Parse(words[9]);
+            newBlock.hardness = float.Parse(words[10]);
+            newBlock.type = SetBlockType(words[11]);
+
             BlockInfo.Add(blockCode, newBlock);
+            
         }
     }
-
+    private static Type SetBlockType(string str)
+    {
+        return str switch
+        {
+            "Basic" => Type.Basic,
+            "Soil" => Type.Soil,
+            "Stone" => Type.Stone,
+            "Wood" => Type.Wood,
+            _ => Type.Basic,
+        };
+    }
     public static readonly ushort BLOCK_AIR = 0;
     public static readonly ushort BLOCK_STONE = 1;
     public static readonly ushort BLOCK_GRASS = 2;
