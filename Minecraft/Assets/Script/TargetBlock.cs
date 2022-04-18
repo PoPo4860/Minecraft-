@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TargetBlock : MonoBehaviour
 {
-    private int spriteWidth = 9;
-    private int spriteHeight = 1;
+    private readonly int spriteWidth = 10;
+    private readonly int spriteHeight = 1;
 
     private int vertexIndex = 0;
     private readonly List<Vector3> meshVertices = new List<Vector3>();
@@ -18,7 +18,6 @@ public class TargetBlock : MonoBehaviour
     private int attack = 1;
 
 
-    private Transform transForm;
     private MeshFilter meshFilter;
     public static readonly Vector3[] voxelVerts = new Vector3[8]
     {   // 정점을 설정
@@ -35,11 +34,12 @@ public class TargetBlock : MonoBehaviour
         new Vector3(-0.0001f,  1.0001f, 1.0001f), // LT
     };
 
+    private int bufferSpriteNum = -1;
+
     void Start()
     {
         MeshInit();
         SetSpriteNum();
-        transForm = GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -55,11 +55,11 @@ public class TargetBlock : MonoBehaviour
             if (targetBlockHardness <= stayeMouseButtonTime)
             {
                 stayeMouseButtonTime = 0;
-                Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(transForm.position);
+                Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(transform.position);
                 Vector3Int voxelPos = Utile.Vector3ToVector3Int(result.voxelPos);
 
                 int itemCode = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).id;
-                World.Instance.GetChunkFromPos(transForm.position).
+                World.Instance.GetChunkFromPos(transform.position).
                     ModifyChunkData(voxelPos, CodeData.BLOCK_AIR);
 
                 PlayerInventory.Instance.AddInventoryItem(itemCode, 1);
@@ -75,12 +75,11 @@ public class TargetBlock : MonoBehaviour
     {
         meshFilter = gameObject.GetComponent<MeshFilter>();
 
-        Vector3Int voxelPos = new Vector3Int(0, 0, 0);
         for (int face = 0; face < 6; ++face)
         {
 
             for (int i = 0; i < 4; ++i)
-                meshVertices.Add(voxelVerts[VoxelData.voxelTris[face, i]] + voxelPos);
+                meshVertices.Add(voxelVerts[VoxelData.voxelTris[face, i]]);
 
 
             foreach (int i in ChunkHelperData.vertexData)
@@ -110,7 +109,7 @@ public class TargetBlock : MonoBehaviour
     }
     private void SetTargetInfo()
     {
-        Vector3Int newBlock = Utile.Vector3ToVector3Int(transForm.position);
+        Vector3Int newBlock = Utile.Vector3ToVector3Int(transform.position);
         if (targetBlock != newBlock)
         {
             stayeMouseButtonTime = 0;
@@ -135,6 +134,10 @@ public class TargetBlock : MonoBehaviour
     }
     public void SetSpriteNum(int num = 0)
     {
+        if (bufferSpriteNum == num)
+            return;
+
+        bufferSpriteNum = num;
         meshUv.Clear();
         for (int face = 0; face < 6; ++face)
             AddTextureUV(num);

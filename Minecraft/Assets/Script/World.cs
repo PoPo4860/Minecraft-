@@ -10,7 +10,6 @@ public class World : MonoBehaviour
     public Material TextureAtlas;
     public Material TextureAtlasTrans;
     [SerializeField] private GameObject PlayerObject;
-    
     [HideInInspector] public int worldSeed;
 
     private readonly int worldSizeInChunks = 1;
@@ -101,13 +100,13 @@ public class World : MonoBehaviour
     }
     public Chunk CreateNewChunk(in Vector2Int chunkPos)
     {
-        Chunk chunk = new Chunk(new ChunkCoord(chunkPos.x, chunkPos.y), this);
+        Chunk chunk = new Chunk(new ChunkCoord(chunkPos.x, chunkPos.y));
         chunks.Add(chunkPos, chunk);
         return chunk;
     }
     public Chunk CreateNewChunk(in ChunkCoord chunkPos)
     {
-        Chunk chunk = new Chunk(chunkPos, this);
+        Chunk chunk = new Chunk(chunkPos);
         chunks.Add(new Vector2Int(chunkPos.x, chunkPos.z), chunk);
         return chunk;
     }

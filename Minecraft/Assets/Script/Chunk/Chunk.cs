@@ -29,7 +29,7 @@ public class Chunk
     {
         get { return World.Instance; }
     }
-    public Chunk(ChunkCoord coord, World world)
+    public Chunk(ChunkCoord coord)
     {
         this.coord = coord;
         chunkState = ChunkState.CoroutineStart;
@@ -39,8 +39,8 @@ public class Chunk
         ChunkObject = new GameObject();
         meshRenderer = ChunkObject.AddComponent<MeshRenderer>();
         meshFilter = ChunkObject.AddComponent<MeshFilter>();
-        meshRenderer.material = world.TextureAtlas;
-        ChunkObject.transform.SetParent(world.transform);
+        meshRenderer.material = World.Instance.TextureAtlas;
+        ChunkObject.transform.SetParent(World.Instance.transform);
         ChunkObject.transform.position =
             new Vector3(coord.x * VoxelData.ChunkWidth, 0f, coord.z * VoxelData.ChunkWidth);
         ChunkObject.name = $"Chunk [{coord.x}, {coord.z}]";

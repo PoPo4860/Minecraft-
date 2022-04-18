@@ -5,7 +5,7 @@ public class Player : MonoBehaviour
 {
     #region .
     private float walkSpeed = 6f;
-
+    private readonly float jumpPower = 9.8f;
     #endregion
     private Transform cameraTransform;
 
@@ -22,11 +22,11 @@ public class Player : MonoBehaviour
     private Vector3 placeBlock = new Vector3();
     private readonly float checkIncrement = 0.1f;
     private readonly float reach = 8.0f;
-    public GameObject playerUI;
 
+    public GameObject playerUI;
     private bool activePlayerUI = false;
 
-    public PlayerRigidbody playerRigi;
+    public VoxelRigidbody playerRigi;
     public PlayerQuickSlot playerQuickSlot;
     private World world
     {
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 velocityVector = ((transform.forward * vertical) + (transform.right * horizontal));
-        playerRigi.velocity = Time.fixedDeltaTime * walkSpeed * velocityVector.normalized;
+        playerRigi.SetVelocity(Time.fixedDeltaTime * walkSpeed * velocityVector.normalized);
     }
     private void LateUpdate()
     {
@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
         mouseX = Input.GetAxis("Mouse X") * 5;
         mouseY = Input.GetAxis("Mouse Y") * 5;
         if (Input.GetKey(KeyCode.Space))
-            playerRigi.InputJump();
+            playerRigi.InputJump(jumpPower);
 
         if (Input.GetKeyDown(KeyCode.R)) 
             walkSpeed = 10;
@@ -99,6 +99,10 @@ public class Player : MonoBehaviour
         {
             playerRigi.InputShift(false);
             walkSpeed = 6;
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            playerRigi.AddForce(((transform.forward * vertical) + (transform.right * horizontal)));
         }
         #endregion 
 
