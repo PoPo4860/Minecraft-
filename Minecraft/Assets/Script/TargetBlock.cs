@@ -17,6 +17,7 @@ public class TargetBlock : MonoBehaviour
     private float stayeMouseButtonTime = 0f;
     private int attack = 1;
 
+    public DropItem _item;
 
     private MeshFilter meshFilter;
     public static readonly Vector3[] voxelVerts = new Vector3[8]
@@ -36,6 +37,14 @@ public class TargetBlock : MonoBehaviour
 
     private int bufferSpriteNum = -1;
 
+    void Create(int itemCode)
+    {
+        DropItem item = Instantiate(_item);
+        item.transform.position = gameObject.transform.position + new Vector3(0.5f, 0.5f, 0.5f);
+        item.itemCode = itemCode;
+        item.itemNum = 1;
+        item.gameObject.SetActive(true);
+    }
     void Start()
     {
         MeshInit();
@@ -61,8 +70,7 @@ public class TargetBlock : MonoBehaviour
                 int itemCode = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).id;
                 World.Instance.GetChunkFromPos(transform.position).
                     ModifyChunkData(voxelPos, CodeData.BLOCK_AIR);
-
-                PlayerInventory.Instance.AddInventoryItem(itemCode, 1);
+                Create(itemCode);
             }
         }
         else
@@ -132,7 +140,7 @@ public class TargetBlock : MonoBehaviour
         // 채굴이 가능하다면 (경도 값 * 5.0)초
         // 기본 1x  나무 2x  돌4x  철6x  다이아몬드8x
     }
-    public void SetSpriteNum(int num = 0)
+    private void SetSpriteNum(int num = 0)
     {
         if (bufferSpriteNum == num)
             return;

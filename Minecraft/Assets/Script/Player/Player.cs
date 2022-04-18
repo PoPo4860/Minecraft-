@@ -100,10 +100,6 @@ public class Player : MonoBehaviour
             playerRigi.InputShift(false);
             walkSpeed = 6;
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            playerRigi.AddForce(((transform.forward * vertical) + (transform.right * horizontal)));
-        }
         #endregion 
 
         if (true == highlightBlock.gameObject.activeSelf)

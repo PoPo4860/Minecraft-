@@ -7,7 +7,21 @@ public class VoxelRigidbody : MonoBehaviour
     private float objectWidth = 0.3f;
     private float objectHeight = 1.5f;
     private bool isGrounded = false;
-    private float gravity = -9.8f;
+    private float _gravity = -9.8f;
+    private float gravity
+    {
+        get { return _gravity + velocity.y; }
+        set
+        {
+            if (0 == value)
+            {
+                _gravity = 0;
+                velocityY = 0;
+                return;
+            }
+            _gravity = value;
+        }
+    }
     private readonly float downMaxGravity = -30f;
     private bool crouch = false;
     private Vector3 moveVelocity;
@@ -16,7 +30,7 @@ public class VoxelRigidbody : MonoBehaviour
     private Vector3 velocity
     {
         get { return _velocity + addForce; }
-        set {  _velocity = value; addForce = value;}
+        set { _velocity = value; addForce = value; }
     }
     private float velocityX
     {
@@ -42,19 +56,15 @@ public class VoxelRigidbody : MonoBehaviour
         collisionVertex[2] = new Vector3(+objectWidth, 0, +objectWidth);
         collisionVertex[3] = new Vector3(+objectWidth, 0, -objectWidth);
     }
-    private void Update()
-    {
 
-    }
     private void FixedUpdate()
     {
-        float num = 1;
         if (addForce.x != 0)
         {
             if (addForce.x < 0)
-                addForce.x += Time.fixedDeltaTime * num;
+                addForce.x += Time.fixedDeltaTime;
             else
-                addForce.x -= Time.fixedDeltaTime * num;
+                addForce.x -= Time.fixedDeltaTime;
 
             if (Mathf.Abs(addForce.x) < 0.01f)
                 addForce.x = 0;
@@ -62,9 +72,9 @@ public class VoxelRigidbody : MonoBehaviour
         if (addForce.y != 0)
         {
             if (addForce.y < 0)
-                addForce.y += Time.fixedDeltaTime * num;
+                addForce.y += Time.fixedDeltaTime;
             else
-                addForce.y -= Time.fixedDeltaTime * num;
+                addForce.y -= Time.fixedDeltaTime;
 
             if (Mathf.Abs(addForce.y) < 0.01f)
                 addForce.y = 0;
@@ -72,9 +82,9 @@ public class VoxelRigidbody : MonoBehaviour
         if (addForce.z != 0)
         {
             if (addForce.z < 0)
-                addForce.z += Time.fixedDeltaTime * num;
+                addForce.z += Time.fixedDeltaTime;
             else
-                addForce.z -= Time.fixedDeltaTime * num;
+                addForce.z -= Time.fixedDeltaTime;
 
             if (Mathf.Abs(addForce.z) < 0.01f)
                 addForce.z = 0;
@@ -82,7 +92,7 @@ public class VoxelRigidbody : MonoBehaviour
         CalculateVelocity();
         transform.Translate(moveVelocity, Space.World);
     }
-    private enum Direction { Forward, Back, Left, Right, Down, Up};
+    private enum Direction { Forward, Back, Left, Right, Down, Up };
     public void InputJump(float jumpPower)
     {
         if (isGrounded == true)
@@ -98,14 +108,14 @@ public class VoxelRigidbody : MonoBehaviour
     }
     public void InputShift(in bool input)
     {
-        crouch  = input;
+        crouch = input;
     }
 
 
 
     private bool CheckCollision(in Vector3 vel, in Direction dir)
-    {                                  
-        if(dir == Direction.Left)
+    {
+        if (dir == Direction.Left)
         {
             return (World.Instance.CheckBlockSolid(transform.position + vel + collisionVertex[0]) ||
                     World.Instance.CheckBlockSolid(transform.position + vel + collisionVertex[1]) ||
@@ -165,7 +175,7 @@ public class VoxelRigidbody : MonoBehaviour
     private Vector3 CalculateMove()
     {
         float yVelocity = Time.fixedDeltaTime * gravity * 1.2f;
-        if(CheckCollision(new Vector3(0, yVelocity, 0), Direction.Down))
+        if (CheckCollision(new Vector3(0, yVelocity, 0), Direction.Down))
             yVelocity = 0;
 
         if (velocity.x < 0 && CheckCollision(new Vector3(velocity.x, yVelocity, 0), Direction.Left))
@@ -179,7 +189,7 @@ public class VoxelRigidbody : MonoBehaviour
             velocityZ = 0;
 
         // 웅크리고 있다면
-        if(true == crouch && true == isGrounded)
+        if (true == crouch && true == isGrounded)
         {
             float yVelociety = Time.fixedDeltaTime * -5;
 
@@ -207,17 +217,23 @@ public class VoxelRigidbody : MonoBehaviour
         float yVelocity = Time.fixedDeltaTime * gravity;
 
         // 상단 충돌
-        if (gravity > 0)
+        if (0 < yVelocity || 0 < velocity.y)
         {
-            if(CheckCollision(new Vector3(0, yVelocity + 0.3f, 0), Direction.Up))
+            if (CheckCollision(new Vector3(0, yVelocity + 0.3f, 0), Direction.Up))
+            {
+                yVelocity = 0;
                 gravity = 0;
+            }
         }
 
         // 하단 충돌
         isGrounded = CheckCollision(new Vector3(0, yVelocity, 0), Direction.Down);
 
         if (true == isGrounded)
+        {
+            yVelocity = 0;
             gravity = 0;
+        }
 
         return isGrounded ? 0 : yVelocity;
     }

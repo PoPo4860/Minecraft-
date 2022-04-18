@@ -5,8 +5,8 @@ using UnityEngine;
 public class DropItem : MonoBehaviour
 {
     public VoxelRigidbody rigi;
-    public int itemCode;
-
+    [HideInInspector] public int itemCode;
+    [HideInInspector] public int itemNum;
     #region 메쉬데이터
     private readonly List<Vector3> meshVertices = new List<Vector3>();
     private readonly List<int> meshTriangles = new List<int>();
@@ -16,13 +16,11 @@ public class DropItem : MonoBehaviour
     private int vertexIndex = 0;
     #endregion
 
-
-    void Start()
+    void Awake()
     {
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshFilter = gameObject.AddComponent<MeshFilter>();
         meshRenderer.material = World.Instance.TextureAtlas;
-        SetItemRender(itemCode);
     }
 
     // Update is called once per frame
@@ -31,6 +29,15 @@ public class DropItem : MonoBehaviour
         transform.Rotate(new Vector3(0, 100 * Time.deltaTime, 0));
     }
 
+    private void OnEnable()
+    {
+        SetItemRender(itemCode);
+    }
+
+    private void OnDisable()
+    {
+        ClearItemRender();
+    }
     private void SetItemRender(int itemCode)
     {
         Vector3 vec = new Vector3(-0.5f, +0.5f, -0.5f);
@@ -51,6 +58,16 @@ public class DropItem : MonoBehaviour
         meshFilter.mesh.uv = meshUv.ToArray();
         meshFilter.mesh.RecalculateNormals();
     }
+
+    private void ClearItemRender()
+    {
+        meshVertices.Clear();
+        meshTriangles.Clear();
+        meshUv.Clear();
+        vertexIndex = 0;
+        meshFilter.mesh.RecalculateNormals();
+    }
+
     private void AddTextureUV(int atlasesCode)
     {
         // 아틀라스 내의 텍스쳐 가로, 세로 개수

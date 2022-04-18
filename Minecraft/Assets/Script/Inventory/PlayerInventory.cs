@@ -183,7 +183,8 @@ public class PlayerInventory : MonoBehaviour
     }
     public void RightClickSlot(int slotNum)
     {
-        if (true == MouseItemSlot.Instance.itemSlot.empty)
+        if (true == MouseItemSlot.Instance.itemSlot.empty  &&
+            1 != itemSlot[slotNum].itemNum)
         {
             int temp = (1 == itemSlot[slotNum].itemNum % 2) ? 1 : 0;
             int itemNum = itemSlot[slotNum].itemNum /= 2;
