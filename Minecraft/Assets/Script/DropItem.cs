@@ -16,6 +16,8 @@ public class DropItem : MonoBehaviour
     private int vertexIndex = 0;
     #endregion
 
+    public bool canIsItemGet = false;
+
     void Awake()
     {
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
@@ -32,6 +34,7 @@ public class DropItem : MonoBehaviour
     private void OnEnable()
     {
         SetItemRender(itemCode);
+        StartCoroutine(CanIsItemGetDelay());
     }
 
     private void OnDisable()
@@ -67,6 +70,11 @@ public class DropItem : MonoBehaviour
         vertexIndex = 0;
         meshFilter.mesh.RecalculateNormals();
     }
+    IEnumerator CanIsItemGetDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        canIsItemGet = true;
+    }
 
     private void AddTextureUV(int atlasesCode)
     {
@@ -88,4 +96,6 @@ public class DropItem : MonoBehaviour
         meshUv.Add(new Vector2(uvX + nw, uvY));
         meshUv.Add(new Vector2(uvX + nw, uvY + nh));
     }
+
+
 }

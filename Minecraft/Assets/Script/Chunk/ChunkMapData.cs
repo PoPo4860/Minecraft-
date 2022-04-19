@@ -16,6 +16,7 @@ public class ChunkMapData
     {
         get { return World.Instance; }
     }
+
     public ChunkMapData(ChunkCoord _coord)
     {
         coord = _coord;

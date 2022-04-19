@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8268581996638578426}
   - component: {fileID: 8268581996638578425}
   - component: {fileID: 8268581996638578427}
+  - component: {fileID: -1173869375030306621}
   m_Layer: 0
   m_Name: ItemTest
   m_TagString: Untagged
@@ -47,6 +48,7 @@ MonoBehaviour:
   rigi: {fileID: 8268581996638578427}
   itemCode: 0
   itemNum: 0
+  canIsItemGet: 0
 --- !u!114 &8268581996638578427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,3 +61,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67caac02cdbed0742ba14d01ce04f761, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &-1173869375030306621
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8268581996638578424}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 1, z: 0}

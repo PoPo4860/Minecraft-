@@ -111,8 +111,6 @@ public class VoxelRigidbody : MonoBehaviour
         crouch = input;
     }
 
-
-
     private bool CheckCollision(in Vector3 vel, in Direction dir)
     {
         if (dir == Direction.Left)
