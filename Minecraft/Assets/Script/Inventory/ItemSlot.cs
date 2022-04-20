@@ -52,7 +52,7 @@ public class ItemSlot : MonoBehaviour
     {
         string itemName = CodeData.GetBlockInfo(itemCode).blockName;
         itemImage.sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
-        itemText.text = 0 == itemNum ? "" : $"{itemNum}";
+        itemText.text = (0 == itemNum) ? "" : $"{itemNum}";
     }
 
     // 계산 연산자는 아이템 갯수를 기준으로 비교합니다.

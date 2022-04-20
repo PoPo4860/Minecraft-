@@ -7,10 +7,12 @@ public class PlayerQuickSlot : MonoBehaviour
 {
     public RectTransform selectQuickSlotRect;
     public Text selectQuickSlotText;
+    private int selectQuickSlotItemNum = 0;
+    private int currentSelectNum = 0;
+    private int getKeyNum = 0;
 
     public ItemSlot[] itemSlot;
 
-    private int currentSelectNum = 0;
     private void Start()
     {
         //selectQuickSlotRect.position = itemSlot[0].itemImage.transform.position;
@@ -19,16 +21,26 @@ public class PlayerQuickSlot : MonoBehaviour
     private void Update()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (-1 != GetItemQuickSlotNumFromInput())
+        getKeyNum = GetItemQuickSlotNumFromInput();
+        if (-1 != getKeyNum ||
+            selectQuickSlotItemNum != itemSlot[currentSelectNum].itemNum)
         {
-            currentSelectNum = GetItemQuickSlotNumFromInput();
+            if (-1 != getKeyNum) 
+                currentSelectNum = getKeyNum;
+
+            selectQuickSlotItemNum = itemSlot[currentSelectNum].itemNum;
             selectQuickSlotRect.position = itemSlot[currentSelectNum].itemImage.transform.position;
-            int itemCode = itemSlot[currentSelectNum].itemCode;
-            if (CodeData.BLOCK_AIR != itemCode)
-                selectQuickSlotText.text = CodeData.GetBlockInfo(itemCode).blockName;
-            else
-                selectQuickSlotText.text = "";
+            SetQuickSlotText();
         }
+    }
+
+    private void SetQuickSlotText()
+    {
+        int itemCode = itemSlot[currentSelectNum].itemCode;
+        if (CodeData.BLOCK_AIR != itemCode)
+            selectQuickSlotText.text = CodeData.GetBlockInfo(itemCode).blockName;
+        else
+            selectQuickSlotText.text = "";
     }
 
     public ushort UseQuickSlotItemCode()
