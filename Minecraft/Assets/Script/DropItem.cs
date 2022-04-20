@@ -16,30 +16,32 @@ public class DropItem : MonoBehaviour
     private int vertexIndex = 0;
     #endregion
 
-    public bool canIsItemGet = false;
-
+    public bool _canIsItemGet = false;
+    public bool canIsItemGet
+    {
+        get { return (true == _canIsItemGet && true == gameObject.activeSelf); }
+        set { _canIsItemGet = value; }
+    }
     void Awake()
     {
         meshRenderer = gameObject.AddComponent<MeshRenderer>();
         meshFilter = gameObject.AddComponent<MeshFilter>();
         meshRenderer.material = World.Instance.TextureAtlas;
     }
-
-    // Update is called once per frame
     void Update()
     {
         transform.Rotate(new Vector3(0, 100 * Time.deltaTime, 0));
     }
-
     private void OnEnable()
     {
         SetItemRender(itemCode);
         StartCoroutine(CanIsItemGetDelay());
     }
-
     private void OnDisable()
     {
         ClearItemRender();
+        _canIsItemGet = false;
+        rigi.SetVelocity(Vector3.zero);
     }
     private void SetItemRender(int itemCode)
     {
@@ -61,7 +63,6 @@ public class DropItem : MonoBehaviour
         meshFilter.mesh.uv = meshUv.ToArray();
         meshFilter.mesh.RecalculateNormals();
     }
-
     private void ClearItemRender()
     {
         meshVertices.Clear();
@@ -72,7 +73,7 @@ public class DropItem : MonoBehaviour
     }
     IEnumerator CanIsItemGetDelay()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
         canIsItemGet = true;
     }
 
@@ -96,6 +97,4 @@ public class DropItem : MonoBehaviour
         meshUv.Add(new Vector2(uvX + nw, uvY));
         meshUv.Add(new Vector2(uvX + nw, uvY + nh));
     }
-
-
 }

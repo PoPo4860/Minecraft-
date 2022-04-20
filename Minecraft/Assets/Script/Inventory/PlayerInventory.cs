@@ -7,25 +7,6 @@ public class PlayerInventory : MonoBehaviour
 
     private const int slotInMaxItem = 64;
 
-    private static PlayerInventory instance;
-    public static PlayerInventory Instance
-    {
-        get
-        {
-            if (null == instance)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
-    private void Awake()
-    {
-        if (null == instance)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
     private void OnEnable()
     {
         Cursor.visible = true;
@@ -36,17 +17,7 @@ public class PlayerInventory : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            AddInventoryItem(CodeData.BLOCK_BEDROCK, 10);
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            AddInventoryItem(CodeData.BLOCK_COAL, 10);
-
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            AddInventoryItem(CodeData.BLOCK_GRASS, 10);
-    }
     public void AddInventoryItem(in int itemCode, in int itemNum, bool quickPriority = true)
     {
         if (true == CheckCanAddInventory(itemCode, out int slotNum, quickPriority))

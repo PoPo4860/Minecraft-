@@ -17,8 +17,6 @@ public class TargetBlock : MonoBehaviour
     private float stayeMouseButtonTime = 0f;
     private int attack = 1;
 
-    public DropItem _item;
-
     private MeshFilter meshFilter;
     public static readonly Vector3[] voxelVerts = new Vector3[8]
     {   // 정점을 설정
@@ -37,14 +35,6 @@ public class TargetBlock : MonoBehaviour
 
     private int bufferSpriteNum = -1;
 
-    void Create(int itemCode)
-    {
-        DropItem item = Instantiate(_item);
-        item.transform.position = gameObject.transform.position + new Vector3(0.5f, 0.5f, 0.5f);
-        item.itemCode = itemCode;
-        item.itemNum = 1;
-        item.gameObject.SetActive(true);
-    }
     void Start()
     {
         MeshInit();
@@ -59,7 +49,7 @@ public class TargetBlock : MonoBehaviour
             SetTargetInfo();
             stayeMouseButtonTime += Time.deltaTime;
             float percent = stayeMouseButtonTime / targetBlockHardness * (spriteWidth-1);
-            SetSpriteNum((int)percent+1);
+            SetSpriteNum((int)percent + 1);
             
             if (targetBlockHardness <= stayeMouseButtonTime)
             {
@@ -72,7 +62,7 @@ public class TargetBlock : MonoBehaviour
                     ModifyChunkData(voxelPos, CodeData.BLOCK_AIR);
 
                 Vector3 vec = new Vector3(+0.5f, +0.5f, +0.5f);
-                ItemManager.Instance.AddDropItem(itemCode, 1, transform.position + vec);
+                GameManager.Instance.itemManager.AddDropItem(itemCode, 1, transform.position + vec);
             }
         }
         else

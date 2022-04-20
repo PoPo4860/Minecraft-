@@ -65,7 +65,7 @@ public class MouseItemSlot : MonoBehaviour
         int itemNum = _itemSlot.itemNum;
         if (0 != itemCode && 0 != itemNum)
         {
-            PlayerInventory.Instance.AddInventoryItem(itemCode, itemNum);
+            GameManager.Instance.playerInventory.AddInventoryItem(itemCode, itemNum);
             _itemSlot.itemCode = 0;
             _itemSlot.itemNum = 0;
         }

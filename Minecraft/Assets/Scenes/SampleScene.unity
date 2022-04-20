@@ -609,6 +609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 17
+  slotInMouse: 0
   state: 1
 --- !u!222 &92160636
 CanvasRenderer:
@@ -715,6 +716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 26
+  slotInMouse: 0
   state: 1
 --- !u!222 &125820153
 CanvasRenderer:
@@ -762,14 +764,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 144626421}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.99792, y: 18.90636, z: -10.615605}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1623705806}
   - {fileID: 810712308}
   - {fileID: 1358716210}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &147060189
 GameObject:
@@ -988,6 +990,53 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!1 &171100596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 171100598}
+  - component: {fileID: 171100597}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &171100597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171100596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7f91ec9557cf964eaecb723a3e7ab7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 827087654}
+  playerInventory: {fileID: 625029012}
+  itemManager: {fileID: 593787772}
+  mouseItemSlot: {fileID: 1722827892}
+--- !u!4 &171100598
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 171100596}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &206931915
 GameObject:
   m_ObjectHideFlags: 0
@@ -1150,6 +1199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 16
+  slotInMouse: 0
   state: 1
 --- !u!222 &219430629
 CanvasRenderer:
@@ -1256,6 +1306,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 8
+  slotInMouse: 0
   state: 1
 --- !u!222 &259148898
 CanvasRenderer:
@@ -1437,6 +1488,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 15
+  slotInMouse: 0
   state: 1
 --- !u!222 &387383047
 CanvasRenderer:
@@ -1905,6 +1957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 30
+  slotInMouse: 0
   state: 1
 --- !u!222 &449875490
 CanvasRenderer:
@@ -2090,6 +2143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 3
+  slotInMouse: 0
   state: 1
 --- !u!222 &474246380
 CanvasRenderer:
@@ -2508,6 +2562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 22
+  slotInMouse: 0
   state: 1
 --- !u!222 &542001207
 CanvasRenderer:
@@ -2693,6 +2748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 33
+  slotInMouse: 0
   state: 1
 --- !u!222 &579396877
 CanvasRenderer:
@@ -2716,6 +2772,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemImage: {fileID: 0}
   itemText: {fileID: 0}
+--- !u!1 &593787771
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 593787773}
+  - component: {fileID: 593787772}
+  m_Layer: 0
+  m_Name: ItemManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &593787772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593787771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 421447b6091397a4fbcd1a23eef08f8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTransform: {fileID: 827087653}
+  dorpItemObject: {fileID: 8268581996638578425, guid: 878ba3f31e7f7b04e9967c58d1eeb69c, type: 3}
+--- !u!4 &593787773
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593787771}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 163.0978, y: -485.41702, z: 543.5885}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &618044931
 GameObject:
   m_ObjectHideFlags: 0
@@ -2878,6 +2979,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 25
+  slotInMouse: 0
   state: 1
 --- !u!222 &621997318
 CanvasRenderer:
@@ -3039,6 +3141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
+  slotInMouse: 0
   state: 0
 --- !u!1 &634373072
 GameObject:
@@ -3202,6 +3305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 4
+  slotInMouse: 0
   state: 1
 --- !u!222 &647228944
 CanvasRenderer:
@@ -3349,7 +3453,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &736339654
 GameObject:
@@ -3434,6 +3538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 6
+  slotInMouse: 0
   state: 1
 --- !u!222 &736339658
 CanvasRenderer:
@@ -3838,6 +3943,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 1
+  slotInMouse: 0
   state: 1
 --- !u!114 &796404709
 MonoBehaviour:
@@ -4219,6 +4325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 9
+  slotInMouse: 0
   state: 1
 --- !u!222 &900640470
 CanvasRenderer:
@@ -4416,6 +4523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 12
+  slotInMouse: 0
   state: 1
 --- !u!222 &946061161
 CanvasRenderer:
@@ -4963,6 +5071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
+  slotInMouse: 0
   state: 1
 --- !u!1 &1163446645
 GameObject:
@@ -5284,6 +5393,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 18
+  slotInMouse: 0
   state: 1
 --- !u!222 &1200326906
 CanvasRenderer:
@@ -5390,6 +5500,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 2
+  slotInMouse: 0
   state: 1
 --- !u!222 &1219245456
 CanvasRenderer:
@@ -5666,6 +5777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 35
+  slotInMouse: 0
   state: 1
 --- !u!222 &1232938786
 CanvasRenderer:
@@ -5772,6 +5884,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 14
+  slotInMouse: 0
   state: 1
 --- !u!222 &1251192628
 CanvasRenderer:
@@ -6133,6 +6246,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 10
+  slotInMouse: 0
   state: 1
 --- !u!222 &1362869342
 CanvasRenderer:
@@ -6313,6 +6427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 28
+  slotInMouse: 0
   state: 1
 --- !u!222 &1402435877
 CanvasRenderer:
@@ -6498,6 +6613,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 20
+  slotInMouse: 0
   state: 1
 --- !u!222 &1427223121
 CanvasRenderer:
@@ -6841,6 +6957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 21
+  slotInMouse: 0
   state: 1
 --- !u!222 &1445676281
 CanvasRenderer:
@@ -6947,6 +7064,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 23
+  slotInMouse: 0
   state: 1
 --- !u!222 &1446522127
 CanvasRenderer:
@@ -7132,6 +7250,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 29
+  slotInMouse: 0
   state: 1
 --- !u!222 &1471237234
 CanvasRenderer:
@@ -7238,6 +7357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 5
+  slotInMouse: 0
   state: 1
 --- !u!222 &1561985180
 CanvasRenderer:
@@ -7391,6 +7511,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 31
+  slotInMouse: 0
   state: 1
 --- !u!222 &1627793270
 CanvasRenderer:
@@ -7576,6 +7697,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 7
+  slotInMouse: 0
   state: 1
 --- !u!222 &1668761777
 CanvasRenderer:
@@ -7814,7 +7936,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c89f7f9d285aca4689d166a2e009add, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _item: {fileID: 8268581996638578425, guid: 878ba3f31e7f7b04e9967c58d1eeb69c, type: 3}
 --- !u!23 &1715831776
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -8134,6 +8255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 11
+  slotInMouse: 0
   state: 1
 --- !u!222 &1752743245
 CanvasRenderer:
@@ -8398,6 +8520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 13
+  slotInMouse: 0
   state: 1
 --- !u!222 &1790316929
 CanvasRenderer:
@@ -8509,6 +8632,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
+  slotInMouse: 0
   state: 0
 --- !u!1 &1836126950
 GameObject:
@@ -8593,6 +8717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 34
+  slotInMouse: 0
   state: 1
 --- !u!222 &1836126954
 CanvasRenderer:
@@ -8699,6 +8824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 32
+  slotInMouse: 0
   state: 1
 --- !u!222 &1836804455
 CanvasRenderer:
@@ -8805,6 +8931,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 27
+  slotInMouse: 0
   state: 1
 --- !u!222 &1872176072
 CanvasRenderer:
@@ -9385,6 +9512,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 19
+  slotInMouse: 0
   state: 1
 --- !u!222 &2073210623
 CanvasRenderer:
@@ -9649,6 +9777,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 24
+  slotInMouse: 0
   state: 1
 --- !u!222 &2087231702
 CanvasRenderer:

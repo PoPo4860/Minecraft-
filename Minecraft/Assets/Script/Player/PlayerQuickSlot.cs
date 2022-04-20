@@ -33,7 +33,7 @@ public class PlayerQuickSlot : MonoBehaviour
 
     public ushort UseQuickSlotItemCode()
     {
-        PlayerInventory.Instance.RightClickQuickSlotItem(currentSelectNum, out int itemCode, out int itemNum);
+        GameManager.Instance.playerInventory.RightClickQuickSlotItem(currentSelectNum, out int itemCode, out int itemNum);
         return (ushort)itemCode;
     }
     private int GetItemQuickSlotNumFromInput()
