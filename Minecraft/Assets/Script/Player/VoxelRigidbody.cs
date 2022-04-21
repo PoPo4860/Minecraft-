@@ -63,7 +63,6 @@ public class VoxelRigidbody : MonoBehaviour
         if (addForce.x != 0 || addForce.y != 0 || addForce.z != 0)
         {
             addForce += (-deceleration) * Time.fixedDeltaTime;
-
             if (Mathf.Abs(addForce.x) < 0.01f)
             {
                 deceleration.x = 0;

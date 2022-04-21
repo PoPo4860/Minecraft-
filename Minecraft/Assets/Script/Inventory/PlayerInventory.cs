@@ -188,9 +188,13 @@ public class PlayerInventory : MonoBehaviour
             return;
 
         int itemCode = itemSlot[itemSlotNum].itemCode;
-        int itemNum = itemSlot[itemSlotNum].itemNum;
+        if(itemSlot[itemSlotNum].itemNum < dropItemNum)
+            dropItemNum = itemSlot[itemSlotNum].itemNum;
+        
+        itemSlot[itemSlotNum] -= dropItemNum;
         Vector3 vec =  GameManager.Instance.player.cameraTransform.position;
         Vector3 vec2 = GameManager.Instance.player.cameraTransform.forward / 1.5f;
         GameManager.Instance.itemManager.AddDropItem(itemCode, dropItemNum, vec, vec2);
+        SetQuickSlot(itemSlotNum);
     }
 }

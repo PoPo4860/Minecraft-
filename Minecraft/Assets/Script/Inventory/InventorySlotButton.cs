@@ -19,16 +19,12 @@ public class InventorySlotButton : MonoBehaviour,
     }
     private void Update()
     {
-        if (state == EItemState.InventorySlot && true == Input.GetKeyDown(KeyCode.Q))
+        if (state == EItemState.InventorySlot && true == Input.GetKeyDown(KeyCode.Q) && true == slotInMouse)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-
-            }
+            if (true == Input.GetKey(KeyCode.LeftShift))
+                GameManager.Instance.playerInventory.DropItemFromInventoy(slotNumber, 64);
             else
-            {
-
-            }
+                GameManager.Instance.playerInventory.DropItemFromInventoy(slotNumber, 1);
         }
     }
 

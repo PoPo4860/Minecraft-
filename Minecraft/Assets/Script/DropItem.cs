@@ -36,6 +36,7 @@ public class DropItem : MonoBehaviour
     {
         SetItemRender(itemCode);
         StartCoroutine(CanIsItemGetDelay());
+        StartCoroutine(ActiveFalse());
     }
     private void OnDisable()
     {
@@ -78,7 +79,11 @@ public class DropItem : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         canIsItemGet = true;
     }
-
+    IEnumerator ActiveFalse()
+    {
+        yield return new WaitForSeconds(30.0f);
+        gameObject.SetActive(false);
+    }
     private void AddTextureUV(int atlasesCode)
     {
         // 아틀라스 내의 텍스쳐 가로, 세로 개수
