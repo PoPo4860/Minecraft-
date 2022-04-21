@@ -57,8 +57,8 @@ public class ItemManager : MonoBehaviour
                 objectList[i].itemCode = itemCode;
                 objectList[i].itemNum = itemNum;
                 objectList[i].gameObject.transform.position = pos;
-                objectList[i].rigi.SetVelocity(vec);
                 objectList[i].gameObject.SetActive(true);
+                objectList[i].rigi.AddForce(vec);
                 return;
             }
         }
@@ -66,8 +66,8 @@ public class ItemManager : MonoBehaviour
         obj.transform.SetParent(gameObject.transform);
         obj.itemCode = itemCode;
         obj.itemNum = itemNum;
-        obj.rigi.SetVelocity(vec);
         obj.gameObject.SetActive(true);
+        obj.rigi.AddForce(vec);
         objectList.Add(obj);
     }
 }

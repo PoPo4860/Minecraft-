@@ -42,6 +42,8 @@ public class DropItem : MonoBehaviour
         ClearItemRender();
         _canIsItemGet = false;
         rigi.SetVelocity(Vector3.zero);
+        rigi.SetForce(Vector3.zero);
+        
     }
     private void SetItemRender(int itemCode)
     {
@@ -73,7 +75,7 @@ public class DropItem : MonoBehaviour
     }
     IEnumerator CanIsItemGetDelay()
     {
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.5f);
         canIsItemGet = true;
     }
 

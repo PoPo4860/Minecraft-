@@ -7,7 +7,6 @@ public class Player : MonoBehaviour
     private float walkSpeed = 6f;
     private readonly float jumpPower = 9.8f;
     #endregion
-    private Transform cameraTransform;
 
     #region .
     private float horizontal;
@@ -16,8 +15,7 @@ public class Player : MonoBehaviour
     private float mouseY;
     #endregion
 
-    
-
+    [HideInInspector] public Transform cameraTransform;
     [SerializeField] private Transform highlightBlock;
     private Vector3 placeBlock = new Vector3();
     private readonly float checkIncrement = 0.1f;
@@ -32,6 +30,7 @@ public class Player : MonoBehaviour
     {
         get { return World.Instance; }
     }
+
     void Start()
     {
         Camera camera = GetComponentInChildren<Camera>();
@@ -47,11 +46,6 @@ public class Player : MonoBehaviour
         GetPlayerControlInput();
         PlaceCursorBlocks();
     }
-
-    void SetPlayerUI(bool check)
-    {
-        playerUI.SetActive(check);
-    }
     private void FixedUpdate()
     {
         Vector3 velocityVector = ((transform.forward * vertical) + (transform.right * horizontal));
@@ -60,6 +54,10 @@ public class Player : MonoBehaviour
     private void LateUpdate()
     {
         MoveAndRotate();
+    }
+    void SetPlayerUI(bool check)
+    {
+        playerUI.SetActive(check);
     }
     private void GetPlayerUIInput()
     {
@@ -75,7 +73,7 @@ public class Player : MonoBehaviour
     }
     private void GetPlayerControlInput()
     {
-        #region 플레이어 움직임 관련
+        #region 플레이어 움직임 관련 입력
         horizontal = Input.GetAxisRaw("Horizontal");
         vertical = Input.GetAxisRaw("Vertical");
         mouseX = Input.GetAxis("Mouse X") * 5;
@@ -100,7 +98,13 @@ public class Player : MonoBehaviour
             playerRigi.InputShift(false);
             walkSpeed = 6;
         }
-        #endregion 
+        #endregion
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            int itemSlot = playerQuickSlot.currentSelectNum + 27;
+            GameManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 1);
+        }
 
         if (true == highlightBlock.gameObject.activeSelf)
         {
@@ -117,7 +121,6 @@ public class Player : MonoBehaviour
             }
         }
     }
-
     private void MoveAndRotate()
     {
         transform.Rotate(Vector3.up * mouseX);

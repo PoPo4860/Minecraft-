@@ -14,6 +14,8 @@ public class ItemSlot : MonoBehaviour
             _itemNum = value;
             if (0 == itemNum)
                 itemCode = 0;
+            if (_itemNum < 0)
+                _itemNum = 0;
 
             SetItemImage();
         }
@@ -27,7 +29,7 @@ public class ItemSlot : MonoBehaviour
     [HideInInspector] public Image itemImage;
     [HideInInspector] public Text itemText;
     
-    public void Awake()
+    private void Awake()
     {
         if (null == itemImage)
             itemImage = GetComponent<Image>();

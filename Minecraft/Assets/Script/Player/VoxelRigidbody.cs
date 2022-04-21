@@ -8,6 +8,7 @@ public class VoxelRigidbody : MonoBehaviour
     private float objectHeight = 1.5f;
     private bool isGrounded = false;
     private float _gravity = -9.8f;
+    private Vector3 deceleration;
     private float gravity
     {
         get { return _gravity + velocity.y; }
@@ -59,35 +60,25 @@ public class VoxelRigidbody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (addForce.x != 0)
+        if (addForce.x != 0 || addForce.y != 0 || addForce.z != 0)
         {
-            if (addForce.x < 0)
-                addForce.x += Time.fixedDeltaTime;
-            else
-                addForce.x -= Time.fixedDeltaTime;
+            addForce += (-deceleration) * Time.fixedDeltaTime;
 
             if (Mathf.Abs(addForce.x) < 0.01f)
+            {
+                deceleration.x = 0;
                 addForce.x = 0;
-        }
-        if (addForce.y != 0)
-        {
-            if (addForce.y < 0)
-                addForce.y += Time.fixedDeltaTime;
-            else
-                addForce.y -= Time.fixedDeltaTime;
-
+            }
             if (Mathf.Abs(addForce.y) < 0.01f)
+            {
+                deceleration.y = 0;
                 addForce.y = 0;
-        }
-        if (addForce.z != 0)
-        {
-            if (addForce.z < 0)
-                addForce.z += Time.fixedDeltaTime;
-            else
-                addForce.z -= Time.fixedDeltaTime;
-
+            }
             if (Mathf.Abs(addForce.z) < 0.01f)
+            {
+                deceleration.z = 0;
                 addForce.z = 0;
+            }
         }
         CalculateVelocity();
         transform.Translate(moveVelocity, Space.World);
@@ -105,6 +96,12 @@ public class VoxelRigidbody : MonoBehaviour
     public void AddForce(in Vector3 vec)
     {
         addForce += vec / 2;
+        deceleration = addForce.normalized;
+    }
+    public void SetForce(in Vector3 vec)
+    {
+        addForce = vec;
+        deceleration = addForce.normalized;
     }
     public void InputShift(in bool input)
     {

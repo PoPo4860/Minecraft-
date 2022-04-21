@@ -91,7 +91,6 @@ public class PlayerInventory : MonoBehaviour
 
         return false;
     }
-
     public void SetQuickSlot(int slotNum)
     {
         if(27 <= slotNum)
@@ -182,5 +181,16 @@ public class PlayerInventory : MonoBehaviour
         }
         SetQuickSlot(slotNum);
 
+    }
+    public void DropItemFromInventoy(int itemSlotNum, int dropItemNum)
+    {
+        if (true== itemSlot[itemSlotNum].empty)
+            return;
+
+        int itemCode = itemSlot[itemSlotNum].itemCode;
+        int itemNum = itemSlot[itemSlotNum].itemNum;
+        Vector3 vec =  GameManager.Instance.player.cameraTransform.position;
+        Vector3 vec2 = GameManager.Instance.player.cameraTransform.forward / 1.5f;
+        GameManager.Instance.itemManager.AddDropItem(itemCode, dropItemNum, vec, vec2);
     }
 }

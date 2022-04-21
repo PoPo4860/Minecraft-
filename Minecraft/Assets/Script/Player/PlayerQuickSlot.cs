@@ -5,37 +5,34 @@ using UnityEngine.UI;
 
 public class PlayerQuickSlot : MonoBehaviour
 {
-    public RectTransform selectQuickSlotRect;
-    public Text selectQuickSlotText;
+    [SerializeField] private RectTransform selectQuickSlotRect;
+    [SerializeField] private Text selectQuickSlotText;
     private int selectQuickSlotItemNum = 0;
-    private int currentSelectNum = 0;
+    [HideInInspector] public int currentSelectNum = 0;
     private int getKeyNum = 0;
 
     public ItemSlot[] itemSlot;
 
     private void Start()
     {
-        //selectQuickSlotRect.position = itemSlot[0].itemImage.transform.position;
-        //selectQuickSlotText.text = "";
+        SetQuickSlot();
     }
     private void Update()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         getKeyNum = GetItemQuickSlotNumFromInput();
-        if (-1 != getKeyNum ||
-            selectQuickSlotItemNum != itemSlot[currentSelectNum].itemNum)
+        if (-1 != getKeyNum || selectQuickSlotItemNum != itemSlot[currentSelectNum].itemNum)
         {
             if (-1 != getKeyNum) 
                 currentSelectNum = getKeyNum;
-
-            selectQuickSlotItemNum = itemSlot[currentSelectNum].itemNum;
-            selectQuickSlotRect.position = itemSlot[currentSelectNum].itemImage.transform.position;
-            SetQuickSlotText();
+            SetQuickSlot();
         }
     }
 
-    private void SetQuickSlotText()
+    private void SetQuickSlot()
     {
+        selectQuickSlotItemNum = itemSlot[currentSelectNum].itemNum;
+        selectQuickSlotRect.position = itemSlot[currentSelectNum].itemImage.transform.position;
         int itemCode = itemSlot[currentSelectNum].itemCode;
         if (CodeData.BLOCK_AIR != itemCode)
             selectQuickSlotText.text = CodeData.GetBlockInfo(itemCode).blockName;
