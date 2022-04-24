@@ -49,18 +49,37 @@ public class DropItem : MonoBehaviour
     private void SetItemRender(int itemCode)
     {
         Vector3 vec = new Vector3(-0.5f, +0.5f, -0.5f);
-        for (int face = 0; face < 6; ++face)
+        if(CodeData.ECodeType.Block == CodeData.GetCodeType(itemCode))
         {
-            for (int i = 0; i < 4; ++i)
-                meshVertices.Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + vec);
+            for (int face = 0; face < 6; ++face)
+            {
+                for (int i = 0; i < 4; ++i)
+                    meshVertices.Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + vec);
 
-            foreach (int i in ChunkHelperData.vertexData)
-                meshTriangles.Add(vertexIndex + i);
-            int atlasesCode = CodeData.GetBlockTextureAtlases(itemCode, face);
+                foreach (int i in ChunkHelperData.vertexData)
+                    meshTriangles.Add(vertexIndex + i);
+                int atlasesCode = CodeData.GetBlockTextureAtlases(itemCode, face);
 
-            AddTextureUV(atlasesCode);
-            vertexIndex += 4;
+                AddBlockTextureUV(atlasesCode);
+                vertexIndex += 4;
+            }
         }
+        else if (CodeData.ECodeType.Item == CodeData.GetCodeType(itemCode))
+        {
+            for (int face = 0; face < 2; ++face)
+            {
+                for (int i = 0; i < 4; ++i)
+                    meshVertices.Add(VoxelData.itemVerts[VoxelData.voxelTris[face, i]] + vec);
+
+                foreach (int i in ChunkHelperData.vertexData)
+                    meshTriangles.Add(vertexIndex + i);
+                int atlasesCode = CodeData.GetItemTextureAtlases(itemCode);
+
+                AddItemTextureUV(atlasesCode);
+                vertexIndex += 4;
+            }
+        }
+
         meshFilter.mesh.vertices = meshVertices.ToArray();
         meshFilter.mesh.triangles = meshTriangles.ToArray();
         meshFilter.mesh.uv = meshUv.ToArray();
@@ -71,6 +90,7 @@ public class DropItem : MonoBehaviour
         meshVertices.Clear();
         meshTriangles.Clear();
         meshUv.Clear();
+        meshFilter.mesh.Clear();
         vertexIndex = 0;
         meshFilter.mesh.RecalculateNormals();
     }
@@ -84,7 +104,27 @@ public class DropItem : MonoBehaviour
         yield return new WaitForSeconds(30.0f);
         gameObject.SetActive(false);
     }
-    private void AddTextureUV(int atlasesCode)
+    private void AddBlockTextureUV(int atlasesCode)
+    {
+        // 아틀라스 내의 텍스쳐 가로, 세로 개수
+        (int w, int h) = (VoxelData.TextureAtlasWidth, VoxelData.TextureAtlasHeight);
+
+        int x = atlasesCode % w;
+        int y = h - (atlasesCode / w) - 1;
+
+        float nw = VoxelData.NormalizedTextureAtlasWidth;
+        float nh = VoxelData.NormalizedTextureAtlasHeight;
+
+        float uvX = x * nw;
+        float uvY = y * nh;
+
+        // 해당 텍스쳐의 uv를 LB-LT-RB-RT 순서로 추가
+        meshUv.Add(new Vector2(uvX, uvY)); 
+        meshUv.Add(new Vector2(uvX, uvY + nh));
+        meshUv.Add(new Vector2(uvX + nw, uvY));
+        meshUv.Add(new Vector2(uvX + nw, uvY + nh));
+    }
+    private void AddItemTextureUV(int atlasesCode)
     {
         // 아틀라스 내의 텍스쳐 가로, 세로 개수
         (int w, int h) = (VoxelData.TextureAtlasWidth, VoxelData.TextureAtlasHeight);

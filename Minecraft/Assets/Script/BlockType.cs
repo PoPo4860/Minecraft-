@@ -1,4 +1,4 @@
-public enum Type { Basic, Soil, Stone, Wood }
+public enum EBlockType { Basic, Soil, Stone, Wood }
 public class BlockType
 {
     public ushort[] textureAtlases = new ushort[6];
@@ -6,6 +6,15 @@ public class BlockType
     public bool isSolid;
     public bool renderNeighborFaces;
     public float hardness;
-    public Type type;
+    public EBlockType type;
+}
 
+
+public enum EItemType { Basic, Sword, Pick, Axe, Shovel}
+public class ItemType
+{
+    public ushort textureAtlases;
+    public string itemName;
+    public int value;
+    public EItemType type;
 }

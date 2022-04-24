@@ -35,14 +35,14 @@ public class PlayerQuickSlot : MonoBehaviour
         selectQuickSlotRect.position = itemSlot[currentSelectNum].itemImage.transform.position;
         int itemCode = itemSlot[currentSelectNum].itemCode;
         if (CodeData.BLOCK_AIR != itemCode)
-            selectQuickSlotText.text = CodeData.GetBlockInfo(itemCode).blockName;
+            selectQuickSlotText.text = CodeData.GetCodeName(itemCode);
         else
             selectQuickSlotText.text = "";
     }
 
     public ushort UseQuickSlotItemCode()
     {
-        GameManager.Instance.playerInventory.RightClickQuickSlotItem(currentSelectNum, out int itemCode, out int itemNum);
+        int itemCode = GameManager.Instance.playerInventory.RightClickQuickSlotItem(currentSelectNum);
         return (ushort)itemCode;
     }
     private int GetItemQuickSlotNumFromInput()

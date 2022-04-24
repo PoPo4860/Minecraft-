@@ -18,6 +18,14 @@ public class PlayerInventory : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            AddInventoryItem(CodeData.Item_Coal, 1);
+        }
+    }
+
     public void AddInventoryItem(in int itemCode, in int itemNum, bool quickPriority = true)
     {
         if (true == CheckCanAddInventory(itemCode, out int slotNum, quickPriority))
@@ -99,13 +107,13 @@ public class PlayerInventory : MonoBehaviour
             playerQuickSlot.itemSlot[slotNum - 27].itemNum = itemSlot[slotNum].itemNum;
         }
     }
-    public void RightClickQuickSlotItem(int slotNum, out int itemCdoe, out int itemNum)
+    public int RightClickQuickSlotItem(int slotNum)
     {
         slotNum += 27;
-        itemCdoe = itemSlot[slotNum].itemCode;
-        itemNum = itemSlot[slotNum].itemNum;
+        int itemCdoe = itemSlot[slotNum].itemCode;
         --itemSlot[slotNum];
         SetQuickSlot(slotNum);
+        return itemCdoe;
     }
     public void LeftClickSlot(int slotNum)
     {

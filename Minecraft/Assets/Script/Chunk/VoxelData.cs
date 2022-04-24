@@ -30,7 +30,20 @@ public static class VoxelData
         new Vector3(0.0f, 1.0f, 1.0f), // LT
     };
 
+    public static readonly Vector3[] itemVerts = new Vector3[8]
+{   // 정점을 설정
+        // Front
+        new Vector3(0.0f, 0.0f, 0.5f), // LB
+        new Vector3(1.0f, 0.0f, 0.5f), // RB
+        new Vector3(1.0f, 1.0f, 0.5f), // RT
+        new Vector3(0.0f, 1.0f, 0.5f), // LT
 
+        // Back
+        new Vector3(0.0f, 0.0f, 0.5f), // LB
+        new Vector3(1.0f, 0.0f, 0.5f), // RB
+        new Vector3(1.0f, 1.0f, 0.5f), // RT
+        new Vector3(0.0f, 1.0f, 0.5f), // LT
+};
     /// <summary> 큐브의 각 면을 이루는 삼각형들의 버텍스 인덱스 데이터 </summary>
     public static readonly int[,] voxelTris = new int[6, 4]
     {   // 정점을 이어 준다.

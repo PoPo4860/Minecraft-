@@ -52,8 +52,8 @@ public class ItemSlot : MonoBehaviour
     }
     public void SetItemImage()
     {
-        string itemName = CodeData.GetBlockInfo(itemCode).blockName;
-        itemImage.sprite = Resources.Load<Sprite>("BlockIcon/" + itemName);
+        string itemName = CodeData.GetCodeName(itemCode);
+        itemImage.sprite = Resources.Load<Sprite>("Icon/" + itemName);
         itemText.text = (0 == itemNum) ? "" : $"{itemNum}";
     }
 
