@@ -9,7 +9,12 @@ public static class CraftingResipe
     static CraftingResipe()
     {
         int[] recipe = new int[10]
-            {1,2,3,4,5,6,7,8,9,10};
+            {
+                263,263,0,
+                0,0,0,
+                0,0,0,
+                280
+            };
         SetResipe(recipe);
     }
     public static void SetResipe(int[] recipe)
