@@ -3,7 +3,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public Player player;
-    public PlayerInventory playerInventory;
     public ItemManager itemManager;
     public MouseItemSlot mouseItemSlot;
 

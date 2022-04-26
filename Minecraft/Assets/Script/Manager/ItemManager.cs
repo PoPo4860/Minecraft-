@@ -17,7 +17,7 @@ public class ItemManager : MonoBehaviour
                 float dis = Vector3.Distance(objectList[i].transform.position, playerTransform.position);
                 if (dis < 0.3f)
                 {
-                    GameManager.Instance.playerInventory.AddInventoryItem(objectList[i].itemCode, objectList[i].itemNum);
+                    UIManager.Instance.playerInventory.AddInventoryItem(objectList[i].itemCode, objectList[i].itemNum);
                     objectList[i].gameObject.SetActive(false);
                 }
             }

@@ -9,32 +9,12 @@ public class MouseItemSlot : MonoBehaviour
     public Image mouseSlotImage;
     public Text mouseSlotText;
     public ItemSlot _itemSlot;
-    public static MouseItemSlot instance;
     private Vector3 mousePoint;
 
-    public static MouseItemSlot Instance
-    {
-        get
-        {
-            if (null == instance)
-            {
-                return null;
-            }
-            return instance;
-        }
-    }
     public ItemSlot itemSlot
     {
         get { return _itemSlot; }
         set { _itemSlot = value; }
-    }
-
-    private void Awake()
-    {
-        if (null == instance)
-            instance = this;
-        else
-            Destroy(gameObject);
     }
 
     void Update()
@@ -56,7 +36,21 @@ public class MouseItemSlot : MonoBehaviour
         this._itemSlot.itemNum = _itemSlot.itemNum;
         _itemSlot.itemCode = tempCode;
         _itemSlot.itemNum = tempNum;
+    }
 
+    public void DropItemFromInventoy(int dropItemNum)
+    {
+        if (true == itemSlot.empty)
+            return;
+
+        int itemCode = itemSlot.itemCode;
+        if (itemSlot.itemNum < dropItemNum)
+            dropItemNum = itemSlot.itemNum;
+
+        itemSlot -= dropItemNum;
+        Vector3 vec = GameManager.Instance.player.cameraTransform.position;
+        Vector3 vec2 = GameManager.Instance.player.cameraTransform.forward / 1.5f;
+        GameManager.Instance.itemManager.AddDropItem(itemCode, dropItemNum, vec, vec2);
     }
 
     private void OnDisable()
@@ -65,7 +59,7 @@ public class MouseItemSlot : MonoBehaviour
         int itemNum = _itemSlot.itemNum;
         if (0 != itemCode && 0 != itemNum)
         {
-            GameManager.Instance.playerInventory.AddInventoryItem(itemCode, itemNum);
+            UIManager.Instance.playerInventory.AddInventoryItem(itemCode, itemNum);
             _itemSlot.itemCode = 0;
             _itemSlot.itemNum = 0;
         }

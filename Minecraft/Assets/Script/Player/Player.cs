@@ -104,9 +104,9 @@ public class Player : MonoBehaviour
         {
             int itemSlot = playerQuickSlot.currentSelectNum + 27;
             if (true == Input.GetKey(KeyCode.LeftShift))
-                GameManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 64);
+                UIManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 64);
             else
-                GameManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 1);
+                UIManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 1);
         }
 
         if (true == highlightBlock.gameObject.activeSelf)

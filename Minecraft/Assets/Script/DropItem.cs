@@ -37,14 +37,17 @@ public class DropItem : MonoBehaviour
         SetItemRender(itemCode);
         StartCoroutine(CanIsItemGetDelay());
         StartCoroutine(ActiveFalse());
+        rigi.SetVelocity(Vector3.zero);
+        rigi.SetForce(Vector3.zero);
+
     }
     private void OnDisable()
     {
+        StopCoroutine(CanIsItemGetDelay());
+        StopCoroutine(ActiveFalse());
         ClearItemRender();
         _canIsItemGet = false;
-        rigi.SetVelocity(Vector3.zero);
-        rigi.SetForce(Vector3.zero);
-        
+
     }
     private void SetItemRender(int itemCode)
     {

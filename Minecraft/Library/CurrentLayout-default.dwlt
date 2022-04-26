@@ -122,7 +122,7 @@ MonoBehaviour:
   m_MinSize: {x: 709, y: 492}
   m_MaxSize: {x: 18004, y: 14042}
   vertical: 0
-  controlID: 94
+  controlID: 61
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_MinSize: {x: 508, y: 492}
   m_MaxSize: {x: 14003, y: 14042}
   vertical: 0
-  controlID: 95
+  controlID: 62
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -172,7 +172,7 @@ MonoBehaviour:
   m_MinSize: {x: 231, y: 492}
   m_MaxSize: {x: 10001, y: 14042}
   vertical: 1
-  controlID: 96
+  controlID: 63
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -315,9 +315,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 581.54913, y: 332.06802, z: -424.02902}
+    m_Target: {x: 97.79159, y: 187.20412, z: -149.88812}
     speed: 2
-    m_Value: {x: 581.54913, y: 332.06802, z: -424.02902}
+    m_Value: {x: 97.79159, y: 187.20412, z: -149.88812}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -364,13 +364,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.0039073043, y: 0.008283975, z: -0.00045605542, w: -1.0001084}
+    m_Target: {x: -0.3041464, y: 0.2740073, z: -0.0923256, w: -0.9078523}
     speed: 2
-    m_Value: {x: -0.003906717, y: 0.008282729, z: -0.00045598688, w: -0.99995804}
+    m_Value: {x: -0.3041464, y: 0.2740073, z: -0.09232559, w: -0.9078523}
   m_Size:
-    m_Target: 12.124355
+    m_Target: 11.415624
     speed: 2
-    m_Value: 12.124355
+    m_Value: 11.415624
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -443,8 +443,8 @@ MonoBehaviour:
     vZoomLockedByDefault: 0
     m_HBaseRangeMin: -694.5
     m_HBaseRangeMax: 694.5
-    m_VBaseRangeMin: -317
-    m_VBaseRangeMax: 317
+    m_VBaseRangeMin: -327.5
+    m_VBaseRangeMax: 327.5
     m_HAllowExceedBaseRangeMin: 1
     m_HAllowExceedBaseRangeMax: 1
     m_VAllowExceedBaseRangeMin: 1
@@ -461,11 +461,11 @@ MonoBehaviour:
     m_DrawArea:
       serializedVersion: 2
       x: 0
-      y: 21
+      y: 0
       width: 1389
-      height: 634
+      height: 655
     m_Scale: {x: 1, y: 1}
-    m_Translation: {x: 694.5, y: 317}
+    m_Translation: {x: 694.5, y: 327.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
@@ -473,9 +473,9 @@ MonoBehaviour:
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
       x: -694.5
-      y: -317
+      y: -327.5
       width: 1389
-      height: 634
+      height: 655
     m_MinimalGUI: 1
   m_defaultScale: 1
   m_LastWindowPixelSize: {x: 1389, y: 655}
@@ -522,22 +522,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/CodeInfo
+    - Assets/Script/Inventory
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 69
   m_LastFolders:
-  - Assets/CodeInfo
+  - Assets/Script/Inventory
   m_LastFoldersGridSize: 69
   m_LastProjectPath: "C:\\Users\\dltng\\Desktop\\\uB9C8\uC778\uD06C\uB798\uD504\uD2B8\\Minecraft-\\Minecraft"
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 3c420000
-    m_LastClickedID: 16956
-    m_ExpandedIDs: 00000000344200004442000000ca9a3b
+    scrollPos: {x: 0, y: 58}
+    m_SelectedIDs: be420000
+    m_LastClickedID: 17086
+    m_ExpandedIDs: 0000000094420000aa42000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -565,7 +565,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 0000000034420000
+    m_ExpandedIDs: 0000000094420000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -711,9 +711,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 82420000
+      m_SelectedIDs: a80b0000
       m_LastClickedID: 0
-      m_ExpandedIDs: 66fbffff
+      m_ExpandedIDs: 70fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
