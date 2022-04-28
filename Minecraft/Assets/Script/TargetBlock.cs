@@ -57,7 +57,7 @@ public class TargetBlock : MonoBehaviour
                 Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(transform.position);
                 Vector3Int voxelPos = Utile.Vector3ToVector3Int(result.voxelPos);
 
-                int itemCode = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).id;
+                int itemCode = Utile.GetVoxelStateFromWorldPos(transform.position).id;
                 World.Instance.GetChunkFromPos(transform.position).
                     ModifyChunkData(voxelPos, CodeData.BLOCK_Air);
 

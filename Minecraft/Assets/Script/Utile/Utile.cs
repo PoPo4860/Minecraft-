@@ -28,7 +28,12 @@ static class Utile
         calculationTime.Reset();
     }
 
-
+    static public void IntSwap(ref int a, ref int b)
+    {
+        int tempInt = a;
+        a = b;
+        b = tempInt;
+    }
     /// <summary> 위치 정규화. position값을 넣으면 위치에 해당하는 청크의 상대좌표와 복셀위치를 반환한다.</summary>
     static public ChunkCoordInPos GetCoordInVoxelPosFromWorldPos(in Vector3 pos)
     {
@@ -44,7 +49,6 @@ static class Utile
         if (pos.z < 0 && VoxelPos.z != 0) chunkCoord.z -= 1;
         return new ChunkCoordInPos(VoxelPos, chunkCoord);
     }
-
     static public Vector3Int GetWorldPosFormCoordInVoxelPos(in ChunkCoord coord, in Vector3 pos)
     {
         int x = (coord.x * 16) + (int)pos.x;
@@ -54,10 +58,16 @@ static class Utile
         //if (coord.z < 0 && z != 0) z += -(VoxelData.ChunkWidth - 1);
         return new Vector3Int(x, y, z);
     }
-
     static public Vector3Int Vector3ToVector3Int(in Vector3 pos)
     {
         return new Vector3Int((int)pos.x, (int)pos.y, (int)pos.z);
+    }
+    static public VoxelState GetVoxelStateFromWorldPos(in Vector3 pos)
+    {
+        ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(pos);
+        Vector3Int voxelPos = Utile.Vector3ToVector3Int(result.voxelPos);
+
+        return World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos);
     }
     
 }

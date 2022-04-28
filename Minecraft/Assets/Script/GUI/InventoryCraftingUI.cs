@@ -34,14 +34,14 @@ public class InventoryCraftingUI : ItemSlotUI
         
         if (0 == resipe[0] && 0 == resipe[1])
         {
-            IntSwap(ref resipe[0],ref resipe[3]);
-            IntSwap(ref resipe[1],ref resipe[4]);
+            Utile.IntSwap(ref resipe[0],ref resipe[3]);
+            Utile.IntSwap(ref resipe[1],ref resipe[4]);
         }
 
         if (0 == resipe[0] && 0 == resipe[3])
         {
-            IntSwap(ref resipe[0], ref resipe[1]);
-            IntSwap(ref resipe[3], ref resipe[4]);
+            Utile.IntSwap(ref resipe[0], ref resipe[1]);
+            Utile.IntSwap(ref resipe[3], ref resipe[4]);
         }
 
         ResipeResult result = CraftingResipe.GetResipe(resipe);
@@ -107,12 +107,5 @@ public class InventoryCraftingUI : ItemSlotUI
     {
         RightClickSlotWork(slotNum);
         SetResipe();
-    }
-
-    public void IntSwap(ref int a, ref int b)
-    {
-        int tempInt = a;
-        a = b;
-        b = tempInt;
     }
 }

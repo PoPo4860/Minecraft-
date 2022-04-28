@@ -21,7 +21,6 @@ public class Player : MonoBehaviour
     private readonly float checkIncrement = 0.1f;
     private readonly float reach = 8.0f;
 
-    public GameObject playerUI;
     private bool activePlayerUI = false;
 
     public VoxelRigidbody playerRigi;
@@ -35,7 +34,7 @@ public class Player : MonoBehaviour
     {
         Camera camera = GetComponentInChildren<Camera>();
         cameraTransform = camera.transform;
-        playerUI.SetActive(false);
+        UIManager.Instance.ClearUI();
     }
     void Update()
     {
@@ -55,21 +54,30 @@ public class Player : MonoBehaviour
     {
         MoveAndRotate();
     }
-    void SetPlayerUI(bool check)
-    {
-        playerUI.SetActive(check);
-    }
+
     private void GetPlayerUIInput()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (true == Input.GetKeyDown(KeyCode.E))
         {
-            activePlayerUI = !activePlayerUI;
-            SetPlayerUI(activePlayerUI);
-            horizontal = 0;
-            vertical = 0;
-            mouseX = 0;
-            mouseY = 0;
+            if (true == activePlayerUI)
+            {
+                activePlayerUI = false;
+                UIManager.Instance.ClearUI();
+            }
+            else
+            {
+                activePlayerUI = true;
+                UIManager.Instance.ActiveIventoryUI();
+            }
+            ClearMouseInput();
         }
+    }
+    private void ClearMouseInput()
+    {
+        horizontal = 0;
+        vertical = 0;
+        mouseX = 0;
+        mouseY = 0;
     }
     private void GetPlayerControlInput()
     {
@@ -101,7 +109,7 @@ public class Player : MonoBehaviour
         #endregion
 
         if (Input.GetKeyDown(KeyCode.Q))
-        {
+        {   // 아이템 버리기
             int itemSlot = playerQuickSlot.currentSelectNum + 27;
             if (true == Input.GetKey(KeyCode.LeftShift))
                 UIManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 64);
@@ -109,22 +117,39 @@ public class Player : MonoBehaviour
                 UIManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 1);
         }
 
-        if (true == highlightBlock.gameObject.activeSelf)
+        if (Input.GetMouseButtonDown(1) && true == highlightBlock.gameObject.activeSelf)
         {
-            //if (Input.GetMouseButtonDown(0))
-            //{
-            //    world.GetChunkFromPos(highlightBlock.position).
-            //        ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(highlightBlock.position).voxelPos), CodeData.BLOCK_AIR);
-            //}
-            if (Input.GetMouseButtonDown(1))
+            bool blockInstall = false;
+            int targetItemCode = Utile.GetVoxelStateFromWorldPos(highlightBlock.gameObject.transform.position).id;
+            
+            if (true == Input.GetKey(KeyCode.LeftShift))
+            {
+                blockInstall = true;
+               
+            }
+            else
+            {
+                if (CodeData.BLOCK_CraftingTable == targetItemCode)
+                {
+                    UIManager.Instance.ActiveCraftingUI();
+                    activePlayerUI = true;
+                    ClearMouseInput();
+                }
+                else
+                    blockInstall = true;
+            }
+
+
+            if(true == blockInstall)
             {
                 ushort itemCode = playerQuickSlot.UseQuickSlotItemCode();
-                if(null != CodeData.GetBlockInfo(itemCode))
+                if (null != CodeData.GetBlockInfo(itemCode))
                 {
                     world.GetChunkFromPos(placeBlock).
                     ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos), itemCode);
-                }
+                }   
             }
+
         }
     }
     private void MoveAndRotate()
