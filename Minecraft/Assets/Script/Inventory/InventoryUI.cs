@@ -21,7 +21,7 @@ public class InventoryUI : ItemSlotUI
     {
         if(Input.GetKeyDown(KeyCode.C))
         {
-            AddInventoryItem(CodeData.Item_Coal, 1);
+            AddInventoryItem(CodeData.Item_Coal, 50);
         }
     }
 
@@ -29,7 +29,7 @@ public class InventoryUI : ItemSlotUI
     {
         if (true == CheckCanAddInventory(itemCode, out int slotNum, quickPriority))
         {
-            if (CodeData.BLOCK_AIR == itemSlot[slotNum].itemCode)
+            if (CodeData.BLOCK_Air == itemSlot[slotNum].itemCode)
             {   // 해당 위치가 비어있다면
                 itemSlot[slotNum].itemCode = itemCode;
                 itemSlot[slotNum].itemNum = itemNum;
@@ -110,7 +110,7 @@ public class InventoryUI : ItemSlotUI
     {
         slotNum += 27;
         int itemCode = itemSlot[slotNum].itemCode;
-        if (CodeData.ECodeType.Block == CodeData.GetCodeType(itemCode))
+        if (null != CodeData.GetBlockInfo(itemCode))
             --itemSlot[slotNum];
 
         SetQuickSlot(slotNum);

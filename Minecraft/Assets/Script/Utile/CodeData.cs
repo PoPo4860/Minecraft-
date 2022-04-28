@@ -48,10 +48,9 @@ public static class CodeData
     public static string GetCodeName(int itemCode)
     {
         string str = "";
-        if(ECodeType.Block== GetCodeType(itemCode))
+        if(null != GetBlockInfo(itemCode))
             str = GetBlockInfo(itemCode).blockName;
-        
-        else if (ECodeType.Item == GetCodeType(itemCode))
+        else
             str = GetItemInfo(itemCode).itemName;
         return str;
     }
@@ -76,7 +75,6 @@ public static class CodeData
             newBlock.type = SetBlockType(words[11]);
 
             BlockInfo.Add(blockCode, newBlock);
-            
         }
     }
     private static EBlockType SetBlockType(string str)
@@ -120,19 +118,19 @@ public static class CodeData
         };
     }
 
-
-    public static readonly ushort BLOCK_AIR = 0;
-    public static readonly ushort BLOCK_STONE = 1;
-    public static readonly ushort BLOCK_GRASS = 2;
-    public static readonly ushort BLOCK_DIRT = 3;
+    public static readonly ushort BLOCK_Air = 0;
+    public static readonly ushort BLOCK_Stone = 1;
+    public static readonly ushort BLOCK_Grass = 2;
+    public static readonly ushort BLOCK_Dirt = 3;
     public static readonly ushort BLOCK_CobbleStones = 4;
     public static readonly ushort BLOCK_OkaPlanks = 5;
-    public static readonly ushort BLOCK_BEDROCK = 7;
-    public static readonly ushort BLOCK_IRON = 15;
-    public static readonly ushort BLOCK_COAL = 16;
-    public static readonly ushort BLOCK_OAKTREE = 17;
-    public static readonly ushort BLOCK_LEAF = 18;
-    public static readonly ushort BLOCK_DIAMOND = 56;
+    public static readonly ushort BLOCK_BedRock = 7;
+    public static readonly ushort BLOCK_Iron = 15;
+    public static readonly ushort BLOCK_Coal = 16;
+    public static readonly ushort BLOCK_OakTree = 17;
+    public static readonly ushort BLOCK_Leaf = 18;
+    public static readonly ushort BLOCK_Diamond = 56;
+    public static readonly ushort BLOCK_CraftingTable = 58;
     public static readonly ushort Item_Coal = 263;
     public static readonly ushort Item_Stick = 280;
 
@@ -143,21 +141,22 @@ public static class CodeData
         //if (BLOCK_AIR == code)
         //    return ECodeType.Empty;
 
-        if (BLOCK_AIR == code ||
-            BLOCK_STONE == code ||
-            BLOCK_GRASS == code ||
-            BLOCK_DIRT == code ||
+        if (BLOCK_Air == code ||
+            BLOCK_Stone == code ||
+            BLOCK_Grass == code ||
+            BLOCK_Dirt == code ||
             BLOCK_CobbleStones == code ||
             BLOCK_OkaPlanks == code ||
-            BLOCK_BEDROCK == code ||
-            BLOCK_IRON == code ||
-            BLOCK_COAL == code ||
-            BLOCK_OAKTREE == code ||
-            BLOCK_LEAF == code ||
-            BLOCK_DIAMOND == code)
+            BLOCK_BedRock == code ||
+            BLOCK_Iron == code ||
+            BLOCK_Coal == code ||
+            BLOCK_OakTree == code ||
+            BLOCK_Leaf == code ||
+            BLOCK_Diamond == code ||
+            BLOCK_CraftingTable == code)
             return ECodeType.Block;
 
-        if (BLOCK_AIR == code ||
+        if (BLOCK_Air == code ||
             Item_Coal == code ||
             Item_Stick == code)
             return ECodeType.Item;

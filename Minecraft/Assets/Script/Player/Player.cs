@@ -119,7 +119,7 @@ public class Player : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 ushort itemCode = playerQuickSlot.UseQuickSlotItemCode();
-                if(CodeData.ECodeType.Block == CodeData.GetCodeType(itemCode))
+                if(null != CodeData.GetBlockInfo(itemCode))
                 {
                     world.GetChunkFromPos(placeBlock).
                     ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos), itemCode);

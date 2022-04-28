@@ -59,7 +59,7 @@ public class TargetBlock : MonoBehaviour
 
                 int itemCode = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).id;
                 World.Instance.GetChunkFromPos(transform.position).
-                    ModifyChunkData(voxelPos, CodeData.BLOCK_AIR);
+                    ModifyChunkData(voxelPos, CodeData.BLOCK_Air);
 
                 Vector3 vec = new Vector3(+0.5f, +0.5f, +0.5f);
                 GameManager.Instance.itemManager.AddDropItem(itemCode, 1, transform.position + vec);

@@ -52,7 +52,7 @@ public class DropItem : MonoBehaviour
     private void SetItemRender(int itemCode)
     {
         Vector3 vec = new Vector3(-0.5f, +0.5f, -0.5f);
-        if(CodeData.ECodeType.Block == CodeData.GetCodeType(itemCode))
+        if(null != CodeData.GetBlockInfo(itemCode))
         {
             for (int face = 0; face < 6; ++face)
             {
@@ -67,7 +67,7 @@ public class DropItem : MonoBehaviour
                 vertexIndex += 4;
             }
         }
-        else if (CodeData.ECodeType.Item == CodeData.GetCodeType(itemCode))
+        else
         {
             for (int face = 0; face < 2; ++face)
             {

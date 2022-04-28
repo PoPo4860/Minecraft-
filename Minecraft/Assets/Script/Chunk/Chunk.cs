@@ -106,12 +106,11 @@ public class Chunk
     private void CreateMeshkData(in Vector3Int voxelPos)
     {
         VoxelState currentVoxel = chunkMapData.GetVoxelState(voxelPos);
-        if (CodeData.BLOCK_AIR == currentVoxel.id)
+        if (CodeData.BLOCK_Air == currentVoxel.id)
             return;
 
         for (int face = 0; face < 6; ++face)
         {
-
             VoxelState neighborVoxel = chunkMapData.GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
 
             if (false == neighborVoxel?.properties.renderNeighborFaces)

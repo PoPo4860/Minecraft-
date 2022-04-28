@@ -39,32 +39,32 @@ public class ChunkMapData
     private ushort PopulateBlock(in Vector3Int pos)
     {
         if (60 < pos.y)
-            return CodeData.BLOCK_AIR;
+            return CodeData.BLOCK_Air;
         if (0 == pos.y)
-            return CodeData.BLOCK_BEDROCK;
+            return CodeData.BLOCK_BedRock;
 
         float terrainResult = Perlin.GetPerlinNoiseTerrain(coord, world.worldSeed, pos);
         if (terrainResult < 0)
-            return CodeData.BLOCK_AIR;
+            return CodeData.BLOCK_Air;
 
         float cavePerlin = Perlin.GetPerlinNoiseCave(coord, world.worldSeed, pos);
         if (0.499f < cavePerlin && cavePerlin < 0.5f)
             createOrePos.Enqueue(pos);
 
         if (Perlin.GetPerlinNoiseCave(coord, world.worldSeed, pos) < 0.5f)
-            return CodeData.BLOCK_AIR;
+            return CodeData.BLOCK_Air;
 
         if (2 < terrainResult)
-            return CodeData.BLOCK_STONE;
+            return CodeData.BLOCK_Stone;
 
         if (0 == voxelMap[pos.x, pos.y + 1, pos.z].id) 
         {
             if (0 == Random.Range(0, 100))
                 createTreePos.Enqueue(new Vector3Int(pos.x, pos.y + 1, pos.z));
-            return CodeData.BLOCK_GRASS;
+            return CodeData.BLOCK_Grass;
         }
 
-        return CodeData.BLOCK_DIRT;
+        return CodeData.BLOCK_Dirt;
     }
     private void SetOre(in Vector3Int basePos, in ushort blockCode, in int randomValue)
     {
@@ -80,7 +80,7 @@ public class ChunkMapData
             if (VoxelData.ChunkWidth - 1 < posX || VoxelData.ChunkHeight - 1 < posY || VoxelData.ChunkWidth - 1 < posZ)
                 continue;
 
-            if (voxelMap[posX, posY, posZ].id == CodeData.BLOCK_STONE && 0 == Random.Range(0, randomValue))
+            if (voxelMap[posX, posY, posZ].id == CodeData.BLOCK_Stone && 0 == Random.Range(0, randomValue))
                 voxelMap[posX, posY, posZ].id = blockCode;
         }
     }
@@ -91,13 +91,13 @@ public class ChunkMapData
             Vector3Int basePos = createOrePos.Dequeue();
 
             if (20 <= basePos.y && 0 == Random.Range(0, 2))
-                SetOre(basePos, CodeData.BLOCK_COAL, 2);
+                SetOre(basePos, CodeData.BLOCK_Coal, 2);
 
             else if (5 <= basePos.y && basePos.y < 30 && 0 == Random.Range(0, 4))
-                SetOre(basePos, CodeData.BLOCK_IRON, 3);
+                SetOre(basePos, CodeData.BLOCK_Iron, 3);
 
             else if (1 < basePos.y && basePos.y < 10 && 0 == Random.Range(0, 5))
-                SetOre(basePos, CodeData.BLOCK_DIAMOND, 7);
+                SetOre(basePos, CodeData.BLOCK_Diamond, 7);
         }
     }
     private void SetTree()
@@ -123,7 +123,7 @@ public class ChunkMapData
                     int posY = pos.y + y;
                     int posZ = pos.z + ((i / 5) - 2);
                     int blockCode = GetVoxelState(new Vector3Int(posX, posY, posZ)).id;
-                    if (CodeData.BLOCK_AIR != blockCode && CodeData.BLOCK_LEAF != blockCode)
+                    if (CodeData.BLOCK_Air != blockCode && CodeData.BLOCK_Leaf != blockCode)
                     {
                         isCanTree = false;
                         break;

@@ -34,7 +34,7 @@ public class PlayerQuickSlot : MonoBehaviour
         selectQuickSlotItemNum = itemSlot[currentSelectNum].itemNum;
         selectQuickSlotRect.position = itemSlot[currentSelectNum].itemImage.transform.position;
         int itemCode = itemSlot[currentSelectNum].itemCode;
-        if (CodeData.BLOCK_AIR != itemCode)
+        if (CodeData.BLOCK_Air != itemCode)
             selectQuickSlotText.text = CodeData.GetCodeName(itemCode);
         else
             selectQuickSlotText.text = "";
