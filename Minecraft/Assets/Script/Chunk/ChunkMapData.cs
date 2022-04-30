@@ -28,7 +28,7 @@ public class ChunkMapData
                 {
                     Vector3Int voxelPos = new Vector3Int(x, y, z);
                     ushort id = PopulateBlock(voxelPos);
-                    voxelMap[x, y, z] = new VoxelState(this , voxelPos, id);
+                    voxelMap[x, y, z] = new VoxelState(id);
                 }
             }
         }
@@ -166,9 +166,12 @@ public class ChunkMapData
             return null;
         return voxelMap[(int)voxelPos.x, (int)voxelPos.y, (int)voxelPos.z];
     }
-    public void SetVoxelState(in Vector3Int pos, in ushort _id)
+    public void SetVoxelState(in Vector3Int pos, in ushort _id, in Vector2Int dir)
     {
         if (voxelMap[pos.x, pos.y, pos.z].id != _id)
+        {
             voxelMap[pos.x, pos.y, pos.z].id = _id;
+            voxelMap[pos.x, pos.y, pos.z].directionVector = dir;
+        }
     }
 }

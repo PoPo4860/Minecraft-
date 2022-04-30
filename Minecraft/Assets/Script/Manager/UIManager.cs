@@ -12,6 +12,8 @@ public class UIManager : MonoBehaviour
     public RectTransform inventorySlotUI;
     public GameObject inventoryUI;
     public GameObject CraftingTableUI;
+    public GameObject FurnaceUI;
+
     public static UIManager instance;
     public static UIManager Instance
     {

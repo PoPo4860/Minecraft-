@@ -4,29 +4,54 @@ using UnityEngine;
 [System.Serializable]
 public class VoxelState
 {
-    public ushort id;
-    private readonly Vector3Int voxelPos;
-    private readonly ChunkMapData chunkMapData;
-    public BlockType properties
+    public ushort _id;
+    public ushort id
     {
-        get { return CodeData.GetBlockInfo(id); }
+        get { return _id; }
+        set 
+        { 
+            _id = value;
+            if (0 == value)
+                _direction = Vector2Int.zero;
+        }
     }
+    private Vector2Int _direction = new Vector2Int();
 
-    public Vector3Int gobalPos
+    public int direction
     {
         get {
-            return new Vector3Int(
-        (chunkMapData.coord.x * VoxelData.ChunkWidth) + voxelPos.x,
-        voxelPos.y,
-        (chunkMapData.coord.z * VoxelData.ChunkWidth) + voxelPos.z);
+            if (-1 == _direction.y)
+                return 0;
+            if (+1 == _direction.y)
+                return 1;
+            if (-1 == _direction.x)
+                return 2;
+            if (+1 == _direction.x)
+                return 3;
+            return 0;
+            }
+    }
+    public Vector2Int directionVector
+    {
+        set
+        {
+            _direction = value;
         }
     }
 
-    public VoxelState(ChunkMapData _chunkMapData, Vector3Int _voxelPos, ushort _id = 0)
+
+    public BlockType blockProperties
     {
-        voxelPos = _voxelPos;
-        chunkMapData = _chunkMapData;
-        id = _id;
+        get { return CodeData.GetBlockInfo(id); }
+    }
+    public ItemType itemProperties
+    {
+        get { return CodeData.GetItemInfo(id); }
+    }
+
+    public VoxelState(ushort _id = 0)
+    {
+        this._id = _id;
     }
 }
 

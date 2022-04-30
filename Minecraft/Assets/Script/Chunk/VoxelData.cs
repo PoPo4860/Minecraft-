@@ -74,4 +74,17 @@ public static class VoxelData
     new Vector3Int(-1,  0,  0), // Left Face   (-X)
     new Vector3Int(+1,  0,  0), // RIght Face  (+X)
     };
+
+
+    private static int[,] directionNormaliz = new int[4, 6]
+    {
+        {0, 1, 2, 3, 4, 5}, // -z
+        {1, 0, 2, 3, 5, 4}, // +z
+        {4, 5, 2, 3, 0, 1}, // -x
+        {5, 4, 2, 3, 1, 0}  // +x
+    };
+    public static int DirectionNormaliz(int dir, int face)
+    {
+        return directionNormaliz[dir, face];
+    }
 }

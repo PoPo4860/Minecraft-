@@ -125,7 +125,6 @@ public class Player : MonoBehaviour
             if (true == Input.GetKey(KeyCode.LeftShift))
             {
                 blockInstall = true;
-               
             }
             else
             {
@@ -142,11 +141,22 @@ public class Player : MonoBehaviour
 
             if(true == blockInstall)
             {
+                float angle = gameObject.transform.rotation.eulerAngles.y;
+                Vector2Int dir = new Vector2Int();
+                if (45f < angle && angle <= 135f)
+                    ++dir.x; // +X
+                else if (225f < angle && angle <= 315f)
+                    --dir.x; // -X
+                else if (135f < angle && angle <= 225f)
+                    --dir.y; // -Z
+                else
+                    ++dir.y; // -X
+
                 ushort itemCode = playerQuickSlot.UseQuickSlotItemCode();
                 if (null != CodeData.GetBlockInfo(itemCode))
                 {
-                    world.GetChunkFromPos(placeBlock).
-                    ModifyChunkData(Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos), itemCode);
+                    Vector3Int voxelPos = Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos);
+                    world.GetChunkFromPos(placeBlock).ModifyChunkData(voxelPos, itemCode, dir);
                 }   
             }
 

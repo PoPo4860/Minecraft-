@@ -116,7 +116,7 @@ public class TargetBlock : MonoBehaviour
 
             targetBlock = newBlock;
             Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(targetBlock);
-            targetBlockHardness = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).properties.hardness;
+            targetBlockHardness = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).blockProperties.hardness;
 
             if (true)
             {   // 채굴 가능 여부

@@ -113,13 +113,14 @@ public class Chunk
         {
             VoxelState neighborVoxel = chunkMapData.GetVoxelState(voxelPos + VoxelData.faceChecks[face]);
 
-            if (false == neighborVoxel?.properties.renderNeighborFaces)
+            if (false == neighborVoxel?.blockProperties.renderNeighborFaces)
                 continue;
 
             for (int i = 0; i < 4; ++i)
                 meshVertices.Add(VoxelData.voxelVerts[VoxelData.voxelTris[face, i]] + voxelPos);
 
-            int atlasesCode = CodeData.GetBlockTextureAtlases(currentVoxel.id, face);
+            int dir = VoxelData.DirectionNormaliz(currentVoxel.direction, face);
+            int atlasesCode = CodeData.GetBlockTextureAtlases(currentVoxel.id, dir);
             AddTextureUV(atlasesCode);
 
             foreach (int i in ChunkHelperData.vertexData)
@@ -156,10 +157,10 @@ public class Chunk
             return null;
         return chunk;
     }
-    public void ModifyChunkData(in Vector3Int voxelPos, ushort blockCode)
+    public void ModifyChunkData(in Vector3Int voxelPos, ushort blockCode, in Vector2Int dir = new Vector2Int())
     {
         #region 플레이어 입력값 적용
-        chunkMapData.SetVoxelState(voxelPos, blockCode);
+        chunkMapData.SetVoxelState(voxelPos, blockCode, dir);
         #endregion
 
         #region 메쉬데이터 적용
@@ -175,5 +176,3 @@ public class Chunk
         #endregion
     }
 }
-
-

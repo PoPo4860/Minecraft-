@@ -23,8 +23,6 @@ public class CraftingTable : ItemSlotUI
         for (int i = 0; i < 9; ++i)
             resipe[i] = 0;
     }
-
-
     private void SetResipe()
     {
         for(int i = 0; i < 9; ++i)

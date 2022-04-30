@@ -130,6 +130,7 @@ public static class CodeData
     public static readonly ushort BLOCK_OakTree = 17;
     public static readonly ushort BLOCK_Leaf = 18;
     public static readonly ushort BLOCK_Diamond = 56;
+    public static readonly ushort BLOCK_Furnace = 61;
     public static readonly ushort BLOCK_CraftingTable = 58;
     public static readonly ushort Item_Coal = 263;
     public static readonly ushort Item_Stick = 280;
