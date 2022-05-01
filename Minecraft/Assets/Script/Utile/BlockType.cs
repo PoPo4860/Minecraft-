@@ -13,6 +13,6 @@ public class ItemType
 {
     public ushort textureAtlases;
     public string itemName;
-    public int value;
+    public float value;
     public EItemType type;
 }

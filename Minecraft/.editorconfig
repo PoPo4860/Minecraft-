@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# IDE0022: 메서드에 블록 본문 사용
+csharp_style_expression_bodied_methods = false

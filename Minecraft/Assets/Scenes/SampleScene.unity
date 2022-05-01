@@ -4562,7 +4562,7 @@ GameObject:
   - component: {fileID: 725727213}
   - component: {fileID: 725727212}
   m_Layer: 5
-  m_Name: CraftingSlot_2
+  m_Name: CraftingSlot_Flammable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6789,7 +6789,7 @@ GameObject:
   - component: {fileID: 1143272232}
   - component: {fileID: 1143272231}
   m_Layer: 5
-  m_Name: CraftingSlot_1
+  m_Name: FurnaceSlot_Material
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7853,7 +7853,7 @@ MonoBehaviour:
   inventorySlotUI: {fileID: 1282921878}
   inventoryUI: {fileID: 625029008}
   CraftingTableUI: {fileID: 1761201379}
-  FurnaceUI: {fileID: 0}
+  FurnaceUI: {fileID: 2072244417}
 --- !u!4 &1261807611
 Transform:
   m_ObjectHideFlags: 0
@@ -10134,7 +10134,7 @@ GameObject:
   - component: {fileID: 1673298932}
   - component: {fileID: 1673298931}
   m_Layer: 5
-  m_Name: CraftingSlot_3
+  m_Name: FurnaceSlot_Result
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

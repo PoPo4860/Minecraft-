@@ -48,7 +48,7 @@ public static class CodeData
     public static string GetCodeName(int itemCode)
     {
         string str = "";
-        if(null != GetBlockInfo(itemCode))
+        if (null != GetBlockInfo(itemCode))
             str = GetBlockInfo(itemCode).blockName;
         else
             str = GetItemInfo(itemCode).itemName;
@@ -98,7 +98,7 @@ public static class CodeData
             newItem.itemName = words[0];
             ushort blockCode = ushort.Parse(words[1]);
             newItem.textureAtlases = UInt16.Parse(words[2]);
-            newItem.value = UInt16.Parse(words[2]);
+            newItem.value = float.Parse(words[2]);
             newItem.type = SetItemType(words[3]);
 
             ItemInfo.Add(blockCode, newItem);
@@ -118,52 +118,35 @@ public static class CodeData
         };
     }
 
-    public static readonly ushort BLOCK_Air = 0;
-    public static readonly ushort BLOCK_Stone = 1;
-    public static readonly ushort BLOCK_Grass = 2;
-    public static readonly ushort BLOCK_Dirt = 3;
-    public static readonly ushort BLOCK_CobbleStones = 4;
-    public static readonly ushort BLOCK_OkaPlanks = 5;
-    public static readonly ushort BLOCK_BedRock = 7;
-    public static readonly ushort BLOCK_Iron = 15;
-    public static readonly ushort BLOCK_Coal = 16;
-    public static readonly ushort BLOCK_OakTree = 17;
-    public static readonly ushort BLOCK_Leaf = 18;
-    public static readonly ushort BLOCK_Diamond = 56;
-    public static readonly ushort BLOCK_Furnace = 61;
-    public static readonly ushort BLOCK_CraftingTable = 58;
-    public static readonly ushort Item_Coal = 263;
-    public static readonly ushort Item_Stick = 280;
+    public const ushort BLOCK_Air = 0;
+    public const ushort BLOCK_Stone = 1;
+    public const ushort BLOCK_Grass = 2;
+    public const ushort BLOCK_Dirt = 3;
+    public const ushort BLOCK_CobbleStones = 4;
+    public const ushort BLOCK_OkaPlanks = 5;
+    public const ushort BLOCK_BedRock = 7;
+    public const ushort BLOCK_Iron = 15;
+    public const ushort BLOCK_Coal = 16;
+    public const ushort BLOCK_OakTree = 17;
+    public const ushort BLOCK_Leaf = 18;
+    public const ushort BLOCK_Diamond = 56;
+    public const ushort BLOCK_CraftingTable = 58;
+    public const ushort BLOCK_Furnace = 61;
+    public const ushort BLOCK_FurnaceFire = 62;
 
-    public enum ECodeType { Empty, Block, Item };
-
-    public static ECodeType GetCodeType(int code)
-    {
-        //if (BLOCK_AIR == code)
-        //    return ECodeType.Empty;
-
-        if (BLOCK_Air == code ||
-            BLOCK_Stone == code ||
-            BLOCK_Grass == code ||
-            BLOCK_Dirt == code ||
-            BLOCK_CobbleStones == code ||
-            BLOCK_OkaPlanks == code ||
-            BLOCK_BedRock == code ||
-            BLOCK_Iron == code ||
-            BLOCK_Coal == code ||
-            BLOCK_OakTree == code ||
-            BLOCK_Leaf == code ||
-            BLOCK_Diamond == code ||
-            BLOCK_CraftingTable == code)
-            return ECodeType.Block;
-
-        if (BLOCK_Air == code ||
-            Item_Coal == code ||
-            Item_Stick == code)
-            return ECodeType.Item;
-
-        return ECodeType.Empty;
-    }
+    public const ushort Item_CharCoal = 263;
+    public const ushort Item_Coal = 263;
+    public const ushort Item_Stick = 280;
+    public const ushort Item_IronIngot = 265;
+    public const ushort Item_Diamond = 264;
+    public const ushort Item_WoodShovel = 269;
+    public const ushort Item_WoodPickaxe = 270;
+    public const ushort Item_StoneShovel = 273;
+    public const ushort Item_StonePickaxe = 274;
+    public const ushort Item_IronShovel = 256;
+    public const ushort Item_IronPickaxe = 257;
+    public const ushort Item_DiamondShovel = 277;
+    public const ushort Item_DiamondPickaxe = 278;
 }
 
 
