@@ -69,7 +69,6 @@ public class CraftingTable : ItemSlotUI
             ItemSlot mouseSlot = GameManager.Instance.mouseItemSlot.itemSlot;
             if (false == itemSlot[resipeResult].empty)
             {// 
-
                 if (true == mouseSlot.empty)
                 {
                     GameManager.Instance.mouseItemSlot.SwapItemSlot(ref itemSlot[resipeResult]);

@@ -721,8 +721,9 @@ GameObject:
   m_Component:
   - component: {fileID: 97183108}
   - component: {fileID: 97183110}
-  - component: {fileID: 97183109}
+  - component: {fileID: 97183112}
   - component: {fileID: 97183111}
+  - component: {fileID: 97183109}
   m_Layer: 5
   m_Name: FurnaceSlot
   m_TagString: Untagged
@@ -737,15 +738,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 97183107}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children:
-  - {fileID: 1143272230}
-  - {fileID: 725727211}
-  - {fileID: 1673298930}
-  m_Father: {fileID: 2072244418}
-  m_RootOrder: 0
+  - {fileID: 2072244418}
+  m_Father: {fileID: 1810778122}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -761,24 +760,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 97183107}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Script: {fileID: 11500000, guid: b0a4ab655e4a1944cafb9ba96bb23695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 2800000, guid: bc97de12390795c4399174ad7b655fbe, type: 3}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
+  itemSlot: []
+  tpye: 0
 --- !u!222 &97183110
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -796,13 +782,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 97183107}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d56bb0d74c909c46a594f3eccaeca19, type: 3}
+  m_Script: {fileID: 11500000, guid: f2f85e1ae22a3de45963c342dd1b5ce7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSlot:
-  - {fileID: 1143272231}
-  - {fileID: 725727212}
-  - {fileID: 1673298931}
+  slotNumber: 0
+  itemSlotUI: {fileID: 2072244419}
+--- !u!114 &97183112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 97183107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: bc97de12390795c4399174ad7b655fbe, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &123890673
 GameObject:
   m_ObjectHideFlags: 0
@@ -4501,6 +4515,78 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 667043989}
   m_CullTransparentMesh: 1
+--- !u!1 &686447181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 686447182}
+  - component: {fileID: 686447184}
+  - component: {fileID: 686447183}
+  m_Layer: 5
+  m_Name: FireImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &686447182
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686447181}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2072244418}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -25, y: 40}
+  m_SizeDelta: {x: 16, y: 16}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &686447183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686447181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 62905ea36407ae54292e0757396a8678, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &686447184
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686447181}
+  m_CullTransparentMesh: 1
 --- !u!1 &711807303
 GameObject:
   m_ObjectHideFlags: 0
@@ -4562,7 +4648,7 @@ GameObject:
   - component: {fileID: 725727213}
   - component: {fileID: 725727212}
   m_Layer: 5
-  m_Name: CraftingSlot_Flammable
+  m_Name: FurnaceSlo_Firewood
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4577,15 +4663,15 @@ RectTransform:
   m_GameObject: {fileID: 725727210}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0.33333334}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 235620403}
-  m_Father: {fileID: 97183108}
+  m_Father: {fileID: 2072244418}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -31.899963, y: 58}
+  m_AnchoredPosition: {x: -23.89996, y: 22}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &725727212
@@ -4615,7 +4701,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 1
-  itemSlotUI: {fileID: 462026950}
+  itemSlotUI: {fileID: 2072244419}
 --- !u!114 &725727214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4917,6 +5003,78 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 742981311}
+  m_CullTransparentMesh: 1
+--- !u!1 &752132871
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 752132872}
+  - component: {fileID: 752132874}
+  - component: {fileID: 752132873}
+  m_Layer: 5
+  m_Name: DirImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &752132872
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752132871}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2072244418}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 3, y: 40}
+  m_SizeDelta: {x: 24, y: 17}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &752132873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752132871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 2800000, guid: 06d576014a1aacf43955e95fd16e6554, type: 3}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!222 &752132874
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752132871}
   m_CullTransparentMesh: 1
 --- !u!1 &771387075
 GameObject:
@@ -6789,7 +6947,7 @@ GameObject:
   - component: {fileID: 1143272232}
   - component: {fileID: 1143272231}
   m_Layer: 5
-  m_Name: FurnaceSlot_Material
+  m_Name: FurnaceSlo_RawMaterial
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6804,15 +6962,15 @@ RectTransform:
   m_GameObject: {fileID: 1143272229}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0.33333334}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1724490073}
-  m_Father: {fileID: 97183108}
+  m_Father: {fileID: 2072244418}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -49.899963, y: 58}
+  m_AnchoredPosition: {x: -23.89996, y: 58}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1143272231
@@ -6842,7 +7000,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 0
-  itemSlotUI: {fileID: 462026950}
+  itemSlotUI: {fileID: 2072244419}
 --- !u!114 &1143272233
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10149,15 +10307,15 @@ RectTransform:
   m_GameObject: {fileID: 1673298929}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 0.33333334}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1}
   m_Children:
   - {fileID: 290250631}
-  m_Father: {fileID: 97183108}
+  m_Father: {fileID: 2072244418}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -13.899963, y: 58}
+  m_AnchoredPosition: {x: 35.89996, y: 40}
   m_SizeDelta: {x: 16, y: 16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1673298931
@@ -10187,7 +10345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotNumber: 2
-  itemSlotUI: {fileID: 462026950}
+  itemSlotUI: {fileID: 2072244419}
 --- !u!114 &1673298933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11608,7 +11766,7 @@ RectTransform:
   m_Children:
   - {fileID: 625029009}
   - {fileID: 1761201380}
-  - {fileID: 2072244418}
+  - {fileID: 97183108}
   - {fileID: 1282921878}
   - {fileID: 1722827891}
   m_Father: {fileID: 170917612}
@@ -12959,6 +13117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2072244418}
+  - component: {fileID: 2072244419}
   m_Layer: 5
   m_Name: Furnace_UI
   m_TagString: Untagged
@@ -12973,19 +13132,43 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2072244417}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 97183108}
-  m_Father: {fileID: 1810778122}
-  m_RootOrder: 2
+  - {fileID: 1143272230}
+  - {fileID: 725727211}
+  - {fileID: 1673298930}
+  - {fileID: 686447182}
+  - {fileID: 752132872}
+  m_Father: {fileID: 97183108}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2072244419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2072244417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d56bb0d74c909c46a594f3eccaeca19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSlot:
+  - {fileID: 1143272231}
+  - {fileID: 725727212}
+  - {fileID: 1673298931}
+  fireImage: {fileID: 686447183}
+  fireImageTrans: {fileID: 686447182}
+  dirImage: {fileID: 752132873}
+  dirImageTrans: {fileID: 752132872}
 --- !u!1 &2073210619
 GameObject:
   m_ObjectHideFlags: 0

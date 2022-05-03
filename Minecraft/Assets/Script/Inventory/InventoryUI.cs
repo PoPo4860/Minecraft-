@@ -21,7 +21,7 @@ public class InventoryUI : ItemSlotUI
     {
         if(Input.GetKeyDown(KeyCode.C))
         {
-            AddInventoryItem(CodeData.BLOCK_Furnace, 50);
+            AddInventoryItem(CodeData.BLOCK_OakTree, 50);
         }
     }
 

@@ -134,7 +134,7 @@ public static class CodeData
     public const ushort BLOCK_Furnace = 61;
     public const ushort BLOCK_FurnaceFire = 62;
 
-    public const ushort Item_CharCoal = 263;
+    public const ushort Item_CharCoal = 262;
     public const ushort Item_Coal = 263;
     public const ushort Item_Stick = 280;
     public const ushort Item_IronIngot = 265;
