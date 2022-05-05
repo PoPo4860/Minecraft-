@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public GameObject UI;
+    [SerializeField] private GameObject UI;
     public InventoryUI playerInventory;
     public ItemSlotUI playerInventoryUI;
 
-    public RectTransform inventorySlotUI;
-    public GameObject inventoryUI;
-    public GameObject CraftingTableUI;
-    public GameObject FurnaceUI;
+    [SerializeField] private RectTransform inventorySlotUI;
+    [SerializeField] private GameObject inventoryUI;
+    [SerializeField] private GameObject CraftingTableUI;
+    [SerializeField] private GameObject FurnaceUI;
 
     public static UIManager instance;
     public static UIManager Instance
@@ -31,7 +31,10 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
+    public void StartUICorutine(IEnumerator corutine)
+    {
+        StartCoroutine(corutine);
+    }
     public void ClearUI()
     {
         UI.SetActive(false);
@@ -44,7 +47,6 @@ public class UIManager : MonoBehaviour
         inventoryUI.gameObject.SetActive(true);
         inventorySlotUI.transform.localPosition = new Vector3(0, 33, 0);
     }
-
     public void ActiveCraftingUI()
     {
         UI.SetActive(true);

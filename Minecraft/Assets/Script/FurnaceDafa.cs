@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class FurnaceDafa
 {
+    public static readonly float combustionMaxTime = 10;
+
     public static float GetCombustionValue(int code) => code switch
     {
         CodeData.Item_Stick => 5f,
@@ -25,3 +27,4 @@ public static class FurnaceDafa
         _ => 0,
     };
 }
+

@@ -120,7 +120,7 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(1) && true == highlightBlock.gameObject.activeSelf)
         {
             bool blockInstall = false;
-            int targetItemCode = Utile.GetVoxelStateFromWorldPos(highlightBlock.gameObject.transform.position).id;
+            int targetItemCode = Utile.GetVoxelStateFromWorldPos(GetHighLightBlockPos()).id;
             
             if (true == Input.GetKey(KeyCode.LeftShift))
             {
@@ -199,5 +199,10 @@ public class Player : MonoBehaviour
             step += checkIncrement;
         }
         highlightBlock.gameObject.SetActive(false);
+    }
+    
+    public Vector3 GetHighLightBlockPos()
+    {
+        return highlightBlock.gameObject.transform.position;
     }
 }

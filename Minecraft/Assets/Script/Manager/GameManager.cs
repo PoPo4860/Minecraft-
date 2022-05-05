@@ -4,6 +4,7 @@ public class GameManager : MonoBehaviour
 {
     public Player player;
     public ItemManager itemManager;
+    public UIManager uiManager;
     public MouseItemSlot mouseItemSlot;
 
     private static GameManager _instance;
