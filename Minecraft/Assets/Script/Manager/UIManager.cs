@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject UI;
     public InventoryUI playerInventory;
     public ItemSlotUI playerInventoryUI;
+    public Furnace_UI furncaeUI;
 
     [SerializeField] private RectTransform inventorySlotUI;
     [SerializeField] private GameObject inventoryUI;
@@ -31,15 +32,16 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    public void StartUICorutine(IEnumerator corutine)
+    public Coroutine StartUICorutine(IEnumerator corutine)
     {
-        StartCoroutine(corutine);
+        return StartCoroutine(corutine);
     }
     public void ClearUI()
     {
         UI.SetActive(false);
         CraftingTableUI.gameObject.SetActive(false);
         inventoryUI.gameObject.SetActive(false);
+        FurnaceUI.gameObject.SetActive(false);
     }
     public void ActiveIventoryUI()
     {
@@ -51,6 +53,12 @@ public class UIManager : MonoBehaviour
     {
         UI.SetActive(true);
         CraftingTableUI.gameObject.SetActive(true);
+        inventorySlotUI.transform.localPosition = new Vector3(0, 0, 0);
+    }
+    public void ActiveFurnaceUI()
+    {
+        UI.SetActive(true);
+        FurnaceUI.gameObject.SetActive(true);
         inventorySlotUI.transform.localPosition = new Vector3(0, 0, 0);
     }
 }

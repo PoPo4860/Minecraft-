@@ -134,10 +134,16 @@ public class Player : MonoBehaviour
                     activePlayerUI = true;
                     ClearMouseInput();
                 }
+                else if (CodeData.BLOCK_Furnace == targetItemCode ||
+                         CodeData.BLOCK_FurnaceFire == targetItemCode)
+                {
+                    UIManager.Instance.ActiveFurnaceUI();
+                    activePlayerUI = true;
+                    ClearMouseInput();
+                }
                 else
                     blockInstall = true;
             }
-
 
             if(true == blockInstall)
             {
@@ -159,7 +165,6 @@ public class Player : MonoBehaviour
                     world.GetChunkFromPos(placeBlock).ModifyChunkData(voxelPos, itemCode, dir);
                 }   
             }
-
         }
     }
     private void MoveAndRotate()

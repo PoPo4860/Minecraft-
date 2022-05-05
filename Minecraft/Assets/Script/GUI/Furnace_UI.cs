@@ -17,10 +17,16 @@ public class Furnace_UI : MonoBehaviour
         if (null == furnace)
         {
             Furnace newFurnace = Instantiate(furnaceObject, Vector2.zero, Quaternion.identity);
-            newFurnace.transform.parent = transform.parent;
+            newFurnace.transform.SetParent(transform, false);
             newFurnace.name = $"Furnace [{posInt.x}, {posInt.y}, {posInt.z}]";
             furnaceData.Add(posInt, newFurnace);
             currentFurnace = newFurnace;
+            newFurnace.gameObject.SetActive(true);
+            
+        }
+        else
+        {
+            furnace.gameObject.SetActive(true);
         }
     }
     private void OnDisable()
@@ -31,6 +37,7 @@ public class Furnace_UI : MonoBehaviour
     {
         furnaceData.TryGetValue(pos, out Furnace furnace);
         furnaceData.Remove(pos);
-        Destroy(furnace);
+        furnace.Destory(pos);
+        Destroy(furnace.gameObject);
     }
 }

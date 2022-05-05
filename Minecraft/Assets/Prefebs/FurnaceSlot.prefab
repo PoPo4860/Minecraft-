@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Texture: {fileID: 2800000, guid: 06d576014a1aacf43955e95fd16e6554, type: 3}
   m_UVRect:
     serializedVersion: 2
-    x: 0
+    x: -2
     y: 0
     width: 1
     height: 1
@@ -247,7 +247,7 @@ MonoBehaviour:
   m_UVRect:
     serializedVersion: 2
     x: 0
-    y: 0
+    y: -2
     width: 1
     height: 1
 --- !u!1 &2494503262422265105
@@ -424,7 +424,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2494503262786699861
 RectTransform:
   m_ObjectHideFlags: 0

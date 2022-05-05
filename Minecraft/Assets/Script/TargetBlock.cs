@@ -14,6 +14,7 @@ public class TargetBlock : MonoBehaviour
 
     private Vector3Int targetBlock;
     private float targetBlockHardness;
+    
     private float stayeMouseButtonTime = 0f;
     private int attack = 1;
 
@@ -52,7 +53,7 @@ public class TargetBlock : MonoBehaviour
             SetSpriteNum((int)percent + 1);
             
             if (targetBlockHardness <= stayeMouseButtonTime)
-            {
+            {   // 블럭이 파괴되었을 때에
                 stayeMouseButtonTime = 0;
                 Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(transform.position);
                 Vector3Int voxelPos = Utile.Vector3ToVector3Int(result.voxelPos);
@@ -60,6 +61,14 @@ public class TargetBlock : MonoBehaviour
                 int itemCode = Utile.GetVoxelStateFromWorldPos(transform.position).id;
                 World.Instance.GetChunkFromPos(transform.position).
                     ModifyChunkData(voxelPos, CodeData.BLOCK_Air);
+
+                if (CodeData.BLOCK_Furnace == itemCode ||
+                    CodeData.BLOCK_FurnaceFire == itemCode) 
+                {
+                    Vector3Int targetPos = Utile.Vector3ToVector3Int(transform.position);
+                    GameManager.Instance.uiManager.furncaeUI.DeletFurnace(targetPos);
+                }
+
 
                 Vector3 vec = new Vector3(+0.5f, +0.5f, +0.5f);
                 GameManager.Instance.itemManager.AddDropItem(itemCode, 1, transform.position + vec);
@@ -80,7 +89,6 @@ public class TargetBlock : MonoBehaviour
 
             for (int i = 0; i < 4; ++i)
                 meshVertices.Add(voxelVerts[VoxelData.voxelTris[face, i]]);
-
 
             foreach (int i in ChunkHelperData.vertexData)
                 meshTriangles.Add(vertexIndex + i);
@@ -116,8 +124,8 @@ public class TargetBlock : MonoBehaviour
 
             targetBlock = newBlock;
             Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(targetBlock);
-            targetBlockHardness = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos).blockProperties.hardness;
-
+            VoxelState voxel = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos);
+            targetBlockHardness = voxel.blockProperties.hardness;
             if (true)
             {   // 채굴 가능 여부
                 targetBlockHardness *= 1.5f;

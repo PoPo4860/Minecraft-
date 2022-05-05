@@ -18,17 +18,20 @@ public class Furnace : ItemSlotUI
     public RawImage dirImage;
     public RectTransform dirImageTrans;
 
+    private Coroutine muCoroutine;
+
     private float fireHeight = 0f;
     private float dirWidth = 0f;
-
-    private Vector3Int pos;
 
     public void Start()
     {
         fireHeight = fireImageTrans.rect.height;
         dirWidth = dirImageTrans.rect.width;
     }
-
+    public void OnEnable()
+    {
+        GetComponentInParent<SlotButton>().SetItemSlotUI(this);
+    }
     public void OnDisable()
     {
         Rect fireRc = fireImage.uvRect;
@@ -70,9 +73,10 @@ public class Furnace : ItemSlotUI
     public IEnumerator CombustionWrok()
     {
         while (0f < combustionPower ||
-               0f != combustionTime) 
+               0f != combustionTime)
         {
             yield return new WaitForSeconds(0.5f);
+
             checkCoroutineIsRun = true;
 
             if (0f < combustionPower)
@@ -97,10 +101,16 @@ public class Furnace : ItemSlotUI
                     ++itemSlot[resultSlotNum];
                 }
             }
-
             SetImage();
         }
         checkCoroutineIsRun = false;
+    }
+    public void Destory(in Vector3 desPos)
+    {
+        for (int i = 0; i < 3; ++i)
+            GameManager.Instance.itemManager.AddDropItem(itemSlot[i].itemCode, itemSlot[i].itemNum, desPos);
+        StopCoroutine(muCoroutine);
+        StopCoroutine(CombustionWrok());
     }
     private void SetImage()
     {
@@ -128,7 +138,7 @@ public class Furnace : ItemSlotUI
     {
         SetCombustionPower();
         if (checkCoroutineIsRun == false)
-            GameManager.Instance.uiManager.StartUICorutine(CombustionWrok());
+            muCoroutine = GameManager.Instance.uiManager.StartUICorutine(CombustionWrok());
     }
     public void SetCombustionPower()
     {

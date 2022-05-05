@@ -4,7 +4,8 @@ using UnityEngine;
 [System.Serializable]
 public class VoxelState
 {
-    public ushort _id;
+    private ushort _id;
+
     public ushort id
     {
         get { return _id; }

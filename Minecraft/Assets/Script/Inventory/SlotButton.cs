@@ -25,6 +25,10 @@ public class SlotButton : MonoBehaviour,
                 UIManager.Instance.playerInventory.DropItemFromInventoy(slotNumber, 1);
         }
     }
+    public void SetItemSlotUI(ItemSlotUI itemSlotUI)
+    {
+        this.itemSlotUI = itemSlotUI;
+    }
 
     // 이미지 누름
     public void OnPointerDown(PointerEventData eventData)

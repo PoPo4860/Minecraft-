@@ -21,10 +21,13 @@ public class InventoryUI : ItemSlotUI
     {
         if(Input.GetKeyDown(KeyCode.C))
         {
+            AddInventoryItem(CodeData.BLOCK_Furnace, 50);
+        }
+        if (Input.GetKeyDown(KeyCode.V))
+        {
             AddInventoryItem(CodeData.BLOCK_OakTree, 50);
         }
     }
-
     public void AddInventoryItem(in int itemCode, in int itemNum, bool quickPriority = true)
     {
         if (true == CheckCanAddInventory(itemCode, out int slotNum, quickPriority))
@@ -63,7 +66,6 @@ public class InventoryUI : ItemSlotUI
                 return true;
             }
         }
-
         if (false == quickPriority)
         {
             for (int slotNum = 0; slotNum < 36; ++slotNum)
@@ -85,7 +87,6 @@ public class InventoryUI : ItemSlotUI
                     return true;
                 }
             }
-
             for (int slotNum = 0; slotNum < 27; ++slotNum)
             {
                 if (0 == itemSlot[slotNum].itemCode)
@@ -95,7 +96,6 @@ public class InventoryUI : ItemSlotUI
                 }
             }
         }
-
         return false;
     }
     public void SetQuickSlot(int slotNum)
@@ -142,9 +142,9 @@ public class InventoryUI : ItemSlotUI
             dropItemNum = itemSlot[itemSlotNum].itemNum;
         
         itemSlot[itemSlotNum] -= dropItemNum;
-        Vector3 vec =  GameManager.Instance.player.cameraTransform.position;
-        Vector3 vec2 = GameManager.Instance.player.cameraTransform.forward / 1.5f;
-        GameManager.Instance.itemManager.AddDropItem(itemCode, dropItemNum, vec, vec2);
+        Vector3 dropPos =  GameManager.Instance.player.cameraTransform.position;
+        Vector3 dirVec = GameManager.Instance.player.cameraTransform.forward / 1.5f;
+        GameManager.Instance.itemManager.AddDropItem(itemCode, dropItemNum, dropPos, dirVec);
         SetQuickSlot(itemSlotNum);
     }
 }
