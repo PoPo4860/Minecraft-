@@ -36,6 +36,11 @@ public class UIManager : MonoBehaviour
     {
         return StartCoroutine(corutine);
     }
+
+    public void StopUICorutine(Coroutine coroutine)
+    {
+        StopCoroutine(coroutine);
+    }
     public void ClearUI()
     {
         UI.SetActive(false);

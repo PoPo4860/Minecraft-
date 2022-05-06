@@ -70,4 +70,12 @@ static class Utile
         return World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos);
     }
     
+    static public void ModifyChunkDataFromWorldPos(Vector3 worldPos, int itemCode)
+    {
+        VoxelState voxel = GetVoxelStateFromWorldPos(worldPos);
+        ChunkCoordInPos result = GetCoordInVoxelPosFromWorldPos(worldPos);
+        Vector3Int pos = Vector3ToVector3Int(result.voxelPos);
+        World.Instance.GetChunkFromCoord(result.chunkCoord).
+            ModifyChunkData(pos, (ushort)itemCode, voxel.directionVector);
+    }
 }

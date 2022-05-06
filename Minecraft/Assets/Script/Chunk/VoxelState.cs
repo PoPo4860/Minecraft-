@@ -38,6 +38,10 @@ public class VoxelState
         {
             _direction = value;
         }
+        get
+        {
+            return _direction;
+        }
     }
 
 

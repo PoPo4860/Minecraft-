@@ -15,6 +15,7 @@ public static class FurnaceDafa
         CodeData.BLOCK_OakTree => 15f,
         CodeData.BLOCK_CraftingTable => 15f,
         CodeData.Item_Coal => 80f,
+        CodeData.Item_CharCoal => 80f,
         _ => 0,
     };
     public static int GetBakeResultCode(int code) => code switch

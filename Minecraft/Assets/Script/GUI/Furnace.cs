@@ -23,6 +23,8 @@ public class Furnace : ItemSlotUI
     private float fireHeight = 0f;
     private float dirWidth = 0f;
 
+    private Vector3Int worldPos;
+
     public void Start()
     {
         fireHeight = fireImageTrans.rect.height;
@@ -64,7 +66,8 @@ public class Furnace : ItemSlotUI
     }
     public override void RightClickSlot(int slotNum)
     {
-        if (resultSlotNum != slotNum)
+        if (rawMaterialSlotNum == slotNum ||
+            firewoodSlotNum == slotNum)
         {
             RightClickSlotWork(slotNum);
             SetCombustion();
@@ -72,9 +75,15 @@ public class Furnace : ItemSlotUI
     }
     public IEnumerator CombustionWrok()
     {
+        bool fireCheck = true;
         while (0f < combustionPower ||
                0f != combustionTime)
         {
+            if (true == fireCheck) 
+            {
+                fireCheck = false;
+                Utile.ModifyChunkDataFromWorldPos(worldPos, CodeData.BLOCK_FurnaceFire);
+            }
             yield return new WaitForSeconds(0.5f);
 
             checkCoroutineIsRun = true;
@@ -104,13 +113,16 @@ public class Furnace : ItemSlotUI
             SetImage();
         }
         checkCoroutineIsRun = false;
+        Utile.ModifyChunkDataFromWorldPos(worldPos, CodeData.BLOCK_Furnace);
+
     }
     public void Destory(in Vector3 desPos)
     {
         for (int i = 0; i < 3; ++i)
             GameManager.Instance.itemManager.AddDropItem(itemSlot[i].itemCode, itemSlot[i].itemNum, desPos);
-        StopCoroutine(muCoroutine);
-        StopCoroutine(CombustionWrok());
+        if (muCoroutine != null)
+            GameManager.Instance.uiManager.StopCoroutine(muCoroutine);
+        
     }
     private void SetImage()
     {
@@ -138,7 +150,7 @@ public class Furnace : ItemSlotUI
     {
         SetCombustionPower();
         if (checkCoroutineIsRun == false)
-            muCoroutine = GameManager.Instance.uiManager.StartUICorutine(CombustionWrok());
+            muCoroutine = GameManager.Instance.uiManager.StartCoroutine(CombustionWrok());
     }
     public void SetCombustionPower()
     {
@@ -181,5 +193,9 @@ public class Furnace : ItemSlotUI
                     mouseSlot += slotItemNum;
             }
         }
+    }
+    public void SetWorldPos(in Vector3Int pos)
+    {
+        worldPos = pos;
     }
 }
