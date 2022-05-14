@@ -11,6 +11,8 @@ public class PlayerQuickSlot : MonoBehaviour
     [HideInInspector] public int currentSelectNum = 0;
     private int getKeyNum = 0;
 
+    public PlayerRightHand playerRightHand;
+    public TargetBlock targetBlock;
     public ItemSlot[] itemSlot;
 
     private void Start()
@@ -34,10 +36,13 @@ public class PlayerQuickSlot : MonoBehaviour
         selectQuickSlotItemNum = itemSlot[currentSelectNum].itemNum;
         selectQuickSlotRect.position = itemSlot[currentSelectNum].itemImage.transform.position;
         int itemCode = itemSlot[currentSelectNum].itemCode;
+        playerRightHand.SetItemRender(itemCode);
         if (CodeData.BLOCK_Air != itemCode)
             selectQuickSlotText.text = CodeData.GetCodeName(itemCode);
         else
             selectQuickSlotText.text = "";
+        ItemType itemType = CodeData.GetItemInfo(itemSlot[currentSelectNum].itemCode);
+        targetBlock.SetItemType(itemType);
     }
 
     public ushort UseQuickSlotItemCode()

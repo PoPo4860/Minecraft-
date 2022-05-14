@@ -98,8 +98,8 @@ public static class CodeData
             newItem.itemName = words[0];
             ushort blockCode = ushort.Parse(words[1]);
             newItem.textureAtlases = UInt16.Parse(words[2]);
-            newItem.value = float.Parse(words[2]);
-            newItem.type = SetItemType(words[3]);
+            newItem.value = float.Parse(words[3]);
+            newItem.type = SetItemType(words[4]);
 
             ItemInfo.Add(blockCode, newItem);
 

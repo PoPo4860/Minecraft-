@@ -21,12 +21,11 @@ public class InventoryUI : ItemSlotUI
     {
         if(Input.GetKeyDown(KeyCode.C))
         {
-            AddInventoryItem(CodeData.BLOCK_Furnace, 50);
+            AddInventoryItem(CodeData.Item_DiamondPickaxe, 1);
+            AddInventoryItem(CodeData.Item_StonePickaxe, 1);
+            AddInventoryItem(CodeData.Item_WoodPickaxe, 1);
         }
-        if (Input.GetKeyDown(KeyCode.V))
-        {
-            AddInventoryItem(CodeData.BLOCK_OakTree, 50);
-        }
+
     }
     public void AddInventoryItem(in int itemCode, in int itemNum, bool quickPriority = true)
     {

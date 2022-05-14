@@ -7,17 +7,10 @@ public class TargetBlock : MonoBehaviour
     private readonly int spriteWidth = 10;
     private readonly int spriteHeight = 1;
 
-    private int vertexIndex = 0;
     private readonly List<Vector3> meshVertices = new List<Vector3>();
     private readonly List<int> meshTriangles = new List<int>();
     private readonly List<Vector2> meshUv = new List<Vector2>();
-
-    private Vector3Int targetBlock;
-    private float targetBlockHardness;
-    
-    private float stayeMouseButtonTime = 0f;
-    private int attack = 1;
-
+    private int vertexIndex = 0;
     private MeshFilter meshFilter;
     public static readonly Vector3[] voxelVerts = new Vector3[8]
     {   // Á¤Á¡À» ¼³Á¤
@@ -34,15 +27,19 @@ public class TargetBlock : MonoBehaviour
         new Vector3(-0.0001f,  1.0001f, 1.0001f), // LT
     };
 
+    private Vector3Int targetBlock;
+    private float targetBlockHardness;
+    
+    private float stayeMouseButtonTime = 0f;
+    private ItemType itemType;
+    private int itemTypeNum = 0;
+    private bool miningPossible = false;
     private int bufferSpriteNum = -1;
-
     void Start()
     {
         MeshInit();
         SetSpriteNum();
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKey(KeyCode.Mouse0))
@@ -68,17 +65,23 @@ public class TargetBlock : MonoBehaviour
                     Vector3Int targetPos = Utile.Vector3ToVector3Int(transform.position);
                     GameManager.Instance.uiManager.furncaeUI.DeletFurnace(targetPos);
                 }
-
-
                 Vector3 vec = new Vector3(+0.5f, +0.5f, +0.5f);
-                GameManager.Instance.itemManager.AddDropItem(itemCode, 1, transform.position + vec);
+                if(true == miningPossible)
+                {
+                    int dropItemCode = GetDropItemCode(itemCode);
+                    GameManager.Instance.itemManager.AddDropItem(dropItemCode, 1, transform.position + vec);
+                }
             }
         }
         else
         {
-            SetSpriteNum();
+            SetSpriteNum(0);
             stayeMouseButtonTime = 0;
         }
+    }
+    public void SetItemType(ItemType itemType)
+    {
+        this.itemType = itemType;
     }
     private void MeshInit()
     {
@@ -117,28 +120,99 @@ public class TargetBlock : MonoBehaviour
     }
     private void SetTargetInfo()
     {
-        Vector3Int newBlock = Utile.Vector3ToVector3Int(transform.position);
-        if (targetBlock != newBlock)
-        {
-            stayeMouseButtonTime = 0;
+        Vector3Int blockPos = Utile.Vector3ToVector3Int(transform.position);
+        int currentItemTypeNum;
+        if(null == itemType)
+            currentItemTypeNum = 0;
+        else
+            currentItemTypeNum = itemType.textureAtlases;
 
-            targetBlock = newBlock;
+        if (targetBlock != blockPos ||
+            itemTypeNum != currentItemTypeNum)
+        {
+            targetBlock = blockPos;
+            itemTypeNum = currentItemTypeNum;
+            stayeMouseButtonTime = 0;
             Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(targetBlock);
             VoxelState voxel = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos);
             targetBlockHardness = voxel.blockProperties.hardness;
-            if (true)
+            if (true == GetMiningCheck(voxel , out float value))
             {   // Ã¤±¼ °¡´É ¿©ºÎ
+                miningPossible = true;
                 targetBlockHardness *= 1.5f;
-                targetBlockHardness *= attack;
+                targetBlockHardness /= value;
             }
-            //else
-            //{
-            //    targetBlockHardness *= 5.0f;
-            //}
+            else
+            {
+                miningPossible = false;
+                targetBlockHardness *= 5.0f;
+            }
         }
         // Ã¤±¼ÀÌ °¡´ÉÇÏ´Ù¸é (°æµµ °ª * 1.5)ÃÊ
         // Ã¤±¼ÀÌ °¡´ÉÇÏ´Ù¸é (°æµµ °ª * 5.0)ÃÊ
         // ±âº» 1x  ³ª¹« 2x  µ¹4x  Ã¶6x  ´ÙÀÌ¾Æ¸óµå8x
+    }
+    private bool GetMiningCheck(VoxelState voxel, out float value)
+    {
+        value = 1f;
+
+        if (null == itemType )
+        {
+            if(EBlockType.Stone == voxel.blockProperties.type)
+                return false;
+            else
+                return true;
+        }
+
+        if (EItemType.Axe == itemType.type &&
+            EBlockType.Wood == voxel.blockProperties.type)
+            value = itemType.value;
+        
+        if(EBlockType.Stone == voxel.blockProperties.type)
+        {
+            if (EItemType.Pick == itemType.type)
+            {
+                value = itemType.value;
+                switch (itemType.itemName)
+                {
+                    case "´ÙÀÌ¾Æ¸óµå °î±ªÀÌ":
+                        goto case "Ã¶ °î±ªÀÌ";
+
+                    case "Ã¶ °î±ªÀÌ":
+                        if (CodeData.BLOCK_Diamond == voxel.id)
+                            return true;
+                        goto case "µ¹ °î±ªÀÌ";
+                    
+                    case "µ¹ °î±ªÀÌ":
+                        if (CodeData.BLOCK_Coal == voxel.id ||
+                            CodeData.BLOCK_Iron == voxel.id)
+                            return true;
+                        goto case "³ª¹« °î±ªÀÌ";
+                    
+                    case "³ª¹« °î±ªÀÌ":
+                        if (CodeData.BLOCK_Stone == voxel.id ||
+                            CodeData.BLOCK_CobbleStones == voxel.id ||
+                            CodeData.BLOCK_Furnace == voxel.id ||
+                            CodeData.BLOCK_FurnaceFire == voxel.id)
+                            return true;
+                        return false;
+
+                    default:
+                        return false;
+                }
+            }
+            else
+                return false;
+        }
+
+        if (EItemType.Shovel == itemType.type &&
+            EBlockType.Soil == voxel.blockProperties.type)
+            value = itemType.value;
+        
+        if (EBlockType.Basic == voxel.blockProperties.type)
+            value = itemType.value;
+        
+        return true;
     }
     private void SetSpriteNum(int num = 0)
     {
@@ -151,5 +225,17 @@ public class TargetBlock : MonoBehaviour
             AddTextureUV(num);
         meshFilter.mesh.uv = meshUv.ToArray();
         meshFilter.mesh.RecalculateNormals();
+    }
+    private int GetDropItemCode(int destoryBlockCode)
+    {
+        return destoryBlockCode switch
+        {
+            CodeData.BLOCK_Stone => CodeData.BLOCK_CobbleStones,
+            CodeData.BLOCK_Coal => CodeData.Item_Coal,
+            CodeData.BLOCK_FurnaceFire => CodeData.BLOCK_Furnace,
+            CodeData.BLOCK_Diamond => CodeData.Item_Diamond,
+            CodeData.BLOCK_Grass => CodeData.BLOCK_Dirt,
+            _ => destoryBlockCode,
+        };
     }
 }

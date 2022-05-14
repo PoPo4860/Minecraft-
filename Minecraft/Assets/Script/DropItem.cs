@@ -14,7 +14,7 @@ public class DropItem : MonoBehaviour
     private MeshRenderer meshRenderer;
     private MeshFilter meshFilter;
     private int vertexIndex = 0;
-    #endregion
+    #endregion 
 
     public bool _canIsItemGet = false;
     public bool canIsItemGet
@@ -97,16 +97,6 @@ public class DropItem : MonoBehaviour
         vertexIndex = 0;
         meshFilter.mesh.RecalculateNormals();
     }
-    IEnumerator CanIsItemGetDelay()
-    {
-        yield return new WaitForSeconds(0.5f);
-        canIsItemGet = true;
-    }
-    IEnumerator ActiveFalse()
-    {
-        yield return new WaitForSeconds(30.0f);
-        gameObject.SetActive(false);
-    }
     private void AddBlockTextureUV(int atlasesCode)
     {
         // 아틀라스 내의 텍스쳐 가로, 세로 개수
@@ -147,4 +137,15 @@ public class DropItem : MonoBehaviour
         meshUv.Add(new Vector2(uvX + nw, uvY));
         meshUv.Add(new Vector2(uvX + nw, uvY + nh));
     }
+    private IEnumerator CanIsItemGetDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        canIsItemGet = true;
+    }
+    private IEnumerator ActiveFalse()
+    {
+        yield return new WaitForSeconds(30.0f);
+        gameObject.SetActive(false);
+    }
 }
+ 

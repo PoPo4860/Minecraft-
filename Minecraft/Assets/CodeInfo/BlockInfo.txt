@@ -4,12 +4,12 @@
 흙,3,0,0,0,0,0,0,true,false,0.5,Soil
 조약돌,4,7,7,7,7,7,7,true,false,2,Stone
 참나무 판자,5,21,21,21,21,21,21,true,false,2,Wood
-기반암,7,20,20,20,20,20,20,true,false,-1,Stone
+기반암,7,20,20,20,20,20,20,true,false,9999999,Stone
 철 블록,15,5,5,5,5,5,5,true,false,5,Stone
 석탄 블록,16,4,4,4,4,4,4,true,false,3,Stone
 참 나무 원목,17,22,22,23,23,22,22,true,false,2,Wood
 참나무 잎,18,24,24,24,24,24,24,true,true,0.2,Wood
-다이아몬드 블록,56,6,6,6,6,6,6,true,false,7,Basic
+다이아몬드 블록,56,6,6,6,6,6,6,true,false,7,Stone
 제작대,58,26,26,27,21,25,25,true,false,2,Wood
 화로,61,10,8,11,11,10,10,true,false,0.5,Stone
 화로,62,10,9,11,11,10,10,true,false,0.5,Stone

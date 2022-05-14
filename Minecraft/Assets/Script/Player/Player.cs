@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
 
     public VoxelRigidbody playerRigi;
     public PlayerQuickSlot playerQuickSlot;
+    public PlayerRightHand playerRightHand;
+
     private World world
     {
         get { return World.Instance; }
@@ -117,15 +119,16 @@ public class Player : MonoBehaviour
                 UIManager.Instance.playerInventory.DropItemFromInventoy(itemSlot, 1);
         }
 
+        if (Input.GetMouseButton(0))
+            playerRightHand.ActiveHandMove();
+
         if (Input.GetMouseButtonDown(1) && true == highlightBlock.gameObject.activeSelf)
         {
             bool blockInstall = false;
             int targetItemCode = Utile.GetVoxelStateFromWorldPos(GetHighLightBlockPos()).id;
             
             if (true == Input.GetKey(KeyCode.LeftShift))
-            {
                 blockInstall = true;
-            }
             else
             {
                 if (CodeData.BLOCK_CraftingTable == targetItemCode)
@@ -161,6 +164,7 @@ public class Player : MonoBehaviour
                 ushort itemCode = playerQuickSlot.UseQuickSlotItemCode();
                 if (null != CodeData.GetBlockInfo(itemCode))
                 {
+                    playerRightHand.ActiveHandMove();
                     Vector3Int voxelPos = Utile.Vector3ToVector3Int(Utile.GetCoordInVoxelPosFromWorldPos(placeBlock).voxelPos);
                     world.GetChunkFromPos(placeBlock).ModifyChunkData(voxelPos, itemCode, dir);
                 }   
