@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class ChunkMapData
 {
-    public readonly VoxelState[,,] voxelMap =
-    new VoxelState[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
+    public readonly Voxel[,,] voxelMap =
+    new Voxel[VoxelData.ChunkWidth, VoxelData.ChunkHeight, VoxelData.ChunkWidth];
 
     public ChunkCoord coord;
 
@@ -28,7 +28,7 @@ public class ChunkMapData
                 {
                     Vector3Int voxelPos = new Vector3Int(x, y, z);
                     ushort id = PopulateBlock(voxelPos);
-                    voxelMap[x, y, z] = new VoxelState(id);
+                    voxelMap[x, y, z] = new Voxel(id);
                 }
             }
         }
@@ -150,7 +150,7 @@ public class ChunkMapData
         }
     }
 
-    public VoxelState GetVoxelState(in Vector3 voxelPos)
+    public Voxel GetVoxelState(in Vector3 voxelPos)
     {
         for (int i = 0; i < 4; ++i)
         {

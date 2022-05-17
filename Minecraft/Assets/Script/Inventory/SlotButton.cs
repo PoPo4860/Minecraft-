@@ -3,7 +3,6 @@ using UnityEngine.EventSystems;
 
 public class SlotButton : MonoBehaviour, 
     IPointerEnterHandler, 
-    IPointerUpHandler, 
     IPointerDownHandler,
     IPointerExitHandler
 {
@@ -46,11 +45,6 @@ public class SlotButton : MonoBehaviour,
             if (PointerEventData.InputButton.Left == eventData.button)
                 itemSlotUI.LeftShiftClickSlot(slotNumber);
         }
-    }
-
-    // 이미지 뗌 (눌러있는 상태여야만 호출 및 누른 이미지에서 호출)
-    public void OnPointerUp(PointerEventData eventData)
-    {
     }
 
     // 이미지에 마우스가 닿으면 호출

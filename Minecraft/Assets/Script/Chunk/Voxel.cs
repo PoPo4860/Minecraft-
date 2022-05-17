@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class VoxelState
+public class Voxel
 {
     private ushort _id;
 
@@ -43,8 +43,6 @@ public class VoxelState
             return _direction;
         }
     }
-
-
     public BlockType blockProperties
     {
         get { return CodeData.GetBlockInfo(id); }
@@ -54,7 +52,7 @@ public class VoxelState
         get { return CodeData.GetItemInfo(id); }
     }
 
-    public VoxelState(ushort _id = 0)
+    public Voxel(ushort _id = 0)
     {
         this._id = _id;
     }

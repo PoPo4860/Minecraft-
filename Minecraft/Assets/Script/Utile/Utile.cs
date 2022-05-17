@@ -62,7 +62,7 @@ static class Utile
     {
         return new Vector3Int((int)pos.x, (int)pos.y, (int)pos.z);
     }
-    static public VoxelState GetVoxelStateFromWorldPos(in Vector3 pos)
+    static public Voxel GetVoxelStateFromWorldPos(in Vector3 pos)
     {
         ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(pos);
         Vector3Int voxelPos = Utile.Vector3ToVector3Int(result.voxelPos);
@@ -72,7 +72,7 @@ static class Utile
     
     static public void ModifyChunkDataFromWorldPos(Vector3 worldPos, int itemCode)
     {
-        VoxelState voxel = GetVoxelStateFromWorldPos(worldPos);
+        Voxel voxel = GetVoxelStateFromWorldPos(worldPos);
         ChunkCoordInPos result = GetCoordInVoxelPosFromWorldPos(worldPos);
         Vector3Int pos = Vector3ToVector3Int(result.voxelPos);
         World.Instance.GetChunkFromCoord(result.chunkCoord).

@@ -40,10 +40,9 @@ public class Perlin
         float ZY = Mathf.PerlinNoise(Z, Y);
         float XZ = Mathf.PerlinNoise(X, Z);
         float minHight = 20;
-        float value = (XY + YZ + ZX + YX + ZY + XZ) / 6f;
-        value = value * 40 + minHight - pos.y;
-        
-        return value;
+        float density = (XY + YZ + ZX + YX + ZY + XZ) / 6f;
+        density = density * 40 + minHight - pos.y;
+        return density;
     }
     public static float GetPerlinNoiseCave(in ChunkCoord coord, in int seed, in Vector3Int pos, in float scale = 15)
     {

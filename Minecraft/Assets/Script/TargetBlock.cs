@@ -134,7 +134,7 @@ public class TargetBlock : MonoBehaviour
             itemTypeNum = currentItemTypeNum;
             stayeMouseButtonTime = 0;
             Utile.ChunkCoordInPos result = Utile.GetCoordInVoxelPosFromWorldPos(targetBlock);
-            VoxelState voxel = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos);
+            Voxel voxel = World.Instance.GetChunkFromCoord(result.chunkCoord).chunkMapData.GetVoxelState(result.voxelPos);
             targetBlockHardness = voxel.blockProperties.hardness;
             if (true == GetMiningCheck(voxel , out float value))
             {   // 채굴 가능 여부
@@ -152,7 +152,7 @@ public class TargetBlock : MonoBehaviour
         // 채굴이 가능하다면 (경도 값 * 5.0)초
         // 기본 1x  나무 2x  돌4x  철6x  다이아몬드8x
     }
-    private bool GetMiningCheck(VoxelState voxel, out float value)
+    private bool GetMiningCheck(Voxel voxel, out float value)
     {
         value = 1f;
 

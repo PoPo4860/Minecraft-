@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
 
     private bool activePlayerUI = false;
 
-    public VoxelRigidbody playerRigi;
+    public VoxelRigidbody playerRigidbody;
     public PlayerQuickSlot playerQuickSlot;
     public PlayerRightHand playerRightHand;
 
@@ -50,7 +50,7 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Vector3 velocityVector = ((transform.forward * vertical) + (transform.right * horizontal));
-        playerRigi.SetVelocity(Time.fixedDeltaTime * walkSpeed * velocityVector.normalized);
+        playerRigidbody.SetVelocity(Time.fixedDeltaTime * walkSpeed * velocityVector.normalized);
     }
     private void LateUpdate()
     {
@@ -89,7 +89,7 @@ public class Player : MonoBehaviour
         mouseX = Input.GetAxis("Mouse X") * 5;
         mouseY = Input.GetAxis("Mouse Y") * 5;
         if (Input.GetKey(KeyCode.Space))
-            playerRigi.InputJump(jumpPower);
+            playerRigidbody.InputJump(jumpPower);
 
         if (Input.GetKeyDown(KeyCode.R)) 
             walkSpeed = 10;
@@ -99,13 +99,12 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            playerRigi.InputShift(true);
+            playerRigidbody.InputShift(true);
             walkSpeed = 3;
         }
-
         if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            playerRigi.InputShift(false);
+            playerRigidbody.InputShift(false);
             walkSpeed = 6;
         }
         #endregion

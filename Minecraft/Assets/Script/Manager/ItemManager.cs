@@ -48,26 +48,31 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public void AddDropItem(int itemCode, int itemNum, Vector3 pos, Vector3 vec = new Vector3())
+    public void AddDropItem(int itemCode, int itemNum, Vector3 dropPos, Vector3 vec = new Vector3())
     {
+        // 비활성화된 드롭아이템이 있다면 재활용
         for (int i = 0; i < objectList.Count; ++i)
         {
             if (false == objectList[i].gameObject.activeSelf) 
             {
-                objectList[i].itemCode = itemCode;
-                objectList[i].itemNum = itemNum;
-                objectList[i].gameObject.transform.position = pos;
-                objectList[i].gameObject.SetActive(true);
-                objectList[i].rigi.AddForce(vec);
+                ReSetDropItem(objectList[i], itemCode, itemNum, vec);
+                objectList[i].gameObject.transform.position = dropPos;
                 return;
             }
         }
-        DropItem obj = Instantiate(dorpItemObject, pos, Quaternion.identity);
-        obj.transform.SetParent(gameObject.transform);
-        obj.itemCode = itemCode;
-        obj.itemNum = itemNum;
-        obj.gameObject.SetActive(true);
-        obj.rigi.AddForce(vec);
-        objectList.Add(obj);
+
+        // 비활성화된 드롭 아이템이 없다면 새로 생성
+        DropItem dropItem = Instantiate(dorpItemObject, dropPos, Quaternion.identity);
+        dropItem.transform.SetParent(gameObject.transform);
+        ReSetDropItem(dropItem, itemCode, itemNum, vec);
+        objectList.Add(dropItem);
+    }
+
+    private void ReSetDropItem(DropItem dropItem,int itemCode, int itemNum, Vector3 vec)
+    {
+        dropItem.itemCode = itemCode;
+        dropItem.itemNum = itemNum;
+        dropItem.gameObject.SetActive(true);
+        dropItem.rigi.AddForce(vec);
     }
 }
